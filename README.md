@@ -22,8 +22,9 @@ deployment patterns are compatible with NGINX Ingress Controller Git release [`n
   
 ## Quick Start Guide
 >In the context of this document, <br>
->* `HELM_HOME` will refer to a local copy of the [`wso2/kubernetes-microgateway`](https://github.com/wso2/kubernetes-microgateway/)
+>* `KUBERNETES_HOME` will refer to a local copy of the [`wso2/kubernetes-microgateway`](https://github.com/wso2/kubernetes-microgateway/)
 Git repository. <br>
+>* `HELM_HOME` will refer to `<KUBERNETES_HOME>/helm/microgateway`. <br>
 
 ##### 1. Clone the Kubernetes Resources for WSO2 Identity Server Git repository.
 
@@ -116,12 +117,12 @@ b. Add the above host as an entry in /etc/hosts file as follows:
 Centralized logging with Logstash and Elasticsearch is disabled by default. However, if it is required to be enabled, 
 the following steps should be followed.
 
-1. Set `centralizedLogging.enabled` to `true` in the [values.yaml](values.yaml) file.
+1. Set `centralizedLogging.enabled` to `true` in the [values.yaml](helm/microgateway/values.yaml) file.
 2. Add elasticsearch Helm repository to download sub-charts required for Centralized logging.
 ```
 helm repo add elasticsearch https://helm.elastic.co
 ```
-3. Add the following dependencies in the [requirements.yaml](requirements.yaml) file.
+3. Add the following dependencies in the [requirements.yaml](helm/microgateway/requirements.yaml) file.
 ```
 dependencies:
   - name: kibana
@@ -134,7 +135,7 @@ dependencies:
     condition: wso2.centralizedLogging.enabled
 
 ```
-4. Add override configurations for Elasticsearch in the [values.yaml](values.yaml) file.
+4. Add override configurations for Elasticsearch in the [values.yaml](helm/microgateway/values.yaml) file.
 ```
 wso2:
   ( ... )
