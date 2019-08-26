@@ -12,19 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IntelliJ IDEA Project Files
-.idea/
-*.ipr
-*.iws
-*.swp
-
-# Backup files
-*~
-*.bck
-
-# Required-image-building-artifacts
-*.tar.gz
-*.zip
-*jar
-
-**/dockerfiles/**/files/*
+apiVersion: v1
+kind: Service
+metadata:
+  name: wso2micro-gw-service
+  namespace : {{ .Release.Namespace }}
+spec:
+  selector:
+    deployment: wso2micro-gw
+  ports:
+    - name: servlet-http
+      port: 9090
+      targetPort: 9090
+      protocol: TCP
+    - name: servlet-https
+      port: 9095
+      targetPort: 9095
+      protocol: TCP
