@@ -12,19 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IntelliJ IDEA Project Files
-.idea/
-*.ipr
-*.iws
-*.swp
-
-# Backup files
-*~
-*.bck
-
-# Required-image-building-artifacts
-*.tar.gz
-*.zip
-*jar
-
-**/dockerfiles/**/files/*
+http.host: "0.0.0.0"
+path.config: /usr/share/logstash/pipeline

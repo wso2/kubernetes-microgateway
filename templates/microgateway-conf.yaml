@@ -12,19 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# IntelliJ IDEA Project Files
-.idea/
-*.ipr
-*.iws
-*.swp
-
-# Backup files
-*~
-*.bck
-
-# Required-image-building-artifacts
-*.tar.gz
-*.zip
-*jar
-
-**/dockerfiles/**/files/*
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: microgateway-conf
+  namespace : {{ .Release.Namespace }}
+data:
+  {{- $file := .Files }}
+  {{- range $path, $byte := .Files.Glob "confs/*" }}
+  {{- $list := $path | splitList "/"}}
+  {{- $length := len $list }}
+  {{- $last := add $length -1 }}
+  {{ index $list $last }}: |-
+  {{- range $file.Lines $path }}
+    {{ . }}
+  {{- end }}
+  {{- end }}
