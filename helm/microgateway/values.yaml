@@ -69,5 +69,3 @@ wso2:
         host: wso2-elasticsearch-master
         username: "elastic"
         password: "changeme"
-      indexNodeID:
-        wso2MicroGWNode: "wso2micro-gw-node"
