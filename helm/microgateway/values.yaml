@@ -19,6 +19,8 @@ wso2:
     password: ""
   deployment:
     wso2microgw:
+      projectName: ""
+      # Docker registry details
       dockerRegistry: ""
       imageName: "wso2micro-gw"
       imageTag: "3.0.1"
@@ -73,7 +75,7 @@ wso2:
   # Centralized logging is disabled by default. If it is required to enable centralized logging, please follow the instructions
   # provided in the documentation (https://github.com/wso2/kubernetes-microgateway#enabling-centralized-logging)
   centralizedLogging:
-    enabled: false
+    enabled: true
     logstash:
       imageTag: 7.2.0
       elasticsearch:
