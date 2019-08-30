@@ -1,7 +1,7 @@
 
-# Contributing to kubernetes-ei
+# Contributing to kubernetes-microgateway
 
-Kubernetes and Helm resources for WSO2 API Microgateway are open source, and we encourage contributions  from our community.
+Kubernetes and Helm resources for WSO2 API Microgateway are open source, and we encourage contributions from our community.
 
 ## How you can Contribute
 
