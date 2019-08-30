@@ -57,6 +57,17 @@ wso2:
           memory: "1Gi"
           # The maximum amount of CPU that should be allocated for a Pod
           cpu: "2000m"
+  # This is the set of configurations that should be overridden in the micro-gw.conf file
+  # Eg: If the value of the Key Manager server URL must be changed, the configuration must be changed as follows:
+  #   [keyManager]
+  #      serverUrl="https://localhost:9443"
+  #
+  #   keyManager_serverUrl: "https://localhost:9443"
+  microgatewayConfigurations:
+#    analytics_enable: true
+#    analytics_uploadingEndpoint: "https://localhost:9444/analytics/v1.0/usage/upload-file"
+#    analytics_username: admin
+#    analytics_password: admin
 
   # Configurations for the logstash container image and elasticsearch authorization credentials
   # Centralized logging is disabled by default. If it is required to enable centralized logging, please follow the instructions
