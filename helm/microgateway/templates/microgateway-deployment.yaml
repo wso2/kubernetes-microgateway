@@ -90,6 +90,11 @@ spec:
           protocol: TCP
         - containerPort: 9095
           protocol: TCP
+        env:
+        {{- range $key, $val := .Values.wso2.microgatewayConfigurations }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+        {{- end}}
         volumeMounts:
         - name: microgateway-conf
           mountPath: /home/ballerina/conf/micro-gw.conf
