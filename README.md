@@ -1,7 +1,6 @@
-# Kubernetes and Helm Resources for WSO2 API Microgateway 
+# Helm Resources for WSO2 API Microgateway
 
-*Helm Resources for container-based deployments of WSO2 API Microgateway.*
-
+*Helm Resources for container-based deployments of WSO2 API Microgateway in Kubernetes.*
 
 ## Deploy Helm resources
 
