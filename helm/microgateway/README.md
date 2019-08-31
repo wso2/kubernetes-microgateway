@@ -122,7 +122,7 @@ the following steps should be followed.
 ```
 helm repo add elasticsearch https://helm.elastic.co
 ```
-3. Add the following dependencies in the [requirements.yaml](requirements.yaml) file.
+3. Create a requirements.yaml at <HELM_HOME> and add the following dependencies in the file.
 ```
 dependencies:
   - name: kibana
