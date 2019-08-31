@@ -110,7 +110,7 @@ spec:
           subPath: init.sh
         {{ if .Values.wso2.centralizedLogging.enabled }}
         - name: shared-logs
-          mountPath: /ballerina/runtime/logs/
+          mountPath: home/ballerina/logs
       - name: wso2micro-gw-logstash
         image: docker.elastic.co/logstash/logstash:{{ default "7.2.0" .Values.wso2.centralizedLogging.logstash.imageTag }}
         volumeMounts:
