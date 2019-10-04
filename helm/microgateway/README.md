@@ -26,7 +26,7 @@ deployment patterns are compatible with NGINX Ingress Controller Git release [`n
 Git repository. <br>
 >* `HELM_HOME` will refer to `<KUBERNETES_HOME>/helm/microgateway`. <br>
 
-##### 1. Clone the Kubernetes Resources for WSO2 Identity Server Git repository.
+##### 1. Clone the Kubernetes Resources for WSO2 API Microgateway Git repository.
 
 ```
 git clone https://github.com/wso2/kubernetes-microgateway.git
