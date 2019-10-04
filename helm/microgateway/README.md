@@ -81,7 +81,7 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 
 **Note**: The above mentioned default, minimum resource amounts for running WSO2 API Microgateway are based on its [official documentation](https://docs.wso2.com/display/MG301/Installation+Prerequisites#InstallationPrerequisites-MicrogatewayRuntime).
 
-##### 3. Deploy WSO2 Identity server.
+##### 3. Deploy WSO2 API Microgateway.
 
 ```
 helm install --dep-up --name <RELEASE_NAME> <HELM_HOME> --namespace <NAMESPACE>
