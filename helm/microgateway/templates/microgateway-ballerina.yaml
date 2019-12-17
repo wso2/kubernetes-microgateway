@@ -13,30 +13,18 @@
 # limitations under the License.
 
 apiVersion: v1
-kind: Service
+kind: ConfigMap
 metadata:
-  name: wso2micro-gw-service
+  name: microgateway-jmx-ballerina
   namespace : {{ .Release.Namespace }}
-  labels:
-    deployment: wso2micro-gw
-    app: wso2micro-gw
-    monitoring: {{ default "jmx" .Values.wso2.monitoring.prometheus.jmxJobName }}
-spec:
-  selector:
-    deployment: wso2micro-gw
-    app: wso2micro-gw
-  ports:
-    - name: servlet-http
-      port: 9090
-      targetPort: 9090
-      protocol: TCP
-    - name: servlet-https
-      port: 9095
-      targetPort: 9095
-      protocol: TCP
-    {{ if .Values.wso2.monitoring.enabled }}
-    - name: metrics
-      port: 2222
-      targetPort: 2222
-      protocol: TCP
-    {{ end }}
+data:
+  {{- $file := .Files }}
+  {{- range $path, $byte := .Files.Glob "confs/bin/*" }}
+  {{- $list := $path | splitList "/"}}
+  {{- $length := len $list }}
+  {{- $last := add $length -1 }}
+  {{ index $list $last }}: |-
+    {{- range $file.Lines $path }}
+      {{ . }}
+    {{- end }}
+  {{- end }}
