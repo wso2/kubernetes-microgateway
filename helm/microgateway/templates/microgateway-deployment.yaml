@@ -28,10 +28,14 @@ spec:
   selector:
     matchLabels:
       deployment: wso2micro-gw
+      app: wso2micro-gw
+      monitoring: {{ default "jmx" .Values.wso2.monitoring.prometheus.jmxJobName }}
   template:
     metadata:
       labels:
         deployment: wso2micro-gw
+        app: wso2micro-gw
+        monitoring: {{ default "jmx" .Values.wso2.monitoring.prometheus.jmxJobName }}
     spec:
       {{ if .Values.wso2.centralizedLogging.enabled }}
       initContainers:
@@ -49,6 +53,19 @@ spec:
       - name: init-elasticsearch
         image: busybox:1.31
         command: ['sh', '-c', 'echo -e "Checking for the availability of Elasticsearch Server deployment"; while ! nc -z {{ default "wso2-elasticsearch-master" .Values.wso2.centralizedLogging.logstash.elasticsearch.host }} 9200; do sleep 1; printf "-"; done; echo -e "  >> Elasticsearch server has started";']
+      {{ end }}
+      {{ if .Values.wso2.monitoring.enabled }}
+      - name: init-jmx-exporter
+        image: busybox:1.31
+        command:
+          - /bin/sh
+          - "-c"
+          - |
+            set -e
+            wget https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.12.0/jmx_prometheus_javaagent-0.12.0.jar -P /jmx-jar/
+        volumeMounts:
+          - name: shared-prometheus-jmx-jar
+            mountPath: /jmx-jar
       {{ end }}
       containers:
       - name: wso2micro-gw
@@ -94,6 +111,11 @@ spec:
           protocol: TCP
         - containerPort: 9095
           protocol: TCP
+        {{ if .Values.wso2.monitoring.enabled }}
+        - containerPort: 2222
+          protocol: TCP
+          name: metrics
+        {{ end }}
         env:
         - name: PROJECT
           value: {{ .Values.wso2.deployment.wso2microgw.projectName }}
@@ -108,6 +130,16 @@ spec:
         - name: microgateway-logging
           mountPath: /home/ballerina/init/init.sh
           subPath: init.sh
+        - name: microgateway-jmx-ballerina
+          mountPath: /home/ballerina/jmx/ballerina
+          subPath: ballerina
+        {{ if .Values.wso2.monitoring.enabled }}
+        - name: shared-prometheus-jmx-jar
+          mountPath: /home/wso2carbon/prometheus
+        - name: microgateway-prometheus-exporter-conf
+          mountPath: /home/wso2carbon/prometheus/config.yaml
+          subPath: config.yaml
+        {{ end }}
         {{ if .Values.wso2.centralizedLogging.enabled }}
         - name: shared-logs
           mountPath: home/ballerina/logs
@@ -156,6 +188,10 @@ spec:
           configMap:
             name: microgateway-logging
             defaultMode: 0777
+        - name: microgateway-jmx-ballerina
+          configMap:
+            name: microgateway-jmx-ballerina
+            defaultMode: 0777
         {{ if .Values.wso2.centralizedLogging.enabled }}
         - name: shared-logs
           emptyDir: {}
@@ -170,4 +206,14 @@ spec:
         - name: logstash-elasticsearch-creds
           secret:
             secretName: logstash-elasticsearch-creds
+        {{ end }}
+        {{ if .Values.wso2.monitoring.enabled }}
+        - name: shared-prometheus-jmx-jar
+          emptyDir: {}
+        - name: microgateway-prometheus-exporter-conf
+          configMap:
+            name: microgateway-prometheus-exporter-conf
+        - name: microgateway-bin
+          configMap:
+            name: microgateway-bin
         {{ end }}
