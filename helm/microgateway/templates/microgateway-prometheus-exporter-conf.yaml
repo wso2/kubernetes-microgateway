@@ -11,32 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+{{ if .Values.wso2.monitoring.enabled }}
 apiVersion: v1
-kind: Service
+kind: ConfigMap
 metadata:
-  name: wso2micro-gw-service
-  namespace : {{ .Release.Namespace }}
-  labels:
-    deployment: wso2micro-gw
-    app: wso2micro-gw
-    monitoring: {{ default "jmx" .Values.wso2.monitoring.prometheus.jmxJobName }}
-spec:
-  selector:
-    deployment: wso2micro-gw
-    app: wso2micro-gw
-  ports:
-    - name: servlet-http
-      port: 9090
-      targetPort: 9090
-      protocol: TCP
-    - name: servlet-https
-      port: 9095
-      targetPort: 9095
-      protocol: TCP
-    {{ if .Values.wso2.monitoring.enabled }}
-    - name: metrics
-      port: 2222
-      targetPort: 2222
-      protocol: TCP
-    {{ end }}
+    name: microgateway-prometheus-exporter-conf
+    namespace : {{ .Release.Namespace }}
+data:
+    config.yaml: |
+        startDelaySeconds: 0
+        jmxurl: service:jmx:rmi://localhost:11111/jndi/rmi://localhost:9999/jmxrmi
+        ssl: false
+        rules:
+            - pattern: ".*"
+
+{{ end }}
