@@ -18,13 +18,9 @@ metadata:
   name: microgateway-logging
   namespace : {{ .Release.Namespace }}
 data:
-  {{- $file := .Files }}
-  {{- range $path, $byte := .Files.Glob "logging/*" }}
-  {{- $list := $path | splitList "/"}}
-  {{- $length := len $list }}
-  {{- $last := add $length -1 }}
-  {{ index $list $last }}: |-
-    {{- range $file.Lines $path }}
-      {{ . }}
-    {{- end }}
-  {{- end }}
+  init.sh: |-
+    #!/bin/bash
+
+    touch /home/ballerina/wso2/logs/microgateway.log
+    /home/ballerina/wso2/bin/gateway $PROJECT.jar --b7a.config.file=/home/ballerina/conf/micro-gw.conf 2>&1 | tee -a /home/ballerina/wso2/logs/microgateway.log
+
