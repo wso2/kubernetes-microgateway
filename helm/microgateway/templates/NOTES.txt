@@ -7,10 +7,10 @@ Please follow these steps to assess Microgateway.
   kubectl get ing -n {{ .Release.Namespace }}
 
     NAME                       HOSTS                     ADDRESS        PORTS     AGE
-    wso2micro-gw-ingress       {{ .Release.Name }}       <EXTERNAL-IP>  80, 443   3m
+    wso2micro-gw-ingress       {{ .Values.wso2.deployment.wso2microgw.ingress.hostname }}       <EXTERNAL-IP>  80, 443   3m
 
 2. Add the above host as an entry in /etc/hosts file as follows:
 
-    <EXTERNAL-IP>	{{ .Release.Name }}
+    <EXTERNAL-IP>	{{ .Values.wso2.deployment.wso2microgw.ingress.hostname }}
 
-Please refer the official documentation at https://docs.wso2.com/display/MG301/API+Microgateway+Documentation for additional information on WSO2 API Microgateway.
+Please refer the official documentation at https://docs.wso2.com/display/MG310 for additional information on WSO2 API Microgateway.
