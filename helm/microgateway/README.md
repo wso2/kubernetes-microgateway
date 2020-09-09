@@ -260,19 +260,19 @@ dependencies:
 
 - name: kibana
 
-version: "7.2.1-0"
+  version: "7.2.1-0"
 
-repository: "https://helm.elastic.co"
+  repository: "https://helm.elastic.co"
 
-condition: wso2.centralizedLogging.enabled
+  condition: wso2.centralizedLogging.enabled
 
 - name: elasticsearch
 
-version: "7.2.1-0"
+  version: "7.2.1-0"
 
-repository: "https://helm.elastic.co"
+  repository: "https://helm.elastic.co"
 
-condition: wso2.centralizedLogging.enabled
+  condition: wso2.centralizedLogging.enabled
 
   
 
