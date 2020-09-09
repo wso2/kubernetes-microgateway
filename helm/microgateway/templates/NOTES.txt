@@ -13,4 +13,4 @@ Please follow these steps to assess Microgateway.
 
     <EXTERNAL-IP>	{{ .Values.wso2.deployment.wso2microgw.ingress.hostname }}
 
-Please refer the official documentation at https://docs.wso2.com/display/MG310 for additional information on WSO2 API Microgateway.
+Please refer the official documentation at https://docs.wso2.com/display/MG320 for additional information on WSO2 API Microgateway.
