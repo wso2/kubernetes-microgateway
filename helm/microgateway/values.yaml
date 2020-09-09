@@ -61,7 +61,7 @@ wso2:
           cpu: "2000m"
       ingress:
         # Hostname for ingress
-        hostname: "am.wso2.com"
+        hostname: "mgw.wso2.com"
         # Annotations for Microgateway
         annotations:
           kubernetes.io/ingress.class: "nginx"
