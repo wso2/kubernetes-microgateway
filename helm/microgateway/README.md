@@ -82,8 +82,6 @@ b. Open the `<HELM_HOME>/values.yaml` and provide the following values.
 
 
 | Parameter | Description | Default Value |
-
-|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
 | `wso2.subscription.username` | Your WSO2 Subscription username | "" |
 | `wso2.subscription.password` | Your WSO2 Subscription password | "" |
   
