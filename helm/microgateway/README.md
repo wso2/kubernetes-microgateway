@@ -1,3 +1,4 @@
+
 # Helm Chart for deployment of WSO2 API Microgateway
 
   
@@ -75,21 +76,16 @@ configurations as necessary.
   
 
 b. Open the `<HELM_HOME>/values.yaml` and provide the following values.
-
   
 
 ###### WSO2 Subscription Configurations
 
-  
 
 | Parameter | Description | Default Value |
 
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
-
 | `wso2.subscription.username` | Your WSO2 Subscription username | "" |
-
 | `wso2.subscription.password` | Your WSO2 Subscription password | "" |
-
   
 
 If you do not have active WSO2 subscription do not change the parameters `wso2.deployment.username`, `wso2.deployment.password`.
@@ -125,31 +121,18 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | Parameter | Description | Default Value |
 
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
-
 | `wso2.deployment.wso2microgw.dockerRegistry` | Docker registry of the microgateway image | "" |
-
 | `wso2.deployment.wso2microgw.imageName` | Image name for microgateway node | "" |
-
 | `wso2.deployment.wso2microgw.imageTag` | Image tag for microgateway node | "" |
-
 | `wso2.deployment.wso2microgw.replicas` | Number of replicas for microgateway node | 1 |
-
 | `wso2.deployment.wso2microgw.minReadySeconds` | Refer to [doc](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#deploymentspec-v1-apps)| 1 75 |
-
 | `wso2.deployment.wso2microgw.strategy.rollingUpdate.maxSurge` | Refer to [doc](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#deploymentstrategy-v1-apps) | 1 |
-
 | `wso2.deployment.wso2microgw.strategy.rollingUpdate.maxUnavailable` | Refer to [doc](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#deploymentstrategy-v1-apps) | 0 |
-
 | `wso2.deployment.wso2microgw.livenessProbe.initialDelaySeconds` | Initial delay for the live-ness probe for microgateway node | 40 |
-
 | `wso2.deployment.wso2microgw.livenessProbe.periodSeconds` | Period of the live-ness probe for microgateway node | 10 |
-
 | `wso2.deployment.wso2microgw.readinessProbe.initialDelaySeconds` | Initial delay for the readiness probe for microgateway node | 40 |
-
 | `wso2.deployment.wso2microgw.readinessProbe.periodSeconds` | Period of the readiness probe for microgateway node | 10 |
-
 | `wso2.deployment.wso2microgw.imagePullPolicy` | Refer to [doc](https://kubernetes.io/docs/concepts/containers/images#updating-images) | Always |
-
 | `wso2.deployment.wso2microgw.resources.requests.memory` | The minimum amount of memory that should be allocated for a Pod | 1Gi |
 
 | `wso2.deployment.wso2microgw.resources.requests.cpu` | The minimum amount of CPU that should be allocated for a Pod | 2000m |
