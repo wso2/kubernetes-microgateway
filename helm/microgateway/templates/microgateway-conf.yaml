@@ -17,14 +17,80 @@ kind: ConfigMap
 metadata:
   name: microgateway-conf
   namespace : {{ .Release.Namespace }}
+  {{ if .Values.wso2.deployment.wso2microgw.config }}
 data:
-  {{- $file := .Files }}
-  {{- range $path, $byte := .Files.Glob "confs/*" }}
-  {{- $list := $path | splitList "/"}}
-  {{- $length := len $list }}
-  {{- $last := add $length -1 }}
-  {{ index $list $last }}: |-
-  {{- range $file.Lines $path }}
-    {{ . }}
+  {{- range $index, $content := .Values.wso2.deployment.wso2microgw.config }}
+  {{ $index }}: |-
+  {{ tpl $content $ | indent 4 }}
   {{- end }}
+
+  {{ else }}
+data:
+  micro-gw.conf: |-
+    [listenerConfig]
+      httpPort = 9090
+      httpsPort = 9095
+      keyStorePath = "${mgw-runtime.home}/runtime/bre/security/ballerinaKeystore.p12"
+      keyStorePassword = "ballerina"
+      trustStorePath = "${mgw-runtime.home}/runtime/bre/security/ballerinaTruststore.p12"
+      trustStorePassword = "ballerina"
+      tokenListenerPort = 9096
+
+    [keyManager]
+      serverUrl = "https://localhost:9443"
+      tokenContext = "oauth2"
+      [keymanager.security.basic]
+        enabled = true
+        username = "admin"
+        password = "admin"
+
+    [[jwtTokenConfig]]
+      issuer = "https://localhost:9443/oauth2/token"
+      certificateAlias = "wso2apim310"
+      validateSubscription = false
+      consumerKeyClaim = "aud"
+
+    [analytics]
+      [analytics.fileUpload]
+        enable = false
+
+    [b7a.users]
+      [b7a.users.admin]
+        password = "d033e22ae348aeb5660fc2140aec35850c4da997"
+
+    [httpClients]
+      verifyHostname = true
+
+    [apikey.issuer]
+      [apikey.issuer.tokenConfig]
+        enabled = true
+        issuer = "https://localhost:9095/apikey"
+        certificateAlias = "ballerina"
+        validityTime = -1
+
+    # Throttling configurations
+    [throttlingConfig]
+      enabledGlobalTMEventPublishing = false
+      jmsConnectionProviderUrl = "amqp://admin:admin@carbon/carbon?brokerlist='tcp://localhost:5672'"
+      # Throttling configurations related to event publishing using a binary connection
+      [throttlingConfig.binary]
+        enabled = true
+        [[throttlingConfig.binary.URLGroup]]
+          receiverURL = "tcp://localhost:9611"
+          authURL = "ssl://localhost:9711"
+
+    [apim.eventHub]
+      enable = false
+      serviceUrl = "https://localhost:9443"
+      internalDataContext="/internal/data/v1/"
+      username="admin"
+      password="admin"
+      eventListeningEndpoints = "amqp://admin:admin@carbon/carbon?brokerlist='tcp://localhost:5672'"
+
+    [security]
+      validateSubscriptions = false
+
+    # Enable http2 for the microgateway listeners.
+    [http2]
+      enable = true
   {{- end }}

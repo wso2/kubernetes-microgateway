@@ -59,6 +59,19 @@ wso2:
           memory: "1Gi"
           # The maximum amount of CPU that should be allocated for a Pod
           cpu: "2000m"
+      ingress:
+        # Hostname for ingress
+        hostname: "mgw.wso2.com"
+        # Annotations for Microgateway
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+          nginx.ingress.kubernetes.io/affinity: "cookie"
+          nginx.ingress.kubernetes.io/session-cookie-name: "route"
+          nginx.ingress.kubernetes.io/session-cookie-hash: "sha1" 
+#     config:
+#       deployment.toml: |-
+#         # deployment configurations
   # This is the set of configurations that should be overridden in the micro-gw.conf file
   # Eg: If the value of the Key Manager server URL must be changed, the configuration must be changed as follows:
   #   [keyManager]
@@ -75,8 +88,13 @@ wso2:
   # Centralized logging is disabled by default. If it is required to enable centralized logging, please follow the instructions
   # provided in the documentation (https://github.com/wso2/kubernetes-microgateway#enabling-centralized-logging)
   centralizedLogging:
-    enabled: true
+    enabled: false
     logstash:
+#      config:
+#        logstashYaml:
+#          logstash-yml.yaml: |-
+#        logstashConf:
+#          logstash-conf.yaml: |-
       imageTag: 7.2.0
       elasticsearch:
         host: wso2-elasticsearch-master

@@ -15,8 +15,55 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-    name: logstash-conf
-    namespace : {{ .Release.Namespace }}
+  name: logstash-conf
+  namespace : {{ .Release.Namespace }}
+  {{ if .Values.wso2.centralizedLogging.logstash.config }}
 data:
-    {{- (.Files.Glob "confs/logstash/logstash.conf").AsConfig | nindent 2 }}
+  {{- range $index, $content := .Values.wso2.centralizedLogging.logstash.config.logstashConf }}
+  {{ $index }}: |-
+  {{ tpl $content $ | indent 4 }}
+  {{- end }}
+
+  {{ else }}
+data:
+  logstash.conf: |-
+    input {
+        file {
+            add_field => {
+                instance_name => "${NODE_ID}"
+                instance_IP => "${NODE_IP}"
+            }
+            type => "wso2"
+            path => [ '/usr/share/logstash/wso2-logs/microgw.log' ]
+            sincedb_path => "/usr/share/logstash/wso2-logs/sincedb"
+            start_position => "beginning"
+            mode => "tail"
+            codec => multiline {
+                pattern => "^\d{4}-\d{1,2}-\d{1,2}"
+                negate => true
+                what => "previous"
+            }
+        }
+    }
+
+    filter {
+        if [type] == "wso2" {
+            grok {
+                match => [ "message", "%{TIMESTAMP_ISO8601:logdate}%{SPACE}%{LOGLEVEL:level}%{SPACE}%{SPACE}\[%{GREEDYDATA:module}\]%{SPACE}-%{SPACE}%{GREEDYDATA:message}" ]
+            }
+            date {
+                match => [ "logdate", "YYYY-MM-dd HH:mm:ss,SSS" ]
+            }
+        }
+    }
+
+    output {
+        elasticsearch {
+        hosts => "${ELASTICSEARCH_HOST}"
+        user => "${ELASTICSEARCH_USERNAME}"
+        password => "${ELASTICSEARCH_PASSWORD}"
+        index => "${NODE_ID}-${NODE_IP}-%{+YYYY.MM.dd}"
+        }
+    }  
+  {{ end }}
 {{ end }}

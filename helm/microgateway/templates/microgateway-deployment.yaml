@@ -30,6 +30,8 @@ spec:
       deployment: wso2micro-gw
   template:
     metadata:
+      annotations:
+        checksum.wso2microgw.conf: {{ include (print $.Template.BasePath "/microgateway-conf.yaml") . | sha256sum }}
       labels:
         deployment: wso2micro-gw
     spec:
