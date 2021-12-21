@@ -61,44 +61,42 @@ spec:
       containers:
         - name: choreo-connect-adapter
 {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.adapter) | indent 10 }}
+          imagePullPolicy: {{ .Values.wso2.deployment.adapter.imagePullPolicy }}
           volumeMounts:
             - mountPath: /home/wso2/security/keystore/mg.key
-              name: {{ .Values.wso2.deployment.adapter.keystore.key.secretName | default "adapter-keystore" }}
+              name: adapter-keystore-key
               readOnly: true
               {{- include "subPath" (.Values.wso2.deployment.adapter.keystore.key.subPath | default "mg.key") | nindent 14 }}
             - mountPath: /home/wso2/security/keystore/mg.pem
-              name: {{ .Values.wso2.deployment.adapter.keystore.cert.secretName | default "adapter-keystore" }}
+              name: adapter-keystore-cert
               readOnly: true
               {{- include "subPath" (.Values.wso2.deployment.adapter.keystore.cert.subPath | default "mg.pem") | nindent 14 }}
             - mountPath: /home/wso2/security/truststore/controlplane.pem
-              name: {{ .Values.wso2.deployment.adapter.truststore.controlplaneCert.secretName | default "adapter-truststore" }}
+              name: adapter-truststore-controlplane
               readOnly: true
               {{- include "subPath" (.Values.wso2.deployment.adapter.truststore.controlplaneCert.subPath | default "controlplane.pem") | nindent 14 }}
             - mountPath: /home/wso2/security/truststore/mg.pem
-              name: {{ .Values.wso2.deployment.adapter.truststore.adapterCert.secretName | default "adapter-truststore" }}
+              name: adapter-truststore-adapter
               readOnly: true
               {{- include "subPath" (.Values.wso2.deployment.adapter.truststore.adapterCert.subPath | default "mg.pem") | nindent 14 }}
             - mountPath: /home/wso2/security/truststore/consul/consul-agent-ca.pem
-              name: {{ .Values.wso2.deployment.adapter.consulTruststore.consulAgentCert.secretName | default "consul-certs" }}
+              name: consul-certs-consul-agent-ca
               readOnly: true
               {{- include "subPath" (.Values.wso2.deployment.adapter.consulTruststore.consulAgentCert.subPath | default "consul-agent-ca.pem") | nindent 14 }}
             - mountPath: /home/wso2/security/truststore/consul/local-dc-client-consul-0-key.pem
-              name: {{ .Values.wso2.deployment.adapter.consulTruststore.localDcClientConsul0Cert.secretName | default "consul-certs" }}
+              name: consul-certs-local-dc-client0-cert
               readOnly: true
-              subPath: {{- include "subPath" (.Values.wso2.deployment.adapter.consulTruststore.localDcClientConsul0Cert.subPath | default "local-dc-client-consul-0-key.pem") | nindent 14 }}
+              {{- include "subPath" (.Values.wso2.deployment.adapter.consulTruststore.localDcClientConsul0Cert.subPath | default "local-dc-client-consul-0-key.pem") | nindent 14 }}
             - mountPath: /home/wso2/security/truststore/consul/local-dc-client-consul-0.pem
-              name: {{ .Values.wso2.deployment.adapter.consulTruststore.localDcClientConsul0Key.secretName | default "consul-certs" }}
+              name: consul-certs-local-dc-client0-key
               readOnly: true
-              subPath: {{- include "subPath" (.Values.wso2.deployment.adapter.consulTruststore.localDcClientConsul0Key.subPath | default "local-dc-client-consul-0.pem") | nindent 14 }}
-            - mountPath: /home/wso2/conf
-              name: adapter-config
-            - name: secret-mgw
-              mountPath: /mnt/csi/secret-mgw
-              readOnly: true
-            - name: secret-asb
-              mountPath: /mnt/csi/secret-asb
-              readOnly: true
-          imagePullPolicy: Always
+              {{- include "subPath" (.Values.wso2.deployment.adapter.consulTruststore.localDcClientConsul0Key.subPath | default "local-dc-client-consul-0.pem") | nindent 14 }}
+            - mountPath: /home/wso2/conf/config.toml
+              name: config-toml
+              {{ include "subPath" (.Values.wso2.deployment.adapter.configToml.subPath | default "config.toml")}}
+            - mountPath: /home/wso2/conf/log_config.toml
+              name: logconfig-toml
+              {{ include "subPath" (.Values.wso2.deployment.adapter.logconfigToml.subPath | default "log_config.toml")}}
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -115,85 +113,63 @@ spec:
             - name: ADAPTER_PUBLIC_CERT_PATH
               value: "/home/wso2/security/keystore/mg.pem"
             - name: adapter_admin_pwd
-              valueFrom:
-                secretKeyRef:
-                  key: ADAPTER_ADMIN_PASSWORD
-                  name: secret-mgw
+              value: "admin"
+              # valueFrom:
+              #   secretKeyRef:
+              #     key: ADAPTER_ADMIN_PASSWORD
+              #     name: secret-mgw
             - name: cp_admin_pwd
-              valueFrom:
-                secretKeyRef:
-                  key: SUPER_ADMIN_PSWD
-                  name: secret-apim
-            - name: ASB_CONNECTION_STRING
-              valueFrom:
-                secretKeyRef:
-                  name: secret-asb
-                  key: ASB_CONNECTION_STRING
+              value: "admin"
+              # valueFrom:
+              #   secretKeyRef:
+              #     key: SUPER_ADMIN_PSWD
+              #     name: secret-apim
           resources:
             requests:
-              memory: "500Mi"
-              cpu: "500m"
+              memory: {{ .Values.wso2.deployment.adapter.resources.requests.memory }}
+              cpu: {{ .Values.wso2.deployment.adapter.resources.requests.cpu }}
             limits:
-              memory: "750Mi"
-              cpu: "750m"
+              memory: {{ .Values.wso2.deployment.adapter.resources.limits.memory }}
+              cpu: {{ .Values.wso2.deployment.adapter.resources.limits.cpu }}
           ports:
             - containerPort: 18000
             - containerPort: 9843
           livenessProbe:
             exec:
               command: [ "sh", "check_health.sh" ]
-            initialDelaySeconds: 10
-            periodSeconds: 30
+            initialDelaySeconds: {{ .Values.wso2.deployment.adapter.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.wso2.deployment.adapter.livenessProbe.periodSeconds }}
           readinessProbe:
             exec:
               command: [ "sh", "check_health.sh" ]
-            initialDelaySeconds: 8
-            periodSeconds: 5
+            initialDelaySeconds: {{ .Values.wso2.deployment.adapter.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.wso2.deployment.adapter.readinessProbe.periodSeconds }}
       volumes:
-        - name: adapter-config
+        - name: adapter-keystore-key
+          secret:
+            secretName: {{ .Values.wso2.deployment.adapter.keystore.key.secretName | default "adapter-keystore" }}
+        - name: adapter-keystore-cert
+          secret:
+            secretName: {{ .Values.wso2.deployment.adapter.keystore.cert.secretName | default "adapter-keystore" }}
+        - name: adapter-truststore-controlplane
+          secret:
+            secretName: {{ .Values.wso2.deployment.adapter.truststore.controlplaneCert.secretName | default "adapter-truststore" }}
+        - name: adapter-truststore-adapter
+          secret:
+            secretName: {{ .Values.wso2.deployment.adapter.truststore.adapterCert.secretName | default "adapter-truststore" }}
+        - name: consul-certs-consul-agent-ca
+          secret:
+            secretName: {{ .Values.wso2.deployment.adapter.consulTruststore.consulAgentCert.secretName | default "consul-certs" }}
+        - name: consul-certs-local-dc-client0-cert
+          secret:
+            secretName: {{ .Values.wso2.deployment.adapter.consulTruststore.localDcClientConsul0Cert.secretName | default "consul-certs" }}
+        - name: consul-certs-local-dc-client0-key
+          secret:
+            secretName: {{ .Values.wso2.deployment.adapter.consulTruststore.localDcClientConsul0Key.secretName | default "consul-certs" }}
+        - name: config-toml
           configMap:
-            name: mgw-adapter-enforcer-conf
-        # - name: global-adapter-keystore-vol
-        #   configMap:
-        #     name: global-adapter-keystore-vol
-        - name: secret-mgw
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: secret-mgw
-            nodePublishSecretRef:
-              name: csi-secret-store-azure
-        - name: secret-mgw-keystore
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: secret-mgw-keystore
-            nodePublishSecretRef:
-              name: csi-secret-store-azure
-        - name: secret-mgw-truststore
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: secret-mgw-truststore
-            nodePublishSecretRef:
-              name: csi-secret-store-azure
-        - name: secret-mgw-adapter-consul
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: secret-mgw-adapter-consul
-            nodePublishSecretRef:
-              name: csi-secret-store-azure
-        - name: secret-asb
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: secret-asb
-            nodePublishSecretRef:
-              name: csi-secret-store-azure
+            name: {{ .Values.wso2.deployment.adapter.configToml.configMapName | default "config-toml"}}
+        - name: logconfig-toml
+          configMap:
+            name: {{ .Values.wso2.deployment.adapter.logconfigToml.configMapName | default "logconfig-toml"}}
       restartPolicy: Always
