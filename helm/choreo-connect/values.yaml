@@ -17,15 +17,44 @@ wso2:
   # If provided, these parameters will be used to obtain official WSO2 product Docker images available at WSO2 Private Docker Registry (https://docker.wso2.com/)
   # for this deployment
   subscription:
-    username: "xxx"
-    password: "yyy"
+    username: ""
+    password: ""
 
   deployment:
     # Container image configurations
     # If a custom image must be used, uncomment 'dockerRegistry' and provide its value
-    # dockerRegistry: ""
-    fooooooooooo: "bar"
+    # dockerRegistry: "" # TODO: same registry for all adapter, enforcer and router
+    adapter:
+      # Container image configurations
+      imageName: "choreo-connect-adapter"
+      imageTag: "1.0.0"
+      # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
+      imagePullPolicy: Always
 
+      keystore:
+        key:
+          secretName: ""
+          subPath: ""
+        cert:
+          secretName: ""
+          subPath: ""
+      truststore:
+        adapterCert:
+          secretName: ""
+          subPath: ""
+        controlplaneCert:
+          secretName: ""
+          subPath: ""
+      consulTruststore:
+        consulAgentCert:
+          secretName: " "
+          subPath: ""
+        localDcClientConsul0Key:
+          secretName: ""
+          subPath: "local-dc-client-consul-0-key.pem"
+        localDcClientConsul0Cert:
+          secretName: ""
+          subPath: "local-dc-client-consul-0.pem"
 replicaCount: 1
 
 image:
