@@ -60,3 +60,10 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Expand the name of the chart.
+*/}}
+{{- define "choreo-connect.subscriptionCredsSecretName" -}}
+{{- printf "%s-%s" (include "choreo-connect.fullname" .) "wso2-subscription-creds" | trunc 63 | trimSuffix "-" }}
+{{- end }}

@@ -15,7 +15,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "choreo-connect.fullname" . }}-adapter-deployment
+  name: {{printf "%s-%s" (include "choreo-connect.fullname" .) "adapter-deployment" | trunc 63 }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "choreo-connect.labels" . | nindent 4 }}
@@ -42,11 +42,14 @@ spec:
         {{- include "choreo-connect.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: choreo-connect-adapter
     spec:
-      {{- with .Values.imagePullSecrets }}
+      {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
-        {{- range . }}
+        {{- range .Values.imagePullSecrets }}
         - name: {{ . }}
         {{- end }}
+      {{- else if and (not (eq .Values.wso2.subscription.username "")) (not (eq .Values.wso2.subscription.password "")) }}
+      imagePullSecrets:
+        - name: {{ include "choreo-connect.subscriptionCredsSecretName" . }}
       {{- end }}
       automountServiceAccountToken: false
       securityContext:
