@@ -31,6 +31,34 @@ wso2:
       # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
       imagePullPolicy: Always
 
+      resources:
+        requests:
+          memory: "500Mi"
+          cpu: "500m"
+        limits:
+          memory: "500Mi"
+          cpu: "500m"
+
+      # Indicates whether the container is running
+      livenessProbe:
+        # Number of seconds after the container has started before liveness probes are initiated
+        initialDelaySeconds: 10
+        # How often (in seconds) to perform the probe
+        periodSeconds: 30
+      # Indicates whether the container is ready to service requests
+      readinessProbe:
+        # Number of seconds after the container has started before readiness probes are initiated
+        initialDelaySeconds: 8
+        # How often (in seconds) to perform the probe
+        periodSeconds: 5
+
+      configToml:
+        configMapName: ""
+        subPath: ""
+      logconfigToml:
+        configMapName: ""
+        subPath: ""
+      
       keystore:
         key:
           secretName: ""
@@ -51,10 +79,10 @@ wso2:
           subPath: ""
         localDcClientConsul0Key:
           secretName: ""
-          subPath: "local-dc-client-consul-0-key.pem"
+          subPath: ""
         localDcClientConsul0Cert:
           secretName: ""
-          subPath: "local-dc-client-consul-0.pem"
+          subPath: ""
 replicaCount: 1
 
 image:
