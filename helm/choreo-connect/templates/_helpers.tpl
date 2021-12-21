@@ -62,8 +62,37 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Expand the name of the chart.
+Subscriptions secret name.
 */}}
 {{- define "choreo-connect.subscriptionCredsSecretName" -}}
 {{- printf "%s-%s" (include "choreo-connect.fullname" .) "wso2-subscription-creds" | trunc 63 | trimSuffix "-" }}
 {{- end }}
+
+{{/*
+Docker image name.
+*/}}
+{{- define "image" }}
+{{- $imageName := .deployment.imageName }}
+{{- $imageTag := .deployment.imageTag | default "" }}
+{{- if or (eq .Values.wso2.subscription.username "") (eq .Values.wso2.subscription.password "") -}}
+{{- $dockerRegistry := .Values.wso2.deployment.dockerRegistry | default "wso2" }}
+image: {{ $dockerRegistry }}/{{ $imageName }}{{- if not (eq $imageTag "") }}{{- printf ":%s" $imageTag -}}{{- end }}
+{{- else }}
+{{- $dockerRegistry := .Values.wso2.deployment.dockerRegistry | default "docker.wso2.com" }}
+{{- $parts := len (split "." $imageTag) }}
+{{- if and (eq $parts 3) (eq $dockerRegistry "docker.wso2.com") }}
+image: {{ $dockerRegistry }}/{{ $imageName }}{{- if not (eq $imageTag "") }}:{{ $imageTag }}.0{{- end }}
+{{- else }}
+image: {{ $dockerRegistry }}/{{ $imageName }}{{- if not (eq $imageTag "") }}:{{ $imageTag }}{{- end }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Volume subPath.
+*/}}
+{{- define "subPath" }}
+{{- if . -}}
+subPath: {{ . }}
+{{- end -}}
+{{- end -}}

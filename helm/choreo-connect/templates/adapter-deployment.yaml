@@ -36,6 +36,7 @@ spec:
     metadata:
       {{- with .Values.podAnnotations }} # TODO: need specific annotations for adapter and others? assume common is fine.
       annotations:
+        sidecar.istio.io/inject: "false" # TODO: added sidecar inject false, check
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
@@ -55,42 +56,40 @@ spec:
       securityContext:
         runAsUser: 10500
         runAsGroup: 10500
-        seccompProfile:
-          type: RuntimeDefault
+        # seccompProfile:  # TODO: check this
+        #   type: RuntimeDefault
       containers:
         - name: choreo-connect-adapter
+{{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.adapter) | indent 10 }}
           volumeMounts:
             - mountPath: /home/wso2/security/keystore/mg.key
-              name: secret-mgw-keystore
+              name: {{ .Values.wso2.deployment.adapter.keystore.key.secretName | default "adapter-keystore" }}
               readOnly: true
-              subPath: ADAPTER_KEYSTORE_KEY
+              {{- include "subPath" (.Values.wso2.deployment.adapter.keystore.key.subPath | default "mg.key") | nindent 14 }}
             - mountPath: /home/wso2/security/keystore/mg.pem
-              name: secret-mgw-keystore
+              name: {{ .Values.wso2.deployment.adapter.keystore.cert.secretName | default "adapter-keystore" }}
               readOnly: true
-              subPath: ADAPTER_KEYSTORE_CERTIFICATE
+              {{- include "subPath" (.Values.wso2.deployment.adapter.keystore.cert.subPath | default "mg.pem") | nindent 14 }}
             - mountPath: /home/wso2/security/truststore/controlplane.pem
-              name: secret-mgw-truststore
+              name: {{ .Values.wso2.deployment.adapter.truststore.controlplaneCert.secretName | default "adapter-truststore" }}
               readOnly: true
-              subPath: CONTROL_PLANE_CERTIFICATE
+              {{- include "subPath" (.Values.wso2.deployment.adapter.truststore.controlplaneCert.subPath | default "controlplane.pem") | nindent 14 }}
             - mountPath: /home/wso2/security/truststore/mg.pem
-              name: secret-mgw-truststore
+              name: {{ .Values.wso2.deployment.adapter.truststore.adapterCert.secretName | default "adapter-truststore" }}
               readOnly: true
-              subPath: ADAPTER_TRUSTSTORE_CERTIFICATE
-            # - mountPath: /home/wso2/security/truststore/global-adapter.pem
-            #   name: global-adapter-keystore-vol
-            #   subPath: global-adapter.pem
+              {{- include "subPath" (.Values.wso2.deployment.adapter.truststore.adapterCert.subPath | default "mg.pem") | nindent 14 }}
             - mountPath: /home/wso2/security/truststore/consul/consul-agent-ca.pem
-              name: secret-mgw-adapter-consul
+              name: {{ .Values.wso2.deployment.adapter.consulTruststore.consulAgentCert.secretName | default "consul-certs" }}
               readOnly: true
-              subPath: CONSUL_AGENT_CERTIFICATE
+              {{- include "subPath" (.Values.wso2.deployment.adapter.consulTruststore.consulAgentCert.subPath | default "consul-agent-ca.pem") | nindent 14 }}
             - mountPath: /home/wso2/security/truststore/consul/local-dc-client-consul-0-key.pem
-              name: secret-mgw-adapter-consul
+              name: {{ .Values.wso2.deployment.adapter.consulTruststore.localDcClientConsul0Cert.secretName | default "consul-certs" }}
               readOnly: true
-              subPath: CONSUL_DC_CLIENT_KEY
+              subPath: {{- include "subPath" (.Values.wso2.deployment.adapter.consulTruststore.localDcClientConsul0Cert.subPath | default "local-dc-client-consul-0-key.pem") | nindent 14 }}
             - mountPath: /home/wso2/security/truststore/consul/local-dc-client-consul-0.pem
-              name: secret-mgw-adapter-consul
+              name: {{ .Values.wso2.deployment.adapter.consulTruststore.localDcClientConsul0Key.secretName | default "consul-certs" }}
               readOnly: true
-              subPath: CONSUL_DC_CLIENT_CERTIFICATE              
+              subPath: {{- include "subPath" (.Values.wso2.deployment.adapter.consulTruststore.localDcClientConsul0Key.subPath | default "local-dc-client-consul-0.pem") | nindent 14 }}
             - mountPath: /home/wso2/conf
               name: adapter-config
             - name: secret-mgw
@@ -99,7 +98,6 @@ spec:
             - name: secret-asb
               mountPath: /mnt/csi/secret-asb
               readOnly: true
-          image: choreocontrolplane.azurecr.io/choreoipaas/choreo-mgw-adapter:latest
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
