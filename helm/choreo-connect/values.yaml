@@ -23,13 +23,14 @@ wso2:
   deployment:
     # Container image configurations
     # If a custom image must be used, uncomment 'dockerRegistry' and provide its value
-    # dockerRegistry: "" # TODO: same registry for all adapter, enforcer and router
+    dockerRegistry: "" # TODO: same registry for all adapter, enforcer and router
     adapter:
       # Container image configurations
       imageName: "choreo-connect-adapter"
       imageTag: "1.0.0"
       # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
-      imagePullPolicy: Always
+      imagePullPolicy: IfNotPresent
+      replicaCount: 1
 
       resources:
         requests:
@@ -52,6 +53,8 @@ wso2:
         # How often (in seconds) to perform the probe
         periodSeconds: 5
 
+      podAnnotations: {}
+
       configToml:
         configMapName: ""
         subPath: ""
@@ -59,30 +62,107 @@ wso2:
         configMapName: ""
         subPath: ""
       
-      keystore:
-        key:
-          secretName: ""
-          subPath: ""
-        cert:
-          secretName: ""
-          subPath: ""
-      truststore:
-        adapterCert:
-          secretName: ""
-          subPath: ""
-        controlplaneCert:
-          secretName: ""
-          subPath: ""
-      consulTruststore:
-        consulAgentCert:
-          secretName: " "
-          subPath: ""
-        localDcClientConsul0Key:
-          secretName: ""
-          subPath: ""
-        localDcClientConsul0Cert:
-          secretName: ""
-          subPath: ""
+      security:
+        # private key and cert in PEM format
+        # for more details: https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
+        # override default certs from secrets
+        # keystore:
+        #   key:
+        #     secretName: "adapter-keystore"
+        #     subPath: "mg.key"
+        #   cert:
+        #     secretName: "adapter-keystore"
+        #     subPath: "mg.pem"
+        keystore: {} # using default certs, if not defined.
+        
+        # array of secrets with {secretName, subPath}
+        # override default certs from secrets
+        # truststore:
+        #   - secretName: "adapter-cert"
+        #     subPath: "mg.pem"
+        #   - secretName: "controlplane-cert"
+        #     subPath: "wso2carbon.pem"
+        truststore: [] # using default certs, if not defined.
+
+        # certs for consul integration
+        # override default certs from secrets
+        # consul:
+        #   agentCaCert:
+        #     secretName: ""
+        #     subPath: ""
+        #   clientCert:
+        #     secretName: ""
+        #     subPath: ""
+        #   clientKey:
+        #     secretName: ""
+        #     subPath: ""
+        consul: {} # using default certs, if not defined.
+
+    choreoConnect:
+      replicaCount: 1
+      podAnnotations: {}
+
+      enforcer:
+        # Container image configurations
+        imageName: "choreo-connect-enforcer"
+        imageTag: "1.0.0"
+        # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
+        imagePullPolicy: IfNotPresent
+
+        resources:
+          requests:
+            memory: "1000Mi"
+            cpu: "1000m"
+          limits:
+            memory: "1000Mi"
+            cpu: "1000m"
+        
+        # Indicates whether the container is running
+        livenessProbe:
+          # Number of seconds after the container has started before liveness probes are initiated
+          initialDelaySeconds: 10
+          # How often (in seconds) to perform the probe
+          periodSeconds: 30
+        # Indicates whether the container is ready to service requests
+        readinessProbe:
+          # Number of seconds after the container has started before readiness probes are initiated
+          initialDelaySeconds: 8
+          # How often (in seconds) to perform the probe
+          periodSeconds: 5
+        startupProbe:
+          failureThreshold: 30
+          periodSeconds: 5
+      router:
+        # Container image configurations
+        imageName: "choreo-connect-router"
+        imageTag: "1.0.0"
+        # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
+        imagePullPolicy: IfNotPresent
+
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "1000m"
+          limits:
+            memory: "500Mi"
+            cpu: "1000m"
+        
+        # Indicates whether the container is running
+        livenessProbe:
+          # Number of seconds after the container has started before liveness probes are initiated
+          initialDelaySeconds: 20
+          # How often (in seconds) to perform the probe
+          periodSeconds: 10
+        # Indicates whether the container is ready to service requests
+        readinessProbe:
+          # Number of seconds after the container has started before readiness probes are initiated
+          initialDelaySeconds: 20
+          # How often (in seconds) to perform the probe
+          periodSeconds: 5
+        startupProbe:
+          failureThreshold: 30
+          periodSeconds: 5
+
 replicaCount: 1
 
 image:

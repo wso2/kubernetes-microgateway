@@ -1,0 +1,296 @@
+# Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Deployment for router and enforcer
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{printf "%s-%s" (include "choreo-connect.fullname" .) "deployment" | trunc 63 }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "choreo-connect.labels" . | nindent 4 }}
+    app.kubernetes.io/component: choreo-connect-deployment
+  # TODO: annotations
+spec:
+  {{- if not .Values.autoscaling.enabled }} # TODO: ask from pubuduG for autoscaling
+  replicas: {{ .Values.wso2.deployment.choreoConnect.replicaCount }} 
+  {{- end }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      {{- include "choreo-connect.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: choreo-connect-deployment
+  template:
+    metadata:
+      {{- with .Values.wso2.deployment.choreoConnect.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "choreo-connect.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: choreo-connect-deployment
+    spec:
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.imagePullSecrets }}
+        - name: {{ . }}
+        {{- end }}
+      {{- else if and (not (eq .Values.wso2.subscription.username "")) (not (eq .Values.wso2.subscription.password "")) }}
+      imagePullSecrets:
+        - name: {{ include "choreo-connect.subscriptionCredsSecretName" . }}
+      {{- end }}
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: 10500
+        runAsGroup: 10500
+        seccompProfile: # TODO: check this
+          type: RuntimeDefault
+      initContainers:
+        - name: init-adapter-service
+          image: busybox:1.31
+          imagePullPolicy: Always
+          command: [ 'sh', '-c', 'echo -e "Checking for the availability of Adapter"; while ! nc -z {{ include "choreo-connect.adapterFullname" . }} 18000; do sleep 1; printf "-"; done; echo -e "  >> Adapter has started";' ]
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "100m"
+            limits:
+              memory: "100Mi"
+              cpu: "100m"
+      containers:
+        - name: choreo-connect-enforcer
+          image: {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.choreoConnect.enforcer) | indent 10 }}
+          imagePullPolicy: {{ .Values.wso2.deployment.choreoConnect.enforcer.imagePullPolicy }}
+          volumeMounts:
+            - mountPath: /home/wso2/security/truststore
+              name: enforcer-truststore # TODO: enable multiple secrets for truststore
+              readOnly: true
+            - mountPath: /home/wso2/security/keystore/mg.key
+              name: enforcer-keystore-key
+              readOnly: true
+              subPath: mg.key
+            - mountPath: /home/wso2/security/keystore/mg.pem
+              name: enforcer-keystore-cert
+              readOnly: true
+              subPath: mg.pem
+            - mountPath: /home/wso2/conf/log4j2.properties
+              subPath: log4j2.properties
+              name: enforcer-log4j2
+            - mountPath: /home/wso2/lib/dropins
+              name: enforcer-dropins
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+              add: ["NET_RAW"]
+          env:
+            - name: ENFORCER_PRIVATE_KEY_PATH
+              value: "/home/wso2/security/keystore/mg.key"
+            - name: ENFORCER_PUBLIC_CERT_PATH
+              value: "/home/wso2/security/keystore/mg.pem"
+            - name: TRUSTED_CA_CERTS_PATH
+              value: "/home/wso2/security/truststore"
+            - name: ADAPTER_HOST_NAME
+              value: "adapter"
+            - name: ADAPTER_HOST
+              value: {{ include "choreo-connect.adapterFullname" . | quote }}
+            - name: ADAPTER_XDS_PORT
+              value: "18000"
+            - name: ENFORCER_LABEL
+              value: "Default"
+            - name: ENFORCER_REGION
+              value: "UNKNOWN"
+            - name: XDS_MAX_MSG_SIZE
+              value: "4194304"
+            - name: XDS_MAX_RETRIES
+              value: "3"
+            - name: JAVA_OPTS
+              value: "-Dhttpclient.hostnameVerifier=AllowAll -Xms512m -Xmx512m -XX:MaxRAMFraction=2"
+            - name: apim_admin_pwd
+              value: "admin"
+            - name: enforcer_admin_pwd
+              value: "admin"
+            - name: tm_admin_pwd
+              value: "admin"
+              # valueFrom:
+              #   secretKeyRef:
+              #     key: SUPER_ADMIN_PSWD
+              #     name: secret-apim
+            - name: analytics_authToken
+              value: ""
+              # valueFrom:
+              #   secretKeyRef:
+              #     key: ANALYTICS_AUTH_TOKEN
+              #     name: secret-mgw-analytics
+          {{- with .Values.wso2.deployment.choreoConnect.enforcer.resources }}
+          resources:
+            requests:
+              memory: {{ .requests.memory }}
+              cpu: {{ .requests.cpu }}
+            limits:
+              memory: {{ .limits.memory }}
+              cpu: {{ .limits.cpu }}
+          {{- end }}
+          ports:
+            - containerPort: 8081
+            - containerPort: 9001
+          startupProbe:
+            exec:
+              command: [ "sh", "check_health.sh" ]
+            failureThreshold: {{ .Values.wso2.deployment.choreoConnect.enforcer.startupProbe.failureThreshold }}
+            periodSeconds: {{ .Values.wso2.deployment.choreoConnect.enforcer.startupProbe.periodSeconds }}
+          livenessProbe:
+            exec:
+              command: [ "sh", "check_health.sh" ]
+            initialDelaySeconds: {{ .Values.wso2.deployment.choreoConnect.enforcer.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.wso2.deployment.choreoConnect.enforcer.livenessProbe.periodSeconds }}
+          readinessProbe:
+            exec:
+              command: [ "sh", "check_health.sh" ]
+            initialDelaySeconds: {{ .Values.wso2.deployment.choreoConnect.enforcer.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.wso2.deployment.choreoConnect.enforcer.livenessProbe.periodSeconds }}
+        - name: choreo-connect-router
+          image: {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.choreoConnect.router) | indent 10 }}
+          imagePullPolicy: {{ .Values.wso2.deployment.choreoConnect.router.imagePullPolicy }}
+          volumeMounts:
+            - mountPath:  /home/wso2/security/keystore/mg.pem
+              name: router-keystore-key
+              readOnly: true
+              subPath: mg.pem
+            - mountPath: /home/wso2/security/keystore/mg.key
+              name: router-keystore-cert
+              readOnly: true
+              subPath: mg.key
+            - mountPath: /home/wso2/security/truststore/mg.pem
+              name: router-truststore
+              readOnly: true
+              subPath: ""
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+              add: ["NET_RAW"]
+          env:
+            - name: ROUTER_ADMIN_HOST
+              value: "0.0.0.0"
+            - name: ROUTER_ADMIN_PORT
+              value: "9000"
+            - name: ROUTER_CLUSTER
+              value: "default_cluster"
+            - name: ROUTER_LABEL
+              value: "Default"
+            - name: ROUTER_PRIVATE_KEY_PATH
+              value: "/home/wso2/security/keystore/mg.key"
+            - name: ROUTER_PUBLIC_CERT_PATH
+              value: "/home/wso2/security/keystore/mg.pem"
+            - name: ADAPTER_HOST
+              value: {{ include "choreo-connect.adapterFullname" . | quote }}
+            - name: ADAPTER_PORT
+              value: "18000"
+            - name: ADAPTER_CA_CERT_PATH
+              value: "/home/wso2/security/truststore/mg.pem"
+            - name: ENFORCER_HOST
+              value: "127.0.0.1"
+            - name: ENFORCER_PORT
+              value: "8081"
+            - name: ENFORCER_ANALYTICS_HOST
+              value: "127.0.0.1"
+            - name: ENFORCER_ANALYTICS_RECEIVER_PORT
+              value: "18090"
+            - name: ENFORCER_CA_CERT_PATH
+              value: "/home/wso2/security/truststore/mg.pem"
+            - name: CONCURRENCY
+              value: "2"
+          {{- with .Values.wso2.deployment.choreoConnect.router.resources }}
+          resources:
+            requests:
+              memory: {{ .requests.memory }}
+              cpu: {{ .requests.cpu }}
+            limits:
+              memory: {{ .limits.memory }}
+              cpu: {{ .limits.cpu }}
+          {{- end }}
+          ports:
+            - containerPort: 9000
+            - containerPort: 9095
+          startupProbe:
+            httpGet:
+              port: 9095
+              path: /ready
+              scheme: HTTPS
+              httpHeaders:
+                - name: Host
+                  value: gw.wso2.com
+            failureThreshold: {{ .Values.wso2.deployment.choreoConnect.router.startupProbe.failureThreshold }}
+            periodSeconds: {{ .Values.wso2.deployment.choreoConnect.router.startupProbe.periodSeconds }}
+          livenessProbe:
+            httpGet:
+              port: 9095
+              path: /health
+              scheme: HTTPS
+              httpHeaders:
+                - name: Host
+                  value: gw.wso2.com
+            initialDelaySeconds: {{ .Values.wso2.deployment.choreoConnect.router.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.wso2.deployment.choreoConnect.router.livenessProbe.periodSeconds }}
+          readinessProbe:
+            httpGet:
+              port: 9095
+              path: /ready
+              scheme: HTTPS
+              httpHeaders:
+                - name: Host
+                  value: gw.wso2.com
+            initialDelaySeconds: {{ .Values.wso2.deployment.choreoConnect.router.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.wso2.deployment.choreoConnect.router.livenessProbe.periodSeconds }}
+      volumes:
+        - name: enforcer-log4j2
+          configMap:
+            name: enforcer-log4j2
+        - name: enforcer-keystore-key
+          secret:
+            secretName: enforcer-keystore
+        - name: enforcer-keystore-cert
+          secret:
+            secretName: enforcer-keystore
+        - name: enforcer-truststore
+          secret:
+            secretName: enforcer-truststore
+        - name: enforcer-dropins
+          emptyDir: {}
+        - name: router-keystore-key
+          secret:
+            secretName: router-keystore
+        - name: router-keystore-cert
+          secret:
+            secretName: router-keystore
+        - name: router-truststore
+          secret:
+            secretName: router-truststore
+      restartPolicy: Always

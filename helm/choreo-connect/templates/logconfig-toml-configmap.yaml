@@ -20,7 +20,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: logconfig-toml
+  name: {{printf "%s-logconfig-toml" (include "choreo-connect.adapterFullname" .) | trunc 63}}
+  namespace: {{ .Release.Namespace }}
 data:
   log_config.toml: |
     # The logging configuration for Adapter
