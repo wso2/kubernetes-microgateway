@@ -20,7 +20,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: config-toml
+  name: {{printf "%s-config-toml" (include "choreo-connect.adapterFullname" .) | trunc 63}}
+  namespace: {{ .Release.Namespace }}
 data:
   config.toml: |
     [adapter]

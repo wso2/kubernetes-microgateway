@@ -28,7 +28,7 @@ Create chart name and version as used by the chart label.
 */}}
 {{- define "choreo-connect.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
+{{- end -}}
 
 {{/*
 Common labels
@@ -95,4 +95,11 @@ Volume subPath.
 {{- if . -}}
 subPath: {{ . }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Adapter
+*/}}
+{{- define "choreo-connect.adapterFullname" -}}
+{{ printf "%s-adapter" (include "choreo-connect.fullname" .) | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end -}}
