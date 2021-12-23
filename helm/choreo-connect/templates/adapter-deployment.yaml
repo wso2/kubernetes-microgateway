@@ -109,7 +109,7 @@ spec:
               {{ include "subPath" (.Values.wso2.deployment.adapter.configToml.subPath | default "config.toml")}}
             - mountPath: /home/wso2/conf/log_config.toml
               name: logconfig-toml
-              {{ include "subPath" (.Values.wso2.deployment.adapter.logconfigToml.subPath | default "log_config.toml")}}
+              {{ include "subPath" (.Values.wso2.deployment.adapter.logConfigToml.subPath | default "log_config.toml")}}
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -117,6 +117,10 @@ spec:
               drop:
                 - all
               add: ["NET_RAW"]
+          {{- if .Values.wso2.deployment.adapter.envFrom }}
+          envFrom:
+            {{- toYaml .Values.wso2.deployment.adapter.envFrom | nindent 12}}
+          {{- else }}
           env:
             - name: ADAPTER_PRIVATE_KEY_PATH
               value: "/home/wso2/security/keystore/mg.key"
@@ -124,16 +128,9 @@ spec:
               value: "/home/wso2/security/keystore/mg.pem"
             - name: adapter_admin_pwd
               value: "admin"
-              # valueFrom:
-              #   secretKeyRef:
-              #     key: ADAPTER_ADMIN_PASSWORD
-              #     name: secret-mgw
             - name: cp_admin_pwd
               value: "admin"
-              # valueFrom:
-              #   secretKeyRef:
-              #     key: SUPER_ADMIN_PSWD
-              #     name: secret-apim
+          {{- end }}
           {{- with .Values.wso2.deployment.adapter.resources }}
           resources:
             requests:
@@ -191,5 +188,5 @@ spec:
             name: {{ .Values.wso2.deployment.adapter.configToml.configMapName | default (printf "%s-config-toml" (include "choreo-connect.adapterFullname" .) | trunc 63)}}
         - name: logconfig-toml
           configMap:
-            name: {{ .Values.wso2.deployment.adapter.logconfigToml.configMapName | default (printf "%s-logconfig-toml" (include "choreo-connect.adapterFullname" .) | trunc 63)}}
+            name: {{ .Values.wso2.deployment.adapter.logConfigToml.configMapName | default (printf "%s-logconfig-toml" (include "choreo-connect.adapterFullname" .) | trunc 63)}}
       restartPolicy: Always
