@@ -53,14 +53,25 @@ wso2:
         # How often (in seconds) to perform the probe
         periodSeconds: 5
 
+      # key value pair of annotations for the pod
       podAnnotations: {}
 
+      # override default config toml
       configToml:
         configMapName: ""
         subPath: ""
-      logconfigToml:
+      # override default log config toml
+      logConfigToml:
         configMapName: ""
         subPath: ""
+
+      # set environment variables from ConfigMaps and secrets
+      # envFrom:
+      # - configMapRef:
+      #     name: "adapter-env-var-config-map"
+      # - secretRef:
+      #     name: "adapter-env-var-secret"
+      envFrom: [] # using default environment variables and passwords.
       
       security:
         # private key and cert in PEM format
@@ -132,6 +143,7 @@ wso2:
         startupProbe:
           failureThreshold: 30
           periodSeconds: 5
+
       router:
         # Container image configurations
         imageName: "choreo-connect-router"
