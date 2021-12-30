@@ -84,17 +84,26 @@ spec:
           image: {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.choreoConnect.enforcer) | indent 10 }}
           imagePullPolicy: {{ .Values.wso2.deployment.choreoConnect.enforcer.imagePullPolicy }}
           volumeMounts:
+            {{- if not .Values.wso2.deployment.choreoConnect.enforcer.security.truststore }}
             - mountPath: /home/wso2/security/truststore
-              name: enforcer-truststore # TODO: enable multiple secrets for truststore
+              name: enforcer-truststore
               readOnly: true
+            {{- else }}
+              {{- range .Values.wso2.deployment.choreoConnect.enforcer.security.truststore }}
+            - mountPath: /home/wso2/security/truststore{{ if .subPath  }}{{ printf "/%s" .subPath }}{{- end }}
+              name: {{ printf "%s-%s" .secretName .subPath | lower | trunc 63 | trimSuffix "-" }}
+              readOnly: true
+              subPath: {{ .subPath | quote }}
+              {{- end -}}
+            {{- end }}
             - mountPath: /home/wso2/security/keystore/mg.key
               name: enforcer-keystore-key
               readOnly: true
-              subPath: mg.key
+              subPath: {{ if .Values.wso2.deployment.choreoConnect.enforcer.security.keystore }}{{ .Values.wso2.deployment.choreoConnect.enforcer.security.keystore.key.subPath | quote }}{{ else }}"mg.key"{{ end }}
             - mountPath: /home/wso2/security/keystore/mg.pem
               name: enforcer-keystore-cert
               readOnly: true
-              subPath: mg.pem
+              subPath: {{ if .Values.wso2.deployment.choreoConnect.enforcer.security.keystore }}{{ .Values.wso2.deployment.choreoConnect.enforcer.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
             - mountPath: /home/wso2/conf/log4j2.properties
               subPath: log4j2.properties
               name: enforcer-log4j2
@@ -136,16 +145,8 @@ spec:
               value: "admin"
             - name: tm_admin_pwd
               value: "admin"
-              # valueFrom:
-              #   secretKeyRef:
-              #     key: SUPER_ADMIN_PSWD
-              #     name: secret-apim
             - name: analytics_authToken
               value: ""
-              # valueFrom:
-              #   secretKeyRef:
-              #     key: ANALYTICS_AUTH_TOKEN
-              #     name: secret-mgw-analytics
           {{- with .Values.wso2.deployment.choreoConnect.enforcer.resources }}
           resources:
             requests:
@@ -177,18 +178,26 @@ spec:
           image: {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.choreoConnect.router) | indent 10 }}
           imagePullPolicy: {{ .Values.wso2.deployment.choreoConnect.router.imagePullPolicy }}
           volumeMounts:
-            - mountPath:  /home/wso2/security/keystore/mg.pem
+            - mountPath:  /home/wso2/security/keystore/mg.key
               name: router-keystore-key
               readOnly: true
-              subPath: mg.pem
-            - mountPath: /home/wso2/security/keystore/mg.key
+              subPath: {{ if .Values.wso2.deployment.choreoConnect.router.security.keystore }}{{ .Values.wso2.deployment.choreoConnect.router.security.keystore.key.subPath | quote }}{{ else }}"mg.key"{{ end }}
+            - mountPath: /home/wso2/security/keystore/mg.pem
               name: router-keystore-cert
               readOnly: true
-              subPath: mg.key
-            - mountPath: /home/wso2/security/truststore/mg.pem
+              subPath: {{ if .Values.wso2.deployment.choreoConnect.router.security.keystore }}{{ .Values.wso2.deployment.choreoConnect.router.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
+            {{- if not .Values.wso2.deployment.choreoConnect.router.security.truststore }}
+            - mountPath: /home/wso2/security/truststore
               name: router-truststore
               readOnly: true
-              subPath: ""
+            {{- else }}
+              {{- range .Values.wso2.deployment.choreoConnect.router.security.truststore }}
+            - mountPath: /home/wso2/security/truststore{{ if .subPath  }}{{ printf "/%s" .subPath }}{{- end }}
+              name: {{ printf "%s-%s" .secretName .subPath | lower | trunc 63 | trimSuffix "-" }}
+              readOnly: true
+              subPath: {{ .subPath | quote }}
+              {{- end -}}
+            {{- end }}
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -272,25 +281,41 @@ spec:
       volumes:
         - name: enforcer-log4j2
           configMap:
-            name: enforcer-log4j2
+            name: {{ .Values.wso2.deployment.choreoConnect.enforcer.log4j2Properties.configMapName | default (printf "%s-default-log4j2" (include "choreo-connect.enforcerFullname" .) | trunc 63)}}
         - name: enforcer-keystore-key
           secret:
-            secretName: enforcer-keystore
+            secretName: {{ if .Values.wso2.deployment.choreoConnect.enforcer.security.keystore }}{{ .Values.wso2.deployment.choreoConnect.enforcer.security.keystore.key.secretName }}{{ else }}{{ printf "%s-default-keystore" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}{{ end }}
         - name: enforcer-keystore-cert
           secret:
-            secretName: enforcer-keystore
+            secretName: {{ if .Values.wso2.deployment.choreoConnect.enforcer.security.keystore }}{{ .Values.wso2.deployment.choreoConnect.enforcer.security.keystore.cert.secretName }}{{ else }}{{ printf "%s-default-keystore" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}{{ end }}
+        {{- if not .Values.wso2.deployment.choreoConnect.enforcer.security.truststore }}
         - name: enforcer-truststore
           secret:
-            secretName: enforcer-truststore
+            secretName: {{ printf "%s-default-truststore" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}
+        {{- else }}
+          {{- range .Values.wso2.deployment.choreoConnect.enforcer.security.truststore }}
+        - name: {{ printf "%s-%s" .secretName .subPath | lower | trunc 63 | trimSuffix "-" }}
+          secret:
+            secretName: {{ .secretName }}
+          {{- end }}
+        {{- end }}
         - name: enforcer-dropins
-          emptyDir: {}
+          emptyDir: {} # TODO: ask pubuduG
         - name: router-keystore-key
           secret:
-            secretName: router-keystore
+            secretName: {{ if .Values.wso2.deployment.choreoConnect.router.security.keystore }}{{ .Values.wso2.deployment.choreoConnect.router.security.keystore.key.secretName }}{{ else }}{{ printf "%s-default-keystore" (include "choreo-connect.routerFullname" .) | trunc 63 }}{{ end }}
         - name: router-keystore-cert
           secret:
-            secretName: router-keystore
+            secretName: {{ if .Values.wso2.deployment.choreoConnect.router.security.keystore }}{{ .Values.wso2.deployment.choreoConnect.router.security.keystore.cert.secretName }}{{ else }}{{ printf "%s-default-keystore" (include "choreo-connect.routerFullname" .) | trunc 63 }}{{ end }}
+        {{- if not .Values.wso2.deployment.choreoConnect.router.security.truststore }}
         - name: router-truststore
           secret:
-            secretName: router-truststore
+            secretName: {{ printf "%s-default-truststore" (include "choreo-connect.routerFullname" .) | trunc 63 }}
+        {{- else }}
+          {{- range .Values.wso2.deployment.choreoConnect.router.security.truststore }}
+        - name: {{ printf "%s-%s" .secretName .subPath | lower | trunc 63 | trimSuffix "-" }}
+          secret:
+            secretName: {{ .secretName }}
+          {{- end }}
+        {{- end }}
       restartPolicy: Always
