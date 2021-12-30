@@ -53,24 +53,31 @@ wso2:
         # How often (in seconds) to perform the probe
         periodSeconds: 5
 
-      # key value pair of annotations for the pod
+      # Key value pair of annotations for the pod
       podAnnotations: {}
 
-      # override default config toml
+      # Override default config toml
       configToml:
         configMapName: ""
         subPath: ""
-      # override default log config toml
+      # Override default log config toml
       logConfigToml:
         configMapName: ""
         subPath: ""
 
-      # set environment variables from ConfigMaps and secrets
+      # Set environment variables from ConfigMaps and secrets
       # envFrom:
       # - configMapRef:
       #     name: "adapter-env-var-config-map"
       # - secretRef:
       #     name: "adapter-env-var-secret"
+      #
+      # Default values
+      # env:
+      #   - name: adapter_admin_pwd
+      #     value: "admin"
+      #   - name: cp_admin_pwd
+      #     value: "admin"
       envFrom: [] # using default environment variables and passwords.
       
       security:
@@ -143,6 +150,33 @@ wso2:
         startupProbe:
           failureThreshold: 30
           periodSeconds: 5
+        
+        security:
+          # private key and cert in PEM format
+          # for more details: https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
+          # override default certs from secrets
+          # keystore:
+          #   key:
+          #     secretName: "adapter-keystore"
+          #     subPath: "mg.key"
+          #   cert:
+          #     secretName: "adapter-keystore"
+          #     subPath: "mg.pem"
+          keystore: {} # using default certs, if not defined.
+          
+          # array of secrets with {secretName, subPath}
+          # override default certs from secrets
+          # truststore:
+          #   - secretName: "adapter-cert"
+          #     subPath: "mg.pem"
+          #   - secretName: "controlplane-cert"
+          #     subPath: "wso2carbon.pem"
+          truststore: [] # using default certs, if not defined.
+
+        # Override default log4j2 properties toml
+        log4j2Properties:
+          configMapName: ""
+          subPath: ""
 
       router:
         # Container image configurations
@@ -174,6 +208,28 @@ wso2:
         startupProbe:
           failureThreshold: 30
           periodSeconds: 5
+
+        security:
+          # private key and cert in PEM format
+          # for more details: https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
+          # override default certs from secrets
+          # keystore:
+          #   key:
+          #     secretName: "adapter-keystore"
+          #     subPath: "mg.key"
+          #   cert:
+          #     secretName: "adapter-keystore"
+          #     subPath: "mg.pem"
+          keystore: {} # using default certs, if not defined.
+          
+          # array of secrets with {secretName, subPath}
+          # override default certs from secrets
+          # truststore:
+          #   - secretName: "adapter-cert"
+          #     subPath: "mg.pem"
+          #   - secretName: "controlplane-cert"
+          #     subPath: "wso2carbon.pem"
+          truststore: [] # using default certs, if not defined.
 
 replicaCount: 1
 

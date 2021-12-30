@@ -19,7 +19,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: enforcer-log4j2
+  name: {{ printf "%s-default-log4j2" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}
   namespace: {{ .Release.Namespace }}
 data:
   log4j2.properties: |
