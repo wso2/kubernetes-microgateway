@@ -103,3 +103,17 @@ Adapter
 {{- define "choreo-connect.adapterFullname" -}}
 {{ printf "%s-adapter" (include "choreo-connect.fullname" .) | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end -}}
+
+{{/*
+Enforcer
+*/}}
+{{- define "choreo-connect.enforcerFullname" -}}
+{{ printf "%s-enforcer" (include "choreo-connect.fullname" .) | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
+Router
+*/}}
+{{- define "choreo-connect.routerFullname" -}}
+{{ printf "%s-router" (include "choreo-connect.fullname" .) | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- end -}}

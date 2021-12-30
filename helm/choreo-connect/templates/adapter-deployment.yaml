@@ -76,14 +76,14 @@ spec:
               readOnly: true
               subPath: {{ if .Values.wso2.deployment.adapter.security.keystore }}{{ .Values.wso2.deployment.adapter.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
             {{- if not .Values.wso2.deployment.adapter.security.truststore }}
-            - mountPath: /home/wso2/security/truststore/controlplane.pem
-              name: adapter-truststore-controlplane
-              readOnly: true
-              subPath: controlplane.pem
             - mountPath: /home/wso2/security/truststore/mg.pem
-              name: adapter-truststore-adapter
+              name: adapter-truststore
               readOnly: true
               subPath: mg.pem
+            - mountPath: /home/wso2/security/truststore/controlplane.pem
+              name: adapter-truststore
+              readOnly: true
+              subPath: controlplane.pem
             {{- else }}
               {{- range .Values.wso2.deployment.adapter.security.truststore }}
             - mountPath: /home/wso2/security/truststore{{ if .subPath  }}{{ printf "/%s" .subPath }}{{- end }}
@@ -106,10 +106,10 @@ spec:
               subPath: {{ if .Values.wso2.deployment.adapter.security.consul }}{{ .Values.wso2.deployment.adapter.security.consul.clientKey.subPath | quote }}{{ else }}"local-dc-client-consul-0.pem"{{ end }}
             - mountPath: /home/wso2/conf/config.toml
               name: config-toml
-              {{ include "subPath" (.Values.wso2.deployment.adapter.configToml.subPath | default "config.toml")}}
+              subPath: {{ if .Values.wso2.deployment.adapter.configToml.configMapName }}{{ .Values.wso2.deployment.adapter.configToml.subPath | quote }}{{ else }}"config.toml"{{ end }}
             - mountPath: /home/wso2/conf/log_config.toml
               name: logconfig-toml
-              {{ include "subPath" (.Values.wso2.deployment.adapter.logConfigToml.subPath | default "log_config.toml")}}
+              subPath: {{ if .Values.wso2.deployment.adapter.logConfigToml.configMapName }}{{ .Values.wso2.deployment.adapter.logConfigToml.subPath | quote }}{{ else }}"log_config.toml"{{ end }}
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -117,20 +117,19 @@ spec:
               drop:
                 - all
               add: ["NET_RAW"]
-          {{- if .Values.wso2.deployment.adapter.envFrom }}
+          {{- with .Values.wso2.deployment.adapter.envFrom }}
           envFrom:
-            {{- toYaml .Values.wso2.deployment.adapter.envFrom | nindent 12}}
-          {{- else }}
+            {{- toYaml . | nindent 12}}
+          {{- end }}
           env:
             - name: ADAPTER_PRIVATE_KEY_PATH
               value: "/home/wso2/security/keystore/mg.key"
             - name: ADAPTER_PUBLIC_CERT_PATH
               value: "/home/wso2/security/keystore/mg.pem"
-            - name: adapter_admin_pwd
-              value: "admin"
             - name: cp_admin_pwd
               value: "admin"
-          {{- end }}
+            - name: adapter_admin_pwd
+              value: "admin"
           {{- with .Values.wso2.deployment.adapter.resources }}
           resources:
             requests:
@@ -161,10 +160,7 @@ spec:
           secret:
             secretName: {{ if .Values.wso2.deployment.adapter.security.keystore }}{{ .Values.wso2.deployment.adapter.security.keystore.cert.secretName }}{{ else }}{{printf "%s-default-keystore" (include "choreo-connect.adapterFullname" .) | trunc 63}}{{ end }}
         {{- if not .Values.wso2.deployment.adapter.security.truststore }}
-        - name: adapter-truststore-controlplane
-          secret:
-            secretName: {{ printf "%s-default-truststore" (include "choreo-connect.adapterFullname" .) | trunc 63 }}
-        - name: adapter-truststore-adapter
+        - name: adapter-truststore
           secret:
             secretName: {{ printf "%s-default-truststore" (include "choreo-connect.adapterFullname" .) | trunc 63 }}
         {{- else }}
