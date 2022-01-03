@@ -101,7 +101,7 @@ data:
           authURLs = ["ssl://apim:9711"]
 
     [analytics]
-      enabled = false
+      enabled = {{ .Values.wso2.choreoAnalytics.enabled | default "false" }}
 
     [enforcer.metrics]
       enabled = false
