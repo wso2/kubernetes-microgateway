@@ -73,20 +73,14 @@ wso2:
         configMapName: ""
         subPath: ""
 
-      # Set environment variables from ConfigMaps and secrets
-      # envFrom:
-      # - configMapRef:
-      #     name: "adapter-env-var-config-map"
-      # - secretRef:
-      #     name: "adapter-env-var-secret"
-      #
-      # Default values
-      # env:
-      #   - name: adapter_admin_pwd
-      #     value: "admin"
-      #   - name: cp_admin_pwd
-      #     value: "admin"
-      envFrom: [] # using default environment variables and passwords.
+      # - name: ENV-KEY
+      #   value: VALUE
+      # - name: SECRET_PASSWORD
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: my-secret
+      #       key: password
+      envOverride: []
       
       security:
         # private key and cert in PEM format
@@ -138,20 +132,14 @@ wso2:
         # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
         imagePullPolicy: IfNotPresent
 
-        # Set environment variables from ConfigMaps and secrets
-        # envFrom:
-        # - configMapRef:
-        #     name: "adapter-env-var-config-map"
-        # - secretRef:
-        #     name: "adapter-env-var-secret"
-        #
-        # Default values
-        # env:
-        #   - name: adapter_admin_pwd
-        #     value: "admin"
-        #   - name: cp_admin_pwd
-        #     value: "admin"
-        envFrom: [] # using default environment variables and passwords.
+        # - name: ENV-KEY
+        #   value: VALUE
+        # - name: SECRET_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: my-secret
+        #       key: password
+        envOverride: []
 
         resources:
           requests:
@@ -210,6 +198,15 @@ wso2:
         imageTag: "1.0.0"
         # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
         imagePullPolicy: IfNotPresent
+
+        # - name: ENV-KEY
+        #   value: VALUE
+        # - name: SECRET_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: my-secret
+        #       key: password
+        envOverride: []
 
         resources:
           requests:
