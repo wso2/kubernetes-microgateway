@@ -19,11 +19,19 @@ wso2:
   subscription:
     username: ""
     password: ""
+  
+  # WSO2 Choreo Analytics Parameters
+  # If provided, these parameters will be used publish analytics data to Choreo Analytics environment (https://apim.docs.wso2.com/en/latest/observe/api-manager-analytics/configure-analytics/register-for-analytics/).
+  choreoAnalytics:
+    enabled: false
+    endpoint: ""
+    onpremKey: ""
 
   deployment:
     # Container image configurations
     # If a custom image must be used, uncomment 'dockerRegistry' and provide its value
-    dockerRegistry: "" # TODO: same registry for all adapter, enforcer and router
+    dockerRegistry: ""
+
     adapter:
       # Container image configurations
       imageName: "choreo-connect-adapter"
@@ -120,12 +128,30 @@ wso2:
       replicaCount: 1
       podAnnotations: {}
 
+      # Label (environment) name of the deployment
+      labelName: "Default"
+
       enforcer:
         # Container image configurations
         imageName: "choreo-connect-enforcer"
         imageTag: "1.0.0"
         # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
         imagePullPolicy: IfNotPresent
+
+        # Set environment variables from ConfigMaps and secrets
+        # envFrom:
+        # - configMapRef:
+        #     name: "adapter-env-var-config-map"
+        # - secretRef:
+        #     name: "adapter-env-var-secret"
+        #
+        # Default values
+        # env:
+        #   - name: adapter_admin_pwd
+        #     value: "admin"
+        #   - name: cp_admin_pwd
+        #     value: "admin"
+        envFrom: [] # using default environment variables and passwords.
 
         resources:
           requests:
