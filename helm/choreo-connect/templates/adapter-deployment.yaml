@@ -117,10 +117,6 @@ spec:
               drop:
                 - all
               add: ["NET_RAW"]
-          {{- with .Values.wso2.deployment.adapter.envFrom }}
-          envFrom:
-            {{- toYaml . | nindent 12}}
-          {{- end }}
           env:
             - name: ADAPTER_PRIVATE_KEY_PATH
               value: "/home/wso2/security/keystore/mg.key"
@@ -130,6 +126,9 @@ spec:
               value: "admin"
             - name: adapter_admin_pwd
               value: "admin"
+          {{- with .Values.wso2.deployment.adapter.envOverride }}
+            {{- toYaml . | nindent 12}}
+          {{- end }}
           {{- with .Values.wso2.deployment.adapter.resources }}
           resources:
             requests:
