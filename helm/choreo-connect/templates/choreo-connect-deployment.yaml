@@ -84,18 +84,18 @@ spec:
           image: {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.choreoConnect.enforcer) | indent 10 }}
           imagePullPolicy: {{ .Values.wso2.deployment.choreoConnect.enforcer.imagePullPolicy }}
           volumeMounts:
-            {{- if not .Values.wso2.deployment.choreoConnect.enforcer.security.truststore }}
+          {{- if not .Values.wso2.deployment.choreoConnect.enforcer.security.truststore }}
             - mountPath: /home/wso2/security/truststore
               name: enforcer-truststore
               readOnly: true
-            {{- else }}
-              {{- range .Values.wso2.deployment.choreoConnect.enforcer.security.truststore }}
+          {{- else }}
+            {{- range .Values.wso2.deployment.choreoConnect.enforcer.security.truststore }}
             - mountPath: /home/wso2/security/truststore{{ if .subPath  }}{{ printf "/%s" .subPath }}{{- end }}
               name: {{ printf "%s-%s" .secretName .subPath | lower | trunc 63 | trimSuffix "-" }}
               readOnly: true
               subPath: {{ .subPath | quote }}
-              {{- end -}}
-            {{- end }}
+            {{- end -}}
+          {{- end }}
             - mountPath: /home/wso2/security/keystore/mg.key
               name: enforcer-keystore-key
               readOnly: true
@@ -129,10 +129,6 @@ spec:
               value: {{ include "choreo-connect.adapterFullname" . | quote }}
             - name: ADAPTER_XDS_PORT
               value: "18000"
-            {{- with .Values.wso2.deployment.choreoConnect.labelName }}
-            - name: ENFORCER_LABEL
-              value: {{ . }}
-            {{- end }}
             - name: ENFORCER_REGION
               value: "UNKNOWN"
             - name: XDS_MAX_MSG_SIZE
@@ -141,25 +137,31 @@ spec:
               value: "3"
             - name: JAVA_OPTS
               value: "-Dhttpclient.hostnameVerifier=AllowAll -Xms512m -Xmx512m -XX:MaxRAMFraction=2"
-            {{- with .Values.wso2.choreoAnalytics.endpoint }}
-            - name: analytics_authURL
+            - name: apim_admin_pwd
+              value: "admin"
+            - name: enforcer_admin_pwd
+              value: "admin"
+            - name: tm_admin_pwd
+              value: "admin"
+          {{- with .Values.wso2.deployment.choreoConnect.enforcer.envOverride }}
+            {{- toYaml . | nindent 12}}
+          {{- end }}
+          {{- with .Values.wso2.deployment.choreoConnect.labelName }}
+            - name: ENFORCER_LABEL
               value: {{ . }}
             {{- end }}
-            {{- if .Values.wso2.choreoAnalytics.onpremKey }}
+          {{- with .Values.wso2.choreoAnalytics.endpoint }}
+            - name: analytics_authURL
+              value: {{ . }}
+          {{- end }}
+          {{- if .Values.wso2.choreoAnalytics.onpremKey }}
             - name: analytics_authToken
               valueFrom:
                 secretKeyRef:
                   name: {{ printf "%s-analytics-auth-token" (include "choreo-connect.fullname" .) | trunc 63 }}
                   key: authToken
-            {{- end }}
-          {{- if .Values.wso2.deployment.choreoConnect.enforcer.envFrom }}
-          envFrom:
-            {{- toYaml .Values.wso2.deployment.choreoConnect.enforcer.envFrom | nindent 12}}
-          {{- else }}
-            - secretRef:
-              name: {{ printf "%s-default-passwords" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}
           {{- end }}
-          {{- with .Values.wso2.deployment.choreoConnect.enforcer.resources }}
+        {{- with .Values.wso2.deployment.choreoConnect.enforcer.resources }}
           resources:
             requests:
               memory: {{ .requests.memory }}
@@ -167,7 +169,7 @@ spec:
             limits:
               memory: {{ .limits.memory }}
               cpu: {{ .limits.cpu }}
-          {{- end }}
+        {{- end }}
           ports:
             - containerPort: 8081
             - containerPort: 9001
@@ -224,10 +226,6 @@ spec:
               value: "9000"
             - name: ROUTER_CLUSTER
               value: "default_cluster"
-            {{- with .Values.wso2.deployment.choreoConnect.labelName }}
-            - name: ROUTER_LABEL
-              value: {{ . }}
-            {{- end }}
             - name: ROUTER_PRIVATE_KEY_PATH
               value: "/home/wso2/security/keystore/mg.key"
             - name: ROUTER_PUBLIC_CERT_PATH
@@ -238,6 +236,8 @@ spec:
               value: "18000"
             - name: ADAPTER_CA_CERT_PATH
               value: "/home/wso2/security/truststore/mg.pem"
+            - name: ENFORCER_CA_CERT_PATH
+              value: "/home/wso2/security/truststore/mg.pem"
             - name: ENFORCER_HOST
               value: "127.0.0.1"
             - name: ENFORCER_PORT
@@ -246,11 +246,16 @@ spec:
               value: "127.0.0.1"
             - name: ENFORCER_ANALYTICS_RECEIVER_PORT
               value: "18090"
-            - name: ENFORCER_CA_CERT_PATH
-              value: "/home/wso2/security/truststore/mg.pem"
             - name: CONCURRENCY
               value: "2"
-          {{- with .Values.wso2.deployment.choreoConnect.router.resources }}
+          {{- with .Values.wso2.deployment.choreoConnect.enforcer.envOverride }}
+            {{- toYaml . | nindent 12}}
+          {{- end }}
+          {{- with .Values.wso2.deployment.choreoConnect.labelName }}
+            - name: ROUTER_LABEL
+              value: {{ . }}
+          {{- end }}
+        {{- with .Values.wso2.deployment.choreoConnect.router.resources }}
           resources:
             requests:
               memory: {{ .requests.memory }}
@@ -258,7 +263,7 @@ spec:
             limits:
               memory: {{ .limits.memory }}
               cpu: {{ .limits.cpu }}
-          {{- end }}
+        {{- end }}
           ports:
             - containerPort: 9000
             - containerPort: 9095
