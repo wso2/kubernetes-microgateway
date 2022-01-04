@@ -27,7 +27,7 @@ data:
     [adapter]
     [[adapter.vhostMapping]]
       environment = "Default"
-      vhost = "gw.wso2.com"
+      vhost = "{{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}"
 
     [adapter.keystore]
       certPath = "/home/wso2/security/keystore/mg.pem"
@@ -39,7 +39,7 @@ data:
     [router]
       listenerPort = 9090
       securedListenerPort = 9095
-      systemHost = "gw.wso2.com"
+      systemHost = "{{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}"
 
     [router.keystore]
       certPath = "/home/wso2/security/keystore/mg.pem"
@@ -54,22 +54,22 @@ data:
     [enforcer]
     [enforcer.jwtIssuer]
       enabled = true
-      issuer = "https://gw.wso2.com/testkey"
+      issuer = "https://{{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}/testkey"
 
     [enforcer.throttling]
       enableGlobalEventPublishing = true
-      jmsConnectionProviderURL = "amqp://admin:admin@carbon/carbon?brokerlist='tcp://wso2apim:5672'"
+      jmsConnectionProviderURL = "amqp://admin:admin@carbon/carbon?brokerlist='tcp://{{ .Values.wso2.apim.trafficManager.serviceName }}:5672'"
       [enforcer.throttling.publisher]
         username = "admin"
         password = "$env{tm_admin_pwd}"
         [[enforcer.throttling.publisher.URLGroup]]
-          receiverURLs = ["tcp://wso2apim:9611"]
-          authURLs = ["ssl://wso2apim:9711"]
+          receiverURLs = ["tcp://{{ .Values.wso2.apim.trafficManager.serviceName }}:9611"]
+          authURLs = ["ssl://{{ .Values.wso2.apim.trafficManager.serviceName }}:9711"]
 
     [enforcer.security]
     [[enforcer.security.tokenService]]
       name = "Resident Key Manager"
-      issuer = "https://apim.wso2.com/oauth2/token"
+      issuer = "https://{{ .Values.wso2.apim.controlPlane.hostName }}/oauth2/token"
       certificateAlias = "wso2carbon"
       jwksURL = ""
       validateSubscription = false
@@ -78,7 +78,7 @@ data:
 
     [[enforcer.security.tokenService]]
       name = "MGW"
-      issuer = "https://gw.wso2.com/testkey"
+      issuer = "https://{{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}/testkey"
       certificateAlias = "mgw"
       jwksURL = ""
       validateSubscription = false
@@ -87,19 +87,19 @@ data:
 
     [[enforcer.security.tokenService]]
       name = "APIM Publisher"
-      issuer = "https://apim.wso2.com/publisher"
+      issuer = "https://{{ .Values.wso2.apim.controlPlane.hostName }}/publisher"
       validateSubscription = true
       certificateFilePath = "/home/wso2/security/truststore/wso2carbon.pem"
 
     [controlPlane]
       enabled = true
-      serviceURL = "https://wso2apim:9443/"
+      serviceURL = "https://{{ .Values.wso2.apim.controlPlane.serviceName }}:9443/"
       username = "admin"
       password = "$env{cp_admin_pwd}"
       environmentLabels = ["Default"]
       skipSSLVerification = true
       [controlPlane.brokerConnectionParameters]
-      eventListeningEndpoints = ["amqp://admin:$env{cp_admin_pwd}@wso2apim:5672?retries='10'&connectdelay='30'"]
+      eventListeningEndpoints = ["amqp://admin:$env{cp_admin_pwd}@{{ .Values.wso2.apim.controlPlane.serviceName }}:5672?retries='10'&connectdelay='30'"]
 
     [analytics]
       enabled = false
