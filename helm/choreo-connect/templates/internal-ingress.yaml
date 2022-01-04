@@ -1,4 +1,4 @@
-{{- if .Values.wso2.deployment.choreoConnect.ingress.gateway.enabled }}
+{{- if .Values.wso2.deployment.choreoConnect.ingress.internal.enabled }}
 # Copyright (c) 2022, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,33 +13,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# The following ingress resource in only for the debugging purposes
+# and check router related config_dumps etc. In a production scenario
+# make sure to remove this.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ printf "%s-ingress" (include "choreo-connect.fullname" .) | trunc 63 }}
+  name: {{ printf "%s-ingress-internal" (include "choreo-connect.fullname" .) | trunc 63 }}
   namespace: {{ .Release.Namespace }}
-{{- with .Values.wso2.deployment.choreoConnect.ingress.gateway.annotations }}
+{{- with .Values.wso2.deployment.choreoConnect.ingress.internal.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
 {{- end }}
 spec:
   tls:
   - hosts:
-      - {{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}
-  {{- if .Values.wso2.deployment.choreoConnect.ingress.gateway.secretName }}
-    secretName: {{ .Values.wso2.deployment.choreoConnect.ingress.gateway.secretName }}
-  {{- else }}
-    secretName: {{ printf "%s-ingress-tls-secret" (include "choreo-connect.fullname" .) | trunc 63 }}
-  {{- end }}
+      - {{ .Values.wso2.deployment.choreoConnect.ingress.internal.hostname }}
   rules:
-    - host: {{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}
+    - host: internal.wso2.com
       http:
           paths:
             - path: /
               pathType: Prefix
               backend:
                 service:
-                  name: {{printf "%s-%s" (include "choreo-connect.fullname" .) "router-service" | trunc 63 | quote }}
+                  name: {{ printf "%s-%s" (include "choreo-connect.fullname" .) "router-service" | trunc 63 | quote }}
                   port:
-                    number: 9095
+                    number: 9000
 {{- end -}}

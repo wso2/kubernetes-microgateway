@@ -1,4 +1,4 @@
-{{- if empty .Values.wso2.deployment.adapter.configToml.configMapName}}
+{{- if and (include "choreo-connect.deploymentMode.isStandalone" .) (empty .Values.wso2.deployment.adapter.configToml.configMapName) }}
 # --------------------------------------------------------------------
 # Copyright (c) 2020, WSO2 Inc. (http://wso2.com) All Rights Reserved.
 #
