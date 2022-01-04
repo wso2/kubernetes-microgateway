@@ -98,6 +98,15 @@ subPath: {{ . }}
 {{- end -}}
 
 {{/*
+Deployment Mode
+*/}}
+{{- define "choreo-connect.deploymentMode.isStandalone" -}}
+{{- if eq (upper .Values.wso2.deployment.mode) "STANDALONE" -}}
+True
+{{- end -}}
+{{- end -}}
+
+{{/*
 Adapter
 */}}
 {{- define "choreo-connect.adapterFullname" -}}
