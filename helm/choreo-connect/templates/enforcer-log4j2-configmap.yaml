@@ -1,5 +1,5 @@
 # --------------------------------------------------------------------
-# Copyright (c) 2020, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+# Copyright (c) 2022, WSO2 Inc. (http://wso2.com) All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ data:
   log4j2.properties: |
     monitorInterval=20
 
-    appenders = ENFORCER_CONSOLE, ENFORCER_LOGFILE, ENFORCER_ACCESS_LOG
+    appenders = ENFORCER_CONSOLE
 
     appender.ENFORCER_CONSOLE.type = Console
     appender.ENFORCER_CONSOLE.name = ENFORCER_CONSOLE
@@ -75,29 +75,28 @@ data:
     # Change the log level into DEBUG to view the access logs.
     logger.enforcer-interceptors.level = INFO
     logger.enforcer-interceptors.additivity = false
-    logger.enforcer-interceptors.appenderRef.rolling.ref = ENFORCER_ACCESS_LOG
+    logger.enforcer-interceptors.appenderRef.console.ref = ENFORCER_CONSOLE
 
     # Log to console and rolling file
     logger.enforcer.name = org.wso2.choreo.connect.enforcer
     logger.enforcer.level = INFO
     logger.enforcer.additivity = false
-    logger.enforcer.appenderRef.rolling.ref = ENFORCER_LOGFILE
+    # logger.enforcer.appenderRef.rolling.ref = ENFORCER_LOGFILE
     logger.enforcer.appenderRef.console.ref = ENFORCER_CONSOLE
 
     logger.carbon-apimgt.name = org.wso2.carbon.apimgt
     logger.carbon-apimgt.level = INFO
     logger.carbon-apimgt.additivity = false
-    logger.carbon-apimgt.appenderRef.ENFORCER_LOGFILE.ref = ENFORCER_LOGFILE
+    # logger.carbon-apimgt.appenderRef.ENFORCER_LOGFILE.ref = ENFORCER_LOGFILE
     logger.carbon-apimgt.appenderRef.console.ref = ENFORCER_CONSOLE
 
     logger.io-swagger-v3.name = io.swagger.v3.parser
     logger.io-swagger-v3.level = ERROR
     logger.io-swagger-v3.additivity = false
-    logger.io-swagger-v3.appenderRef.rolling.ref = ENFORCER_LOGFILE
+    # logger.io-swagger-v3.appenderRef.rolling.ref = ENFORCER_LOGFILE
     logger.io-swagger-v3.appenderRef.console.ref = ENFORCER_CONSOLE
 
     rootLogger.level = ERROR
     rootLogger.appenderRef.ENFORCER_CONSOLE.ref = ENFORCER_CONSOLE
-    rootLogger.appenderRef.ENFORCER_LOGFILE.ref = ENFORCER_LOGFILE
-    rootLogger.appenderRef.ENFORCER_ACCESS_LOG.ref = ENFORCER_ACCESS_LOG
-
+    # rootLogger.appenderRef.ENFORCER_LOGFILE.ref = ENFORCER_LOGFILE
+    # rootLogger.appenderRef.ENFORCER_ACCESS_LOG.ref = ENFORCER_ACCESS_LOG
