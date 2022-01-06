@@ -27,7 +27,7 @@ data:
     [adapter]
     [[adapter.vhostMapping]]
       environment = "Default"
-      vhost = "{{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}"
+      vhost = "{{ .Values.wso2.ingress.gateway.hostname }}"
 
     [adapter.keystore]
       certPath = "/home/wso2/security/keystore/mg.pem"
@@ -39,7 +39,7 @@ data:
     [router]
       listenerPort = 9090
       securedListenerPort = 9095
-      systemHost = "{{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}"
+      systemHost = "{{ .Values.wso2.ingress.gateway.hostname }}"
 
     [router.keystore]
       certPath = "/home/wso2/security/keystore/mg.pem"
@@ -56,7 +56,7 @@ data:
     [enforcer]
     [enforcer.jwtIssuer]
       enabled = true
-      issuer = "https://{{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}/testkey"
+      issuer = "https://{{ .Values.wso2.ingress.gateway.hostname }}/testkey"
 
     [enforcer.throttling]
       enableGlobalEventPublishing = true
@@ -80,7 +80,7 @@ data:
 
     [[enforcer.security.tokenService]]
       name = "MGW"
-      issuer = "https://{{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}/testkey"
+      issuer = "https://{{ .Values.wso2.ingress.gateway.hostname }}/testkey"
       certificateAlias = "mgw"
       jwksURL = ""
       validateSubscription = false
@@ -98,7 +98,7 @@ data:
       serviceURL = "https://{{ .Values.wso2.apim.controlPlane.serviceName }}:9443/"
       username = "admin"
       password = "$env{cp_admin_pwd}"
-      environmentLabels = ["Default"]
+      environmentLabels = [{{ .Values.wso2.deployment.labelName | quote }}]
       skipSSLVerification = true
       [controlPlane.brokerConnectionParameters]
       eventListeningEndpoints = ["amqp://admin:$env{cp_admin_pwd}@{{ .Values.wso2.apim.controlPlane.serviceName }}:5672?retries='10'&connectdelay='30'"]

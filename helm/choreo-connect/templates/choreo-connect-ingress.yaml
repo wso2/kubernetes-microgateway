@@ -1,4 +1,4 @@
-{{- if .Values.wso2.deployment.choreoConnect.ingress.gateway.enabled }}
+{{- if .Values.wso2.ingress.gateway.enabled }}
 # Copyright (c) 2022, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,21 +18,21 @@ kind: Ingress
 metadata:
   name: {{ printf "%s-ingress" (include "choreo-connect.fullname" .) | trunc 63 }}
   namespace: {{ .Release.Namespace }}
-{{- with .Values.wso2.deployment.choreoConnect.ingress.gateway.annotations }}
+{{- with .Values.wso2.ingress.gateway.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
 {{- end }}
 spec:
   tls:
   - hosts:
-      - {{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}
-  {{- if .Values.wso2.deployment.choreoConnect.ingress.gateway.secretName }}
-    secretName: {{ .Values.wso2.deployment.choreoConnect.ingress.gateway.secretName }}
+      - {{ .Values.wso2.ingress.gateway.hostname }}
+  {{- if .Values.wso2.ingress.gateway.secretName }}
+    secretName: {{ .Values.wso2.ingress.gateway.secretName }}
   {{- else }}
     secretName: {{ printf "%s-ingress-tls-secret" (include "choreo-connect.fullname" .) | trunc 63 }}
   {{- end }}
   rules:
-    - host: {{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}
+    - host: {{ .Values.wso2.ingress.gateway.hostname }}
       http:
           paths:
             - path: /
