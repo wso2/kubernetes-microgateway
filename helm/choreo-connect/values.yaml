@@ -221,13 +221,16 @@ wso2:
           #     subPath: "mg.pem"
           keystore: {} # using default certs, if not defined.
 
-          backendJWT: # TODO: add backend JWT certs templates
-            key:
-              secretName: "backend-jwt-keystore"
-              subPath: "backend-jwt.key"
-            cert:
-              secretName: "backend-jwt-keystore"
-              subPath: "backend-jwt.pem"
+          backendJWT:
+            enabled: false
+            # keystore:
+            #   key:
+            #     secretName: "backend-jwt-keystore"
+            #     subPath: "backend-jwt.key"
+            #   cert:
+            #     secretName: "backend-jwt-keystore"
+            #     subPath: "backend-jwt.pem"
+            keystore: {}
           
           # array of secrets with {secretName, subPath}
           # override default certs from secrets
