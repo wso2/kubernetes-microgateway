@@ -1,4 +1,3 @@
-{{- if empty .Values.wso2.deployment.adapter.configToml.configMapName }}
 # --------------------------------------------------------------------
 # Copyright (c) 2022, WSO2 Inc. (http://wso2.com) All Rights Reserved.
 #
@@ -23,6 +22,10 @@ metadata:
   name: {{printf "%s-config-toml" (include "choreo-connect.adapterFullname" .) | trunc 63}}
   namespace: {{ .Release.Namespace }}
 data:
+{{- if .Values.wso2.deployment.adapter.configToml }}
+  config.toml: |
+{{ tpl .Values.wso2.deployment.adapter.configToml $ | indent 4 }}
+{{- else }}
   config.toml: |
     [adapter]
     [adapter.server]

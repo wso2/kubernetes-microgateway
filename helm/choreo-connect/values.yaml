@@ -108,24 +108,20 @@ wso2:
       podAnnotations:
         sidecar.istio.io/inject: "false"
 
-      # Override default config toml
-      configToml:
-        configMapName: ""
-        subPath: ""
-      # Override default log config toml
-      logConfigToml:
-        configMapName: ""
-        subPath: ""
+      # Define templated config.toml file, if empty using default config.toml
+      configToml: ""
+      # Define templated log_config.toml file, if empty using default log_config.toml
+      logConfigToml: ""
 
-        # envOverride:
-        #   - name: cp_admin_pwd
-        #     value: admin
-        #   - name: adapter_admin_pwd
-        #     valueFrom:
-        #       secretKeyRef:
-        #         name: my-secret
-        #         key: password
-        envOverride: []
+      # envOverride:
+      #   - name: cp_admin_pwd
+      #     value: admin
+      #   - name: adapter_admin_pwd
+      #     valueFrom:
+      #       secretKeyRef:
+      #         name: my-secret
+      #         key: password
+      envOverride: []
 
       security:
         # private key and cert in PEM format
@@ -166,6 +162,13 @@ wso2:
     gatewayRuntime:
       replicaCount: 1
       podAnnotations: {}
+
+      autoscaling:
+        enabled: true
+        minReplicas: 1
+        maxReplicas: 5
+        targetCPUUtilizationPercentage: 75
+        targetMemoryUtilizationPercentage: 75
 
       enforcer:
         # Container image configurations
@@ -374,13 +377,6 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 

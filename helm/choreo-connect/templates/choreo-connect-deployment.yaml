@@ -17,13 +17,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{printf "%s-%s" (include "choreo-connect.fullname" .) "deployment" | trunc 63 }} # TODO: Do we need "deployment" with resource names: no need resource names
+  name: {{printf "%s-%s" (include "choreo-connect.fullname" .) "gateway-runtime" | trunc 63 }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "choreo-connect.labels" . | nindent 4 }}
-    app.kubernetes.io/component: choreo-connect-deployment
+    app.kubernetes.io/component: choreo-connect-gateway-runtime
 spec:
-  {{- if not .Values.autoscaling.enabled }} # TODO: ask from pubuduG for autoscaling: yes lets have HPA
+  {{- if not .Values.wso2.deployment.gatewayRuntime.autoscaling.enabled }}
   replicas: {{ .Values.wso2.deployment.gatewayRuntime.replicaCount }}
   {{- end }}
   strategy:
@@ -34,7 +34,7 @@ spec:
   selector:
     matchLabels:
       {{- include "choreo-connect.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: choreo-connect-deployment
+      app.kubernetes.io/component: choreo-connect-gateway-runtime
   template:
     metadata:
       {{- with .Values.wso2.deployment.gatewayRuntime.podAnnotations }}
@@ -43,7 +43,7 @@ spec:
       {{- end }}
       labels:
         {{- include "choreo-connect.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: choreo-connect-deployment
+        app.kubernetes.io/component: choreo-connect-gateway-runtime
     spec:
       {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
