@@ -1,4 +1,4 @@
-{{- if .Values.wso2.deployment.choreoConnect.ingress.internal.enabled }}
+{{- if .Values.wso2.ingress.internal.enabled }}
 # Copyright (c) 2022, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,14 +21,14 @@ kind: Ingress
 metadata:
   name: {{ printf "%s-ingress-internal" (include "choreo-connect.fullname" .) | trunc 63 }}
   namespace: {{ .Release.Namespace }}
-{{- with .Values.wso2.deployment.choreoConnect.ingress.internal.annotations }}
+{{- with .Values.wso2.ingress.internal.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
 {{- end }}
 spec:
   tls:
   - hosts:
-      - {{ .Values.wso2.deployment.choreoConnect.ingress.internal.hostname }}
+      - {{ .Values.wso2.ingress.internal.hostname }}
   rules:
     - host: internal.wso2.com
       http:
