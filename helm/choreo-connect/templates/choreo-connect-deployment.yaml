@@ -1,4 +1,4 @@
-# Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+# Copyright (c) 2022, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,14 +17,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{printf "%s-%s" (include "choreo-connect.fullname" .) "deployment" | trunc 63 }}
+  name: {{printf "%s-%s" (include "choreo-connect.fullname" .) "deployment" | trunc 63 }} # TODO: Do we need "deployment" with resource names: no need resource names
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "choreo-connect.labels" . | nindent 4 }}
     app.kubernetes.io/component: choreo-connect-deployment
-  # TODO: annotations
 spec:
-  {{- if not .Values.autoscaling.enabled }} # TODO: ask from pubuduG for autoscaling
+  {{- if not .Values.autoscaling.enabled }} # TODO: ask from pubuduG for autoscaling: yes lets have HPA
   replicas: {{ .Values.wso2.deployment.choreoConnect.replicaCount }} 
   {{- end }}
   strategy:
@@ -319,7 +318,7 @@ spec:
           {{- end }}
         {{- end }}
         - name: enforcer-dropins
-          emptyDir: {} # TODO: ask pubuduG
+          emptyDir: {}
         - name: router-keystore-key
           secret:
             secretName: {{ if .Values.wso2.deployment.choreoConnect.router.security.keystore }}{{ .Values.wso2.deployment.choreoConnect.router.security.keystore.key.secretName }}{{ else }}{{ printf "%s-default-keystore" (include "choreo-connect.routerFullname" .) | trunc 63 }}{{ end }}

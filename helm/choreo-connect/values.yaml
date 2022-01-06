@@ -59,12 +59,10 @@ wso2:
   # configure APIM if the deployment.mode is "APIM_AS_CP"
   apim:
     controlPlane:
-      # TODO ask for proper name for hostName: used for config [enforcer.security.tokenService]
       hostName: am.wso2.com
       serviceName: wso2am-single-node-am-service.apim-fooo
-      # TODO: do we want to configure ports
     trafficManager:
-      serviceName: wso2am-single-node-am-service.apim-fooo
+      serviceName: "" # default to controlPlane service name value defined above if not explicitly defined.
 
   deployment:
     # Deployment option: one of "STANDALONE" or "APIM_AS_CP"
@@ -116,7 +114,8 @@ wso2:
         periodSeconds: 5
 
       # Key value pair of annotations for the pod
-      podAnnotations: {}
+      podAnnotations:
+        sidecar.istio.io/inject: "false"
 
       # Override default config toml
       configToml:
@@ -127,15 +126,16 @@ wso2:
         configMapName: ""
         subPath: ""
 
-      # - name: ENV-KEY
-      #   value: VALUE
-      # - name: SECRET_PASSWORD
-      #   valueFrom:
-      #     secretKeyRef:
-      #       name: my-secret
-      #       key: password
-      envOverride: []
-      
+        # envOverride:
+        #   - name: cp_admin_pwd
+        #     value: admin
+        #   - name: adapter_admin_pwd
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: my-secret
+        #         key: password
+        envOverride: []
+
       security:
         # private key and cert in PEM format
         # for more details: https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
@@ -172,12 +172,12 @@ wso2:
         #     subPath: ""
         consul: {} # using default certs, if not defined.
 
-    choreoConnect:
+    choreoConnect: # TODO: change name to a common: gatewayRuntime
       replicaCount: 1
       podAnnotations: {}
 
       # Label (environment) name of the deployment
-      labelName: "Default"
+      labelName: "Default" # TODO: move to deployment section
 
       ingress:
         gateway:
@@ -204,13 +204,14 @@ wso2:
         # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
         imagePullPolicy: IfNotPresent
 
-        # - name: ENV-KEY
-        #   value: VALUE
-        # - name: SECRET_PASSWORD
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: my-secret
-        #       key: password
+        # envOverride:
+        #   - name: enforcer_admin_pwd
+        #     value: admin
+        #   - name: tm_admin_pwd
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: my-secret
+        #         key: tm_password
         envOverride: []
 
         resources:
@@ -243,12 +244,20 @@ wso2:
           # override default certs from secrets
           # keystore:
           #   key:
-          #     secretName: "adapter-keystore"
+          #     secretName: "enforcer-keystore"
           #     subPath: "mg.key"
           #   cert:
-          #     secretName: "adapter-keystore"
+          #     secretName: "enforcer-keystore"
           #     subPath: "mg.pem"
           keystore: {} # using default certs, if not defined.
+
+          backendJWT: # TODO: add backend JWT certs templates
+            key:
+              secretName: "backend-jwt-keystore"
+              subPath: "backend-jwt.key"
+            cert:
+              secretName: "backend-jwt-keystore"
+              subPath: "backend-jwt.pem"
           
           # array of secrets with {secretName, subPath}
           # override default certs from secrets
@@ -271,14 +280,15 @@ wso2:
         # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
         imagePullPolicy: IfNotPresent
 
-        # - name: ENV-KEY
-        #   value: VALUE
-        # - name: SECRET_PASSWORD
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: my-secret
-        #       key: password
-        envOverride: []
+        # envOverride:
+        #   - name: CONCURRENCY
+        #     value: 2
+        #   - name: adapter_admin_pwd
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: my-secret
+        #         key: password
+        envOverride: [ ]
 
         resources:
           requests:
