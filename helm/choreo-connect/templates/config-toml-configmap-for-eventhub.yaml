@@ -1,6 +1,6 @@
 {{- if and (not (include "choreo-connect.deploymentMode.isStandalone" .)) (empty .Values.wso2.deployment.adapter.configToml.configMapName) }}
 # --------------------------------------------------------------------
-# Copyright (c) 2020, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+# Copyright (c) 2022, WSO2 Inc. (http://wso2.com) All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -51,6 +51,8 @@ data:
       verifyHostName = true
       disableSslVerification = false
 
+    # TODO: add backend jwt configs "[enforcer.jwtGenerator]"
+
     [enforcer]
     [enforcer.jwtIssuer]
       enabled = true
@@ -58,13 +60,13 @@ data:
 
     [enforcer.throttling]
       enableGlobalEventPublishing = true
-      jmsConnectionProviderURL = "amqp://admin:admin@carbon/carbon?brokerlist='tcp://{{ .Values.wso2.apim.trafficManager.serviceName }}:5672'"
+      jmsConnectionProviderURL = "amqp://admin:admin@carbon/carbon?brokerlist='tcp://{{ include "choreo-connect.apim.trafficManagerServiceName" . }}:5672'"
       [enforcer.throttling.publisher]
         username = "admin"
         password = "$env{tm_admin_pwd}"
         [[enforcer.throttling.publisher.URLGroup]]
-          receiverURLs = ["tcp://{{ .Values.wso2.apim.trafficManager.serviceName }}:9611"]
-          authURLs = ["ssl://{{ .Values.wso2.apim.trafficManager.serviceName }}:9711"]
+          receiverURLs = ["tcp://{{ include "choreo-connect.apim.trafficManagerServiceName" . }}:9611"]
+          authURLs = ["ssl://{{ include "choreo-connect.apim.trafficManagerServiceName" . }}:9711"]
 
     [enforcer.security]
     [[enforcer.security.tokenService]]
@@ -102,5 +104,5 @@ data:
       eventListeningEndpoints = ["amqp://admin:$env{cp_admin_pwd}@{{ .Values.wso2.apim.controlPlane.serviceName }}:5672?retries='10'&connectdelay='30'"]
 
     [analytics]
-      enabled = false
+      enabled = {{ .Values.wso2.choreoAnalytics.enabled | default "false" }}
 {{- end -}}
