@@ -1,4 +1,4 @@
-{{- if and (not (include "choreo-connect.deploymentMode.isStandalone" .)) (empty .Values.wso2.deployment.adapter.configToml.configMapName) }}
+{{- if empty .Values.wso2.deployment.adapter.configToml.configMapName }}
 # --------------------------------------------------------------------
 # Copyright (c) 2022, WSO2 Inc. (http://wso2.com) All Rights Reserved.
 #
@@ -25,6 +25,14 @@ metadata:
 data:
   config.toml: |
     [adapter]
+    [adapter.server]
+      enabled = true
+      port = "9843"
+      tokenPrivateKeyPath = "/home/wso2/security/keystore/mg.key"
+      [[adapter.server.users]]
+        username = "admin"
+        password = "$env{adapter_admin_pwd}"
+
     [[adapter.vhostMapping]]
       environment = "Default"
       vhost = "{{ .Values.wso2.ingress.gateway.hostname }}"
@@ -59,7 +67,7 @@ data:
       issuer = "https://{{ .Values.wso2.ingress.gateway.hostname }}/testkey"
 
     [enforcer.throttling]
-      enableGlobalEventPublishing = true
+      enableGlobalEventPublishing = {{ if (include "choreo-connect.deploymentMode.isStandalone" .) }}false{{ else }}true{{ end }}
       jmsConnectionProviderURL = "amqp://admin:admin@carbon/carbon?brokerlist='tcp://{{ include "choreo-connect.apim.trafficManagerServiceName" . }}:5672'"
       [enforcer.throttling.publisher]
         username = "admin"
@@ -94,7 +102,7 @@ data:
       certificateFilePath = "/home/wso2/security/truststore/wso2carbon.pem"
 
     [controlPlane]
-      enabled = true
+      enabled = {{ if (include "choreo-connect.deploymentMode.isStandalone" .) }}false{{ else }}true{{ end }}
       serviceURL = "https://{{ .Values.wso2.apim.controlPlane.serviceName }}:9443/"
       username = "admin"
       password = "$env{cp_admin_pwd}"
