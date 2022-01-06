@@ -22,11 +22,8 @@ metadata:
   labels:
     {{- include "choreo-connect.labels" . | nindent 4 }}
     app.kubernetes.io/component: choreo-connect-adapter
-  # TODO: annotations
 spec:
-  {{- if not .Values.autoscaling.enabled }} # TODO: ask from pubuduG for autoscaling
-  replicas: {{ .Values.wso2.deployment.adapter.replicaCount }} 
-  {{- end }}
+  replicas: {{ .Values.wso2.deployment.adapter.replicaCount }}
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -40,7 +37,6 @@ spec:
     metadata:
       {{- with .Values.wso2.deployment.adapter.podAnnotations }}
       annotations:
-        sidecar.istio.io/inject: "false" # TODO: added sidecar inject false, check
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:

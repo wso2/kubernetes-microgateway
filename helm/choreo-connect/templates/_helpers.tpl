@@ -126,3 +126,10 @@ Router
 {{- define "choreo-connect.routerFullname" -}}
 {{ printf "%s-router" (include "choreo-connect.fullname" .) | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end -}}
+
+{{/*
+Traffic manager service name
+*/}}
+{{- define "choreo-connect.apim.trafficManagerServiceName" -}}
+{{ .Values.wso2.apim.trafficManager.serviceName | default .Values.wso2.apim.controlPlane.serviceName }}
+{{- end -}}
