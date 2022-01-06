@@ -145,7 +145,7 @@ spec:
           {{- with .Values.wso2.deployment.choreoConnect.enforcer.envOverride }}
             {{- toYaml . | nindent 12}}
           {{- end }}
-          {{- with .Values.wso2.deployment.choreoConnect.labelName }}
+          {{- with .Values.wso2.deployment.labelName }}
             - name: ENFORCER_LABEL
               value: {{ . }}
             {{- end }}
@@ -250,7 +250,7 @@ spec:
           {{- with .Values.wso2.deployment.choreoConnect.enforcer.envOverride }}
             {{- toYaml . | nindent 12}}
           {{- end }}
-          {{- with .Values.wso2.deployment.choreoConnect.labelName }}
+          {{- with .Values.wso2.deployment.labelName }}
             - name: ROUTER_LABEL
               value: {{ . }}
           {{- end }}
@@ -273,7 +273,7 @@ spec:
               scheme: HTTPS
               httpHeaders:
                 - name: Host
-                  value: {{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}
+                  value: {{ .Values.wso2.ingress.gateway.hostname }}
             failureThreshold: {{ .Values.wso2.deployment.choreoConnect.router.startupProbe.failureThreshold }}
             periodSeconds: {{ .Values.wso2.deployment.choreoConnect.router.startupProbe.periodSeconds }}
           livenessProbe:
@@ -283,7 +283,7 @@ spec:
               scheme: HTTPS
               httpHeaders:
                 - name: Host
-                  value: {{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}
+                  value: {{ .Values.wso2.ingress.gateway.hostname }}
             initialDelaySeconds: {{ .Values.wso2.deployment.choreoConnect.router.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.wso2.deployment.choreoConnect.router.livenessProbe.periodSeconds }}
           readinessProbe:
@@ -293,7 +293,7 @@ spec:
               scheme: HTTPS
               httpHeaders:
                 - name: Host
-                  value: {{ .Values.wso2.deployment.choreoConnect.ingress.gateway.hostname }}
+                  value: {{ .Values.wso2.ingress.gateway.hostname }}
             initialDelaySeconds: {{ .Values.wso2.deployment.choreoConnect.router.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.wso2.deployment.choreoConnect.router.livenessProbe.periodSeconds }}
       volumes:
