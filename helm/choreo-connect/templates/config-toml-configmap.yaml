@@ -59,7 +59,10 @@ data:
       verifyHostName = true
       disableSslVerification = false
 
-    # TODO: add backend jwt configs "[enforcer.jwtGenerator]"
+    [enforcer.jwtGenerator]
+    enabled = {{ .Values.wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.enabled }}
+    publicCertificatePath = "/home/wso2/security/keystore/backend-jwt.pem"
+    privateKeyPath = "/home/wso2/security/keystore/backend-jwt.key"
 
     [enforcer]
     [enforcer.jwtIssuer]

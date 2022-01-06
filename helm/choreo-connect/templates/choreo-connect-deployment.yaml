@@ -98,13 +98,26 @@ spec:
             - mountPath: /home/wso2/security/keystore/mg.key
               name: enforcer-keystore-key
               readOnly: true
-              subPath: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore }}{{ .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.key.subPath | quote }}{{ else }}"mg.key"{{ end }}
+              subPath: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore -}}
+                {{- .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.key.subPath | quote }}{{ else }}"mg.key"{{ end }}
             - mountPath: /home/wso2/security/keystore/mg.pem
               name: enforcer-keystore-cert
               readOnly: true
-              subPath: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore }}{{ .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
+              subPath: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore -}}
+                {{- .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
+            - mountPath: /home/wso2/security/keystore/backend-jwt.key
+              name: backend-jwt-keystore-key
+              readOnly: true
+              subPath: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore -}}
+                {{- .Values.wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore.key.subPath | quote }}{{ else }}"mg.key"{{ end }}
+            - mountPath: /home/wso2/security/keystore/backend-jwt.pem
+              name: backend-jwt-keystore-cert
+              readOnly: true
+              subPath: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore -}}
+                {{- .Values.wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
             - mountPath: /home/wso2/conf/log4j2.properties
-              subPath: log4j2.properties
+              subPath: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.log4j2Properties -}}
+                {{- .Values.wso2.deployment.gatewayRuntime.enforcer.log4j2Properties.subPath | quote }}{{ else }}"log4j2.properties"{{ end }}
               name: enforcer-log4j2
             - mountPath: /home/wso2/lib/dropins
               name: enforcer-dropins
@@ -302,10 +315,24 @@ spec:
             name: {{ .Values.wso2.deployment.gatewayRuntime.enforcer.log4j2Properties.configMapName | default (printf "%s-default-log4j2" (include "choreo-connect.enforcerFullname" .) | trunc 63)}}
         - name: enforcer-keystore-key
           secret:
-            secretName: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore }}{{ .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.key.secretName }}{{ else }}{{ printf "%s-default-keystore" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}{{ end }}
+            secretName: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore -}}
+              {{- .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.key.secretName -}}
+              {{- else }}{{ printf "%s-default-keystore" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}{{ end }}
         - name: enforcer-keystore-cert
           secret:
-            secretName: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore }}{{ .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert.secretName }}{{ else }}{{ printf "%s-default-keystore" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}{{ end }}
+            secretName: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore -}}
+              {{- .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert.secretName -}}
+              {{- else }}{{ printf "%s-default-keystore" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}{{ end }}
+        - name: backend-jwt-keystore-key
+          secret:
+            secretName: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore -}}
+              {{- .Values.wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore.key.secretName -}}
+              {{- else }}{{ printf "%s-default-keystore" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}{{ end }}
+        - name: backend-jwt-keystore-cert
+          secret:
+            secretName: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore -}}
+            {{- .Values.wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore.cert.secretName -}}
+            {{- else }}{{ printf "%s-default-keystore" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}{{ end }}
         {{- if not .Values.wso2.deployment.gatewayRuntime.enforcer.security.truststore }}
         - name: enforcer-truststore
           secret:
