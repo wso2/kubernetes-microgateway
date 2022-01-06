@@ -163,7 +163,7 @@ wso2:
         #     subPath: ""
         consul: {} # using default certs, if not defined.
 
-    choreoConnect: # TODO: change name to a common: gatewayRuntime
+    gatewayRuntime:
       replicaCount: 1
       podAnnotations: {}
 
