@@ -45,9 +45,9 @@ spec:
         {{- include "choreo-connect.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: choreo-connect-gateway-runtime
     spec:
-      {{- if .Values.imagePullSecrets }}
+      {{- if .Values.wso2.deployment.imagePullSecrets }}
       imagePullSecrets:
-        {{- range .Values.imagePullSecrets }}
+        {{- range .Values.wso2.deployment.imagePullSecrets }}
         - name: {{ . }}
         {{- end }}
       {{- else if and (not (eq .Values.wso2.subscription.username "")) (not (eq .Values.wso2.subscription.password "")) }}
@@ -116,12 +116,12 @@ spec:
               subPath: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore -}}
                 {{- .Values.wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
             - mountPath: /home/wso2/conf/log4j2.properties
-              subPath: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.log4j2Properties -}}
-                {{- .Values.wso2.deployment.gatewayRuntime.enforcer.log4j2Properties.subPath | quote }}{{ else }}"log4j2.properties"{{ end }}
               name: enforcer-log4j2
+              readOnly: true
+              subPath: "log4j2.properties"
             - mountPath: /home/wso2/lib/dropins
               name: enforcer-dropins
-          {{- with .Values.wso2.deployment.gatewayRuntime.containerSecurityContext }}
+          {{- with .Values.wso2.deployment.gatewayRuntime.enforcer.containerSecurityContext }}
           securityContext:
             {{- toYaml . | nindent 12}}
           {{- end }}
@@ -221,13 +221,10 @@ spec:
               subPath: {{ .subPath | quote }}
               {{- end -}}
             {{- end }}
+          {{- with .Values.wso2.deployment.gatewayRuntime.router.containerSecurityContext }}
           securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
-              add: ["NET_RAW"]
+            {{- toYaml . | nindent 12}}
+          {{- end }}
           env:
             - name: ROUTER_ADMIN_HOST
               value: "0.0.0.0"
@@ -309,7 +306,7 @@ spec:
       volumes:
         - name: enforcer-log4j2
           configMap:
-            name: {{ .Values.wso2.deployment.gatewayRuntime.enforcer.log4j2Properties.configMapName | default (printf "%s-default-log4j2" (include "choreo-connect.enforcerFullname" .) | trunc 63)}}
+            name: {{ printf "%s-default-log4j2" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}
         - name: enforcer-keystore-key
           secret:
             secretName: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore -}}

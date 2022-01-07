@@ -22,6 +22,10 @@ metadata:
   name: {{ printf "%s-default-log4j2" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}
   namespace: {{ .Release.Namespace }}
 data:
+{{- if .Values.wso2.deployment.gatewayRuntime.enforcer.log4j2Properties }}
+  log4j2.properties: |
+{{ tpl .Values.wso2.deployment.gatewayRuntime.enforcer.log4j2Properties $ | indent 4 }}
+{{- else }}
   log4j2.properties: |
     monitorInterval=20
 
@@ -100,3 +104,4 @@ data:
     rootLogger.appenderRef.ENFORCER_CONSOLE.ref = ENFORCER_CONSOLE
     # rootLogger.appenderRef.ENFORCER_LOGFILE.ref = ENFORCER_LOGFILE
     # rootLogger.appenderRef.ENFORCER_ACCESS_LOG.ref = ENFORCER_ACCESS_LOG
+{{- end -}}
