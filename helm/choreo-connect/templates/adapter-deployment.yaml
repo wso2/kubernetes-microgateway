@@ -43,9 +43,9 @@ spec:
         {{- include "choreo-connect.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: choreo-connect-adapter
     spec:
-      {{- if .Values.imagePullSecrets }}
+      {{- if .Values.wso2.deployment.imagePullSecrets }}
       imagePullSecrets:
-        {{- range .Values.imagePullSecrets }}
+        {{- range .Values.wso2.deployment.imagePullSecrets }}
         - name: {{ . }}
         {{- end }}
       {{- else if and (not (eq .Values.wso2.subscription.username "")) (not (eq .Values.wso2.subscription.password "")) }}

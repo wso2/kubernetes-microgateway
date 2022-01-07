@@ -26,8 +26,8 @@ spec:
   tls:
   - hosts:
       - {{ .Values.wso2.ingress.gateway.hostname }}
-  {{- if .Values.wso2.ingress.gateway.secretName }}
-    secretName: {{ .Values.wso2.ingress.gateway.secretName }}
+  {{- if .Values.wso2.ingress.gateway.tlsSecretName }}
+    secretName: {{ .Values.wso2.ingress.gateway.tlsSecretName }}
   {{- else }}
     secretName: {{ printf "%s-ingress-tls-secret" (include "choreo-connect.fullname" .) | trunc 63 }}
   {{- end }}
