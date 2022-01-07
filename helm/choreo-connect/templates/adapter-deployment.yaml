@@ -52,12 +52,12 @@ spec:
       imagePullSecrets:
         - name: {{ include "choreo-connect.subscriptionCredsSecretName" . }}
       {{- end }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
       automountServiceAccountToken: false
+      {{- with .Values.wso2.deployment.adapter.podSecurityContext }}
       securityContext:
-        runAsUser: 10500
-        runAsGroup: 10500
-        # seccompProfile:  # TODO: check this
-        #   type: RuntimeDefault
+        {{- toYaml . | nindent 8}}
+      {{- end }}
       containers:
         - name: choreo-connect-adapter
           {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.adapter) | indent 10 }}
@@ -106,13 +106,10 @@ spec:
             - mountPath: /home/wso2/conf/log_config.toml
               name: logconfig-toml
               subPath: "log_config.toml"
+          {{- with .Values.wso2.deployment.adapter.containerSecurityContext }}
           securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - all
-              add: ["NET_RAW"]
+            {{- toYaml . | nindent 12}}
+          {{- end }}
           env:
             - name: ADAPTER_PRIVATE_KEY_PATH
               value: "/home/wso2/security/keystore/mg.key"
@@ -181,3 +178,15 @@ spec:
           configMap:
             name: {{printf "%s-logconfig-toml" (include "choreo-connect.adapterFullname" .) | trunc 63}}
       restartPolicy: Always
+      {{- with .Values.wso2.deployment.adapter.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.wso2.deployment.adapter.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.wso2.deployment.adapter.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

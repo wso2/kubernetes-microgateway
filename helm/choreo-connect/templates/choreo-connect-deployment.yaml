@@ -54,12 +54,12 @@ spec:
       imagePullSecrets:
         - name: {{ include "choreo-connect.subscriptionCredsSecretName" . }}
       {{- end }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
       automountServiceAccountToken: false
+      {{- with .Values.wso2.deployment.gatewayRuntime.podSecurityContext }}
       securityContext:
-        runAsUser: 10500
-        runAsGroup: 10500
-        seccompProfile: # TODO: check this
-          type: RuntimeDefault
+        {{- toYaml . | nindent 8}}
+      {{- end }}
       initContainers:
         - name: init-adapter-service
           image: busybox:1.31
@@ -121,13 +121,10 @@ spec:
               name: enforcer-log4j2
             - mountPath: /home/wso2/lib/dropins
               name: enforcer-dropins
+          {{- with .Values.wso2.deployment.gatewayRuntime.containerSecurityContext }}
           securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
-              add: ["NET_RAW"]
+            {{- toYaml . | nindent 12}}
+          {{- end }}
           env:
             - name: ENFORCER_PRIVATE_KEY_PATH
               value: "/home/wso2/security/keystore/mg.key"
@@ -364,3 +361,15 @@ spec:
           {{- end }}
         {{- end }}
       restartPolicy: Always
+      {{- with .Values.wso2.deployment.gatewayRuntime.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.wso2.deployment.gatewayRuntime.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.wso2.deployment.gatewayRuntime.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
