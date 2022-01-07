@@ -90,6 +90,34 @@ wso2:
         limits:
           memory: "500Mi"
           cpu: "500m"
+      
+      # Affinity for adapter pods assignment
+      # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+      affinity: {}
+
+      # Node labels for adapter pods assignment
+      # ref: https://kubernetes.io/docs/user-guide/node-selection/
+      nodeSelector: {}
+
+      # Tolerations for adapter pods assignment
+      # ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+      tolerations: []
+      
+      # Security context of the the adapter pod
+      # ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+      podSecurityContext:
+        runAsUser: 10500
+        runAsGroup: 10500
+      
+      # Security context of the the adapter container
+      # ref ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - all
+          add: ["NET_RAW"]
 
       # Indicates whether the container is running
       livenessProbe:
@@ -169,6 +197,34 @@ wso2:
         maxReplicas: 5
         targetCPUUtilizationPercentage: 75
         targetMemoryUtilizationPercentage: 75
+      
+      # Affinity for adapter pods assignment
+      # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+      affinity: {}
+
+      # Node labels for adapter pods assignment
+      # ref: https://kubernetes.io/docs/user-guide/node-selection/
+      nodeSelector: {}
+
+      # Tolerations for adapter pods assignment
+      # ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+      tolerations: []
+
+      # Security context of the the adapter pod
+      # ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+      podSecurityContext:
+        runAsUser: 10500
+        runAsGroup: 10500
+      
+      # Security context of the the adapter container
+      # ref ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - all
+          add: ["NET_RAW"]
 
       enforcer:
         # Container image configurations
@@ -377,9 +433,3 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
