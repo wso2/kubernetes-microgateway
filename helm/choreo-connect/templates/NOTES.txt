@@ -15,8 +15,8 @@ Please follow these configure DNS records.
 
     {{- if $adapterIngEnabled }}
 
-    choreo Connect Adapter
-    - NAME: Metadata name of the Kubernetes Ingress resource (defaults to "{{ printf "%s-ingress" (include "choreo-connect.adapterFullname" .) | trunc 63 }}")
+    Choreo Connect Adapter
+    - NAME: Metadata name of the Kubernetes Ingress resource ("{{ printf "%s-ingress" (include "choreo-connect.adapterFullname" .) | trunc 63 }}")
     - HOSTS: Hostname of the Choreo Connect Adapter ("{{ .Values.wso2.ingress.adapter.hostname }}")
     - ADDRESS: External IP (`EXTERNAL-IP`) exposing the Chore Connect Adapter to outside of the Kubernetes environment
     - PORTS: Externally exposed service ports of the Choreo Connect Adapter
@@ -25,7 +25,7 @@ Please follow these configure DNS records.
     {{- if $gatewayIngEnabled }}
 
     Choreo Connect Gateway
-    - NAME: Metadata name of the Kubernetes Ingress resource (defaults to "{{ printf "%s-ingress" (include "choreo-connect.fullname" .) | trunc 63 }}"")
+    - NAME: Metadata name of the Kubernetes Ingress resource ("{{ printf "%s-ingress" (include "choreo-connect.fullname" .) | trunc 63 }}"")
     - HOSTS: Hostname of the gateway service ("{{ .Values.wso2.ingress.gateway.hostname }}")
     - ADDRESS: External IP (`EXTERNAL-IP`) exposing the gateway to outside of the Kubernetes environment
     - PORTS: Externally exposed gateway ports of the Choreo Connect
