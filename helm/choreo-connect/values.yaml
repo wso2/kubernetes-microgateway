@@ -102,8 +102,8 @@ wso2:
       # Resources for the adapter container
       resources:
         requests:
-          memory: "500Mi"
-          cpu: "500m"
+          memory: "300Mi"
+          cpu: "300m"
         limits:
           memory: "500Mi"
           cpu: "500m"
@@ -258,8 +258,8 @@ wso2:
         # Resources for the enforcer container
         resources:
           requests:
-            memory: "1000Mi"
-            cpu: "1000m"
+            memory: "500Mi"
+            cpu: "500m"
           limits:
             memory: "1000Mi"
             cpu: "1000m"
@@ -352,8 +352,8 @@ wso2:
         # Resources for the router container
         resources:
           requests:
-            memory: "500Mi"
-            cpu: "1000m"
+            memory: "300Mi"
+            cpu: "500m"
           limits:
             memory: "500Mi"
             cpu: "1000m"
