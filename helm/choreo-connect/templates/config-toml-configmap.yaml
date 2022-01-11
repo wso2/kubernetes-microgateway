@@ -29,7 +29,11 @@ data:
   config.toml: |
     [adapter]
     [adapter.server]
-      enabled = true
+      {{- if .Values.wso2.deployment.adapter.security.adapterRestService.enabled }}
+      enabled = {{ .Values.wso2.deployment.adapter.security.adapterRestService.enabled }}
+      {{- else }}
+      enabled = {{ if (include "choreo-connect.deploymentMode.isStandalone" .) }}true{{ else }}false{{ end }}
+      {{- end }}
       port = "9843"
       tokenPrivateKeyPath = "/home/wso2/security/keystore/mg.key"
       [[adapter.server.users]]
