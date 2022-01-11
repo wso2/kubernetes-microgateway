@@ -318,25 +318,33 @@ b. Open the `<HELM_HOME>/values.yaml` and provide the following values.
 
 ###### WSO2 Subscription Configurations
 
-| Parameter                                                                   | Description                                                                               | Default Value               |
-|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
-| `wso2.subscription.username`                                                | Your WSO2 Subscription username                                                           | -                           |
-| `wso2.subscription.password`                                                | Your WSO2 Subscription password                                                           | -                           |
-| `wso2.choreoAnalytics.enabled`                                              | Chorero Analytics enabled or not                                                          | false                       |
-| `wso2.choreoAnalytics.endpoint`                                             | Choreo Analytics endpoint                                                                 | https://analytics-event-auth.choreo.dev/auth/v1  |
-| `wso2.choreoAnalytics.onpremKey`                                            | On-prem key for Choreo Analytics                                                          | -                           |
+| Parameter                                                                   | Description                                                                               | Default Value                                   |
+|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------------------|
+| `wso2.subscription.username`                                                | Your WSO2 Subscription username                                                           | -                                               |
+| `wso2.subscription.password`                                                | Your WSO2 Subscription password                                                           | -                                               |
+| `wso2.choreoAnalytics.enabled`                                              | Chorero Analytics enabled or not                                                          | false                                           |
+| `wso2.choreoAnalytics.endpoint`                                             | Choreo Analytics endpoint                                                                 | https://analytics-event-auth.choreo.dev/auth/v1 |
+| `wso2.choreoAnalytics.onpremKey`                                            | On-prem key for Choreo Analytics                                                          | -                                               |
 
 If you do not have active WSO2 subscription do not change the parameters `wso2.deployment.username`, `wso2.deployment.password`. 
 
-###### Centralized Logging Configurations
+###### Ingress Configurations
 
 | Parameter                                                                   | Description                                                                               | Default Value               |
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
-| `wso2.centralizedLogging.enabled`                                           | Enable Centralized logging for WSO2 components                                            | true                        |                                                                                         |                             |    
-| `wso2.centralizedLogging.logstash.imageTag`                                 | Logstash Sidecar container image tag                                                      | 7.2.0                       |  
-| `wso2.centralizedLogging.logstash.elasticsearch.username`                   | Elasticsearch username                                                                    | elastic                     |  
-| `wso2.centralizedLogging.logstash.elasticsearch.password`                   | Elasticsearch password                                                                    | changeme                    |  
-| `wso2.centralizedLogging.logstash.indexNodeID.wso2ISNode`                   | Elasticsearch IS Node log index ID(index name: ${NODE_ID}-${NODE_IP})                     | wso2                        |
+| `wso2.ingress.adapter.enabled`                                              | Create ingress resource for adapter Rest endpoint. Adapter ingress is disabled when the Choreo Connect Mode is "APIM_AS_CP" (i.e. not "STANDALONE") even it is enabled with this config | true                        |
+| `wso2.ingress.adapter.hostname`                                             | Hostname for adapter in STANDALONE mode                                                   | adapter.wso2.com            |
+| `wso2.ingress.adapter.tlsSecretName`                                        | TLS secret for the adapter host. Using default secret if not specified                    | -                           |
+| `wso2.ingress.adapter.annotations`                                          | Annotations for the adapter ingress                                                       | Community NGINX Ingress controller annotations |
+|                                                                             |                                                                                           |                             |
+| `wso2.ingress.gateway.enabled`                                              | If enabled, create the ingress for gateway                                                | true                        |
+| `wso2.ingress.gateway.hostname`                                             | Hostname for gateway                                                                      | gw.wso2.com                 |
+| `wso2.ingress.gateway.tlsSecretName`                                        | TLS secret for the gateway host. Using default secret if not specified                    | -                           |
+| `wso2.ingress.adapter.annotations`                                          | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
+|                                                                             |                                                                                           |                             |
+| `wso2.ingress.internal.enabled`                                             | Enable internal ingress resource only for the debugging purposes and check router related config_dumps etc. In a production scenario this should be disabled.   | false                        |
+| `wso2.ingress.internal.hostname`                                            | Hostname for gateway                                                                      | internal.wso2.com           |
+| `wso2.ingress.internal.annotations`                                         | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
 
 ###### Choreo Connect Configurations
 
