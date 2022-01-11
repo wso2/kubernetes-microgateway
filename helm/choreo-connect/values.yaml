@@ -97,9 +97,9 @@ wso2:
       # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
       imagePullPolicy: IfNotPresent
       # Pod count
-      replicaCount: 1 # TODO: do we need replica count for adapter?
+      replicaCount: 1 # TODO: do we need replica count for adapter? #TODO: add to readme
 
-      # Resources for the adapter container
+      # Resources for the adapter container # TODO: check values
       resources:
         requests:
           memory: "300Mi"
@@ -169,9 +169,24 @@ wso2:
       envOverride: []
 
       security:
+        adapterRestService:
+          # Enable or disable adapter Rest service
+          # if not defined, default to true in "STANDALONE" mode and default to false in "APIM_AS_CP" mode
+          enabled: ""
+          # Hostname for SSL verification
+          sslHostname: "adapter"
         # private key and cert in PEM format
         # for more details: https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
         # override default certs from secrets
+        keystore:
+          key:
+            secretName: "adapter-certs"
+            subPath: "tls.key"
+          cert:
+            secretName: "adapter-certs"
+            subPath: "tls.crt"
+        # keystore: {} # using default certs, if not defined.
+
         # keystore:
         #   key:
         #     secretName: "adapter-keystore"
@@ -179,16 +194,15 @@ wso2:
         #   cert:
         #     secretName: "adapter-keystore"
         #     subPath: "mg.pem"
-        keystore: {} # using default certs, if not defined.
         
         # array of secrets with {secretName, subPath}
         # override default certs from secrets
-        # truststore:
-        #   - secretName: "adapter-cert"
-        #     subPath: "mg.pem"
-        #   - secretName: "controlplane-cert"
-        #     subPath: "wso2carbon.pem"
-        truststore: [] # using default certs, if not defined.
+        truststore:
+          - secretName: "adapter-certs"
+            subPath: "tls.crt"
+          # - secretName: "controlplane-cert"
+          #   subPath: "wso2carbon.pem"
+        # truststore: [] # using default certs, if not defined.
 
         # certs for consul integration
         # override default certs from secrets
@@ -205,7 +219,11 @@ wso2:
         consul: {} # using default certs, if not defined.
 
     # Gateway runtime (enforcer + router) deployment configurations
+    # TODO: rename all files as gateway-runtime-deployment?
+    # TODO: rename names also?
     gatewayRuntime:
+      # TODO: trustedCertPath for CC gateway
+
       # Key value pair of annotations for the pod
       podAnnotations: {}
 
@@ -323,9 +341,9 @@ wso2:
           # override default certs from secrets
           # truststore:
           #   - secretName: "adapter-cert"
+          #     subPath: "tls.crt"
+          #   - secretName: "enforcer-truststore"
           #     subPath: "mg.pem"
-          #   - secretName: "controlplane-cert"
-          #     subPath: "wso2carbon.pem"
           truststore: [] # using default certs, if not defined.
 
         # Define templated log4j2.properties file, if empty using default log4j2.properties
@@ -404,9 +422,9 @@ wso2:
           # override default certs from secrets
           # truststore:
           #   - secretName: "adapter-cert"
+          #     subPath: "tls.crt"
+          #   - secretName: "router-truststore"
           #     subPath: "mg.pem"
-          #   - secretName: "controlplane-cert"
-          #     subPath: "wso2carbon.pem"
           truststore: [] # using default certs, if not defined.
 
 kubernetes:

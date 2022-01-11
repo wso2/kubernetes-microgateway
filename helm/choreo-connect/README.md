@@ -346,12 +346,32 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.ingress.internal.hostname`                                            | Hostname for gateway                                                                      | internal.wso2.com           |
 | `wso2.ingress.internal.annotations`                                         | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
 
+###### Externally installed WSO2 API Manager Control Plane Configurations
+
+| Parameter                                                                   | Description                                                                               | Default Value               |
+|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
+| `wso2.apim.controlPlane.hostName`                                           | Hostname of the control plane                                                             | am.wso2.com                 |
+| `wso2.apim.controlPlane.serviceName`                                        | K8s service name (if in another namespace, `<serviceName>.<namespace>`) of the control plane   | wso2am-single-node-am-service.apim |
+| `wso2.apim.trafficManager.serviceName`                                      | K8s service name of the traffic manager. If not defined, default to control plane service name | -                      |
+
 ###### Choreo Connect Configurations
 
 | Parameter                                                                   | Description                                                                               | Default Value               |
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
-| `wso2.deployment.wso2microgw.dockerRegistry`                                | Docker registry of the microgateway image                                                 | ""                          |
-| `wso2.deployment.wso2microgw.imageName`                                     | Image name for microgateway node                                                          | ""                          |
+| `wso2.deployment.mode`                                                      | Deployment option: one of "STANDALONE" or "APIM_AS_CP"                                    | "STANDALONE"                |
+| `wso2.deployment.labelName`                                                 | Label (environment) name of the deployment                                                | "Default"                   |
+| `wso2.deployment.dockerRegistry`                                            | If a custom image must be used, define the docker registry.                               | DockerHub registry          |
+| `wso2.deployment.imagePullSecrets`                                          | Image pull secrets to pull images from docker registry.                                   | -                           |
+
+####### Choreo Connect Adapter Configurations
+| Parameter                                                                   | Description                                                                               | Default Value               |
+| `wso2.deployment.adapter.imageName`                                         | Image name for adapter                                                                    | "choreo-connect-adapter"    |
+| `wso2.deployment.adapter.imageTag`                                          | Image tag for adapter                                                                     | "1.0.0"                     |
+| `wso2.deployment.adapter.imagePullPolicy`                                   | Image pull policy of the container                                                        | "IfNotPresent"              |
+| `wso2.deployment.adapter.resources`                                   | Resources for the adapter container                                                        | "IfNotPresent"              |
+
+
+
 | `wso2.deployment.wso2microgw.imageTag`                                      | Image tag for microgateway node                                                           | ""                          |
 | `wso2.deployment.wso2microgw.replicas`                                      | Number of replicas for microgateway node                                                  | 1                           |
 | `wso2.deployment.wso2microgw.minReadySeconds`                               | Refer to [doc](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#deploymentspec-v1-apps)| 1  75                        |

@@ -89,13 +89,43 @@ image: {{ $dockerRegistry }}/{{ $imageName }}{{- if not (eq $imageTag "") }}:{{ 
 {{- end -}}
 
 {{/*
-Volume subPath.
+Truststore Secret Volumes
 */}}
-{{- define "subPath" }}
+{{- define "choreo-connect.deployment.secretVolumeName" -}}
+{{ (regexReplaceAll "\\W+" (printf "renukaff-%s-%s-%s" .prefix .secret.secretName .secret.subPath | lower | trunc 63 ) "-" ) | trimSuffix "-"}}
+{{- end -}}
+
+{{/*
+Truststore Secret Volumes
+*/}}
+{{- define "choreo-connect.deployment.trustore.volumes" -}}
+{{- range .truststore -}}
 {{- if . -}}
-subPath: {{ . }}
+{{- /* Didn't used "nindent" when using this template, that makes new lines, hence do the indentation here */}}
+        - name: {{ include "choreo-connect.deployment.secretVolumeName" (dict "prefix" $.prefix "secret" .) }}
+          secret:
+            secretName: {{ .secretName }}
 {{- end -}}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Truststore Secret Volume Mounts
+*/}}
+{{- define "choreo-connect.deployment.trustore.mounts" -}}
+{{- range .truststore -}}
+{{- if . -}}
+{{- /* Didn't used "nindent" when using this template, that makes new lines, hence do the indentation here */ -}}
+{{- /* Appended '.pem' since there can be file extension check inside the component */}}
+            - mountPath: /home/wso2/security/truststore{{ if .subPath  }}{{ printf "/%s-%s.pem" .secretName (.subPath | replace "." "-") }}{{- end }}
+              name: {{ include "choreo-connect.deployment.secretVolumeName" (dict "prefix" $.prefix "secret" .) }}
+              readOnly: true
+              subPath: {{ .subPath | quote }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+
 
 {{/*
 Deployment Mode

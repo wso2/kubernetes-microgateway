@@ -81,13 +81,11 @@ spec:
               readOnly: true
               subPath: controlplane.pem
             {{- else }}
-              {{- range .Values.wso2.deployment.adapter.security.truststore }}
-            - mountPath: /home/wso2/security/truststore{{ if .subPath  }}{{ printf "/%s" .subPath }}{{- end }}
-              name: {{ printf "%s-%s" .secretName .subPath | lower | trunc 63 | trimSuffix "-" }}
-              readOnly: true
-              subPath: {{ .subPath | quote }}
-              {{- end -}}
+              {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" .Values.wso2.deployment.adapter.security.truststore "prefix" "adapter") }}
             {{- end }}
+          {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" (list .Values.wso2.deployment.adapter.security.keystore.cert) "prefix" "adapter") }}
+          {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert) "prefix" "adapter") }}
+          {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert) "prefix" "adapter") }}
             - mountPath: /home/wso2/security/truststore/consul/consul-agent-ca.pem
               name: consul-agent-ca-cert
               readOnly: true
@@ -156,12 +154,11 @@ spec:
           secret:
             secretName: {{ printf "%s-default-truststore" (include "choreo-connect.adapterFullname" .) | trunc 63 }}
         {{- else }}
-          {{- range .Values.wso2.deployment.adapter.security.truststore }}
-        - name: {{ printf "%s-%s" .secretName .subPath | lower | trunc 63 | trimSuffix "-" }}
-          secret:
-            secretName: {{ .secretName }}
-          {{- end }}
+          {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" .Values.wso2.deployment.adapter.security.truststore "prefix" "adpter") }}
         {{- end }}
+        {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" (list .Values.wso2.deployment.adapter.security.keystore.cert) "prefix" "adapter") }}
+        {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert) "prefix" "adapter") }}
+        {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert) "prefix" "adapter") }}
         - name: consul-agent-ca-cert
           secret:
             secretName: {{ if .Values.wso2.deployment.adapter.security.consul }}{{ .Values.wso2.deployment.adapter.security.consul.agentCaCert.secretName }}{{ else }}{{printf "%s-default-consul-certs" (include "choreo-connect.adapterFullname" .) | trunc 63}}{{ end }}
