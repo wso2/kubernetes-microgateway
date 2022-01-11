@@ -52,7 +52,7 @@ spec:
       imagePullSecrets:
         - name: {{ include "choreo-connect.subscriptionCredsSecretName" . }}
       {{- end }}
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: {{ include "choreo-connect.serviceAccountName" . }}
       automountServiceAccountToken: false
       {{- with .Values.wso2.deployment.adapter.podSecurityContext }}
       securityContext:
