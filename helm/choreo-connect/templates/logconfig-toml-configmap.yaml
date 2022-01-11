@@ -27,12 +27,10 @@ data:
 {{ tpl .Values.wso2.deployment.adapter.logConfigToml $ | indent 4 }}
 {{- else }}
   log_config.toml: |
-    # The logging configuration for Adapter
-
-    ## Adapter root Level configurations
-
-    logfile = "logs/adapter.log" # This file will be created inside adapter container.
-    logLevel = "INFO" # LogLevels can be "DEBG", "FATL", "ERRO", "WARN", "INFO", "PANC"
+    # The logging configuration file for control plane
+    ######### root Level ########
+    logfile = "/dev/null"
+    logLevel = "INFO"
 
     [rotation]
     MaxSize = 10    # In MegaBytes (MB)
@@ -54,7 +52,7 @@ data:
     # The logging configuration for Router
 
     [accessLogs]
-    enable = false
-    logfile = "/tmp/envoy.access.log" # This file will be created inside router container.
+    enable = true
+    logfile = "/dev/stdout" # This file will be created inside router container.
     format = "[%START_TIME%] '%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%' %RESPONSE_CODE% %RESPONSE_FLAGS% %BYTES_RECEIVED% %BYTES_SENT% %DURATION% %RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)% '%REQ(X-FORWARDED-FOR)%' '%REQ(USER-AGENT)%' '%REQ(X-REQUEST-ID)%' '%REQ(:AUTHORITY)%' '%UPSTREAM_HOST%'\n"
 {{- end -}}
