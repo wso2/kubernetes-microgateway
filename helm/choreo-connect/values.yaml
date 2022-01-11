@@ -29,14 +29,14 @@ wso2:
 
   ingress:
     adapter:
-      # Adapter ingress is disabled when the Choreo Connect Mode is "APIM_AS_CP" (i.e. not "STANDALONE")
+      # Create ingress resource for adapter Rest endpoint. Adapter ingress is disabled when the Choreo Connect Mode is "APIM_AS_CP" (i.e. not "STANDALONE")
       # even it is enabled with this config
       enabled: true
       # Hostname for adapter in STANDALONE mode
       hostname: adapter.wso2.com
       # TLS secret for the adapter host. Using default secret if not specified
       tlsSecretName: ""
-      # Annotations for the adapter service Ingress
+      # Annotations for the adapter Ingress
       annotations:
         kubernetes.io/ingress.class: nginx
         nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
@@ -54,9 +54,9 @@ wso2:
         nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         nginx.ingress.kubernetes.io/ssl-redirect: "false"
     internal:
-      # The following ingress resource in only for the debugging purposes
+      # Enable internal ingress resource only for the debugging purposes
       # and check router related config_dumps etc. In a production scenario this should be disabled.
-      enabled: true
+      enabled: false
       # Hostname for the internal service
       hostname: internal.wso2.com
       # Annotations for the internal service
@@ -347,7 +347,7 @@ wso2:
         #       secretKeyRef:
         #         name: my-secret
         #         key: password
-        envOverride: [ ]
+        envOverride: []
 
         # Resources for the router container
         resources:
