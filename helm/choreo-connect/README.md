@@ -166,9 +166,9 @@ NOTE:
   If you do not have sufficient resources you can adjust them setting following values when installing the chart.
   ```
   --set wso2.deployment.am.resources.requests.memory=2Gi \
-  --set wso2.deployment.am.resources.requests.cpu=2000m \
+  --set wso2.deployment.am.resources.requests.cpu=1000m \
   --set wso2.deployment.am.resources.limits.memory=2Gi \
-  --set wso2.deployment.am.resources.limits.cpu=2000m
+  --set wso2.deployment.am.resources.limits.cpu=1000m
   ```
 
 
@@ -208,7 +208,8 @@ Helm v2
 helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-1 --namespace <NAMESPACE> \
   --set wso2.deployment.mode=APIM_AS_CP \
   --set wso2.apim.controlPlane.hostName=am.wso2.com \
-  --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim
+  --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim \
+  --set wso2.ingress.gateway.hostname=gateway.am.wso2.com
 ```
 
 Helm v3
@@ -217,7 +218,8 @@ Helm v3
 helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-1 --namespace <NAMESPACE> --create-namespace \
   --set wso2.deployment.mode=APIM_AS_CP \
   --set wso2.apim.controlPlane.hostName=am.wso2.com \
-  --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim
+  --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim \
+  --set wso2.ingress.gateway.hostname=gateway.am.wso2.com
 ```
 
 NOTE:
@@ -225,18 +227,18 @@ NOTE:
     ```
     --set wso2.deployment.adapter.resources.requests.memory=300Mi \
     --set wso2.deployment.adapter.resources.requests.cpu=300m \
-    --set wso2.deployment.adapter.resources.limits.memory=500Mi \
-    --set wso2.deployment.adapter.resources.limits.cpu=500m \
-
-    --set wso2.deployment.gatewayRuntime.enforcer.resources.requests.memory=500Mi \
+    --set wso2.deployment.adapter.resources.limits.memory=300Mi \
+    --set wso2.deployment.adapter.resources.limits.cpu=300m \
+    \
+    --set wso2.deployment.gatewayRuntime.enforcer.resources.requests.memory=1000Mi \
     --set wso2.deployment.gatewayRuntime.enforcer.resources.requests.cpu=500m \
     --set wso2.deployment.gatewayRuntime.enforcer.resources.limits.memory=1000Mi \
-    --set wso2.deployment.gatewayRuntime.enforcer.resources.limits.cpu=1000m \
-
+    --set wso2.deployment.gatewayRuntime.enforcer.resources.limits.cpu=500m \
+    \
     --set wso2.deployment.gatewayRuntime.router.resources.requests.memory=300Mi \
     --set wso2.deployment.gatewayRuntime.router.resources.requests.cpu=500m \
-    --set wso2.deployment.gatewayRuntime.router.resources.limits.memory=500Mi \
-    --set wso2.deployment.gatewayRuntime.router.resources.limits.cpu=1000m
+    --set wso2.deployment.gatewayRuntime.router.resources.limits.memory=300Mi \
+    --set wso2.deployment.gatewayRuntime.router.resources.limits.cpu=500m
     ```
 
 ### 3. Choreo Analytics
@@ -276,7 +278,7 @@ kubectl get ing -n <NAMESPACE>
 
 The output under the relevant column stands for the following.
 
-Choreo Connect Adapter
+Choreo Connect Adapter (Only if you have installed Choreo Connect in "Standalone" mode)
 - NAME: Metadata name of the Kubernetes Ingress resource (defaults to "<RELEASE_NAME>-choreo-connect-adapter-ingress")
 - HOSTS: Hostname of the Choreo Connect Adapter (defaults to "adapter.wso2.com")
 - ADDRESS: External IP (`EXTERNAL-IP`) exposing the Chore Connect Adapter to outside of the Kubernetes environment
@@ -297,12 +299,17 @@ If the defined hostnames are not backed by a DNS service, for the purpose of eva
 hostnames and the external IP in the `/etc/hosts` file at the client-side.
 
 ```
-<EXTERNAL-IP> <wso2.deployment.am.ingress.management.hostname> <wso2.deployment.am.ingress.gateway.hostname>
+<EXTERNAL-IP> adapter.wso2.com gateway.am.wso2.com
 ```
 
+### 4. Access Management Consoles (If you installed WSO2 API Manager as control plane for Choreo Connect)
+
+- API Manager Publisher: [https://am.wso2.com/publisher](https://am.wso2.com/publisher)
+
+- API Manager DevPortal: [https://am.wso2.com/devportal](https://am.wso2.com/devportal)
 
 
-##### 2. Provide configurations.
+## Configuration
 
 a. The default product configurations are available at `<HELM_HOME>/confs` folder. Change the
 configurations as necessary.
@@ -313,8 +320,11 @@ b. Open the `<HELM_HOME>/values.yaml` and provide the following values.
 
 | Parameter                                                                   | Description                                                                               | Default Value               |
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
-| `wso2.subscription.username`                                                | Your WSO2 Subscription username                                                           | ""                          |
-| `wso2.subscription.password`                                                | Your WSO2 Subscription password                                                           | ""                          |
+| `wso2.subscription.username`                                                | Your WSO2 Subscription username                                                           | -                           |
+| `wso2.subscription.password`                                                | Your WSO2 Subscription password                                                           | -                           |
+| `wso2.choreoAnalytics.enabled`                                              | Chorero Analytics enabled or not                                                          | false                       |
+| `wso2.choreoAnalytics.endpoint`                                             | Choreo Analytics endpoint                                                                 | https://analytics-event-auth.choreo.dev/auth/v1  |
+| `wso2.choreoAnalytics.onpremKey`                                            | On-prem key for Choreo Analytics                                                          | -                           |
 
 If you do not have active WSO2 subscription do not change the parameters `wso2.deployment.username`, `wso2.deployment.password`. 
 
@@ -328,7 +338,7 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.centralizedLogging.logstash.elasticsearch.password`                   | Elasticsearch password                                                                    | changeme                    |  
 | `wso2.centralizedLogging.logstash.indexNodeID.wso2ISNode`                   | Elasticsearch IS Node log index ID(index name: ${NODE_ID}-${NODE_IP})                     | wso2                        |
 
-###### Micro Gateway Configurations
+###### Choreo Connect Configurations
 
 | Parameter                                                                   | Description                                                                               | Default Value               |
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
@@ -350,66 +360,3 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.wso2microgw.resources.limits.cpu`                          | The maximum amount of CPU that should be allocated for a Pod                              | 2000m                        |
 
 **Note**: The above mentioned default, minimum resource amounts for running WSO2 API Microgateway are based on its [official documentation](https://docs.wso2.com/display/MG301/Installation+Prerequisites#InstallationPrerequisites-MicrogatewayRuntime).
-
-##### 3. Deploy WSO2 Identity server.
-
-```
-helm install --dep-up --name <RELEASE_NAME> <HELM_HOME> --namespace <NAMESPACE>
-```
-
-`NAMESPACE` should be the Kubernetes Namespace in which the resources are deployed
-
-##### 4. Access Management Console.
-
-Default deployment will expose `<RELEASE_NAME>` host (to expose Administrative services and Management Console).
-
-To access the console in the environment,
-
-a. Obtain the external IP (`EXTERNAL-IP`) of the Ingress resources by listing down the Kubernetes Ingresses.
-
-```
-kubectl get ing -n <NAMESPACE>
-```
-
-```
-NAME                       HOSTS                ADDRESS        PORTS     AGE
-wso2micro-gw-ingress       <RELEASE_NAME>       <EXTERNAL-IP>  80, 443   3m
-```
-
-b. Add the above host as an entry in /etc/hosts file as follows:
-
-```
-<EXTERNAL-IP>	<RELEASE_NAME>
-```
-
-## Enabling Centralized Logging
-
-Centralized logging with Logstash and Elasticsearch is disabled by default. However, if it is required to be enabled, 
-the following steps should be followed.
-
-1. Set `centralizedLogging.enabled` to `true` in the [values.yaml](values.yaml) file.
-2. Add elasticsearch Helm repository to download sub-charts required for Centralized logging.
-```
-helm repo add elasticsearch https://helm.elastic.co
-```
-3. Create a requirements.yaml at <HELM_HOME> and add the following dependencies in the file.
-```
-dependencies:
-  - name: kibana
-    version: "7.2.1-0"
-    repository: "https://helm.elastic.co"
-    condition: wso2.centralizedLogging.enabled
-  - name: elasticsearch
-    version: "7.2.1-0"
-    repository: "https://helm.elastic.co"
-    condition: wso2.centralizedLogging.enabled
-
-```
-4. Add override configurations for Elasticsearch in the [values.yaml](values.yaml) file.
-```
-wso2:
-  ( ... )
-  
-elasticsearch:
-  clusterName: wso2-elasticsearch
-```

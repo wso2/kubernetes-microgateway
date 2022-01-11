@@ -54,10 +54,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the service account to use
 */}}
 {{- define "choreo-connect.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "choreo-connect.fullname" .) .Values.serviceAccount.name }}
+{{- if .Values.kubernetes.serviceAccount.create }}
+{{- default (include "choreo-connect.fullname" .) .Values.kubernetes.serviceAccount.name }}
 {{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+{{- default "default" .Values.kubernetes.serviceAccount.name }}
 {{- end }}
 {{- end }}
 
