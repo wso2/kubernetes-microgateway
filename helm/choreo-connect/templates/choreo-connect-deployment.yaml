@@ -63,7 +63,7 @@ spec:
       initContainers:
         - name: init-adapter-service
           image: busybox:1.31
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           command: [ 'sh', '-c', 'echo -e "Checking for the availability of Adapter"; while ! nc -z {{ include "choreo-connect.adapterFullname" . }} 18000; do sleep 1; printf "-"; done; echo -e "  >> Adapter has started";' ]
           securityContext:
             allowPrivilegeEscalation: false
@@ -212,16 +212,16 @@ spec:
               name: router-keystore-cert
               readOnly: true
               subPath: {{ if .Values.wso2.deployment.gatewayRuntime.router.security.keystore }}{{ .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
-            {{- if not .Values.wso2.deployment.gatewayRuntime.router.security.truststore }}
-            - mountPath: /home/wso2/security/truststore
-              name: router-truststore
+            - mountPath: /home/wso2/security/truststore/adapter-ca-cert.pem
+              name: adapter-keystore-cert
               readOnly: true
-            {{- else }}
-              {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" .Values.wso2.deployment.gatewayRuntime.router.security.truststore "prefix" "router") }}
-            {{- end }}
-            {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" (list .Values.wso2.deployment.adapter.security.keystore.cert) "prefix" "router") }}
-            {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert) "prefix" "router") }}
-            {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert) "prefix" "router") }}
+              subPath: {{ if .Values.wso2.deployment.adapter.security.keystore -}}
+                {{- .Values.wso2.deployment.adapter.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
+            - mountPath: /home/wso2/security/truststore/enforcer-ca-cert.pem
+              name: enforcer-keystore-cert
+              readOnly: true
+              subPath: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore -}}
+                {{- .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
           {{- with .Values.wso2.deployment.gatewayRuntime.router.containerSecurityContext }}
           securityContext:
             {{- toYaml . | nindent 12}}
@@ -242,9 +242,9 @@ spec:
             - name: ADAPTER_PORT
               value: "18000"
             - name: ADAPTER_CA_CERT_PATH
-              value: "/home/wso2/security/truststore/mg.pem"
+              value: "/home/wso2/security/truststore/adapter-ca-cert.pem"
             - name: ENFORCER_CA_CERT_PATH
-              value: "/home/wso2/security/truststore/mg.pem"
+              value: "/home/wso2/security/truststore/enforcer-ca-cert.pem"
             - name: ENFORCER_HOST
               value: "127.0.0.1"
             - name: ENFORCER_PORT
@@ -346,16 +346,9 @@ spec:
         - name: router-keystore-cert
           secret:
             secretName: {{ if .Values.wso2.deployment.gatewayRuntime.router.security.keystore }}{{ .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert.secretName }}{{ else }}{{ printf "%s-default-keystore" (include "choreo-connect.routerFullname" .) | trunc 63 }}{{ end }}
-        {{- if not .Values.wso2.deployment.gatewayRuntime.router.security.truststore }}
-        - name: router-truststore
+        - name: adapter-keystore-cert
           secret:
-            secretName: {{ printf "%s-default-truststore" (include "choreo-connect.routerFullname" .) | trunc 63 }}
-        {{- else }}
-          {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" .Values.wso2.deployment.gatewayRuntime.router.security.truststore "prefix" "router") }}
-        {{- end }}
-        {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" (list .Values.wso2.deployment.adapter.security.keystore.cert) "prefix" "router") }}
-        {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert) "prefix" "router") }}
-        {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert) "prefix" "router") }}
+            secretName: {{ if .Values.wso2.deployment.adapter.security.keystore }}{{ .Values.wso2.deployment.adapter.security.keystore.cert.secretName }}{{ else }}{{printf "%s-default-keystore" (include "choreo-connect.adapterFullname" .) | trunc 63}}{{ end }}
       restartPolicy: Always
       {{- with .Values.wso2.deployment.gatewayRuntime.nodeSelector }}
       nodeSelector:

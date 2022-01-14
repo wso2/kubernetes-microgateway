@@ -178,31 +178,23 @@ wso2:
         # private key and cert in PEM format
         # for more details: https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
         # override default certs from secrets
-        keystore:
-          key:
-            secretName: "adapter-certs"
-            subPath: "tls.key"
-          cert:
-            secretName: "adapter-certs"
-            subPath: "tls.crt"
-        # keystore: {} # using default certs, if not defined.
-
         # keystore:
         #   key:
-        #     secretName: "adapter-keystore"
-        #     subPath: "mg.key"
+        #     secretName: "adapter-certs"
+        #     subPath: "tls.key"
         #   cert:
-        #     secretName: "adapter-keystore"
-        #     subPath: "mg.pem"
-        
+        #     secretName: "adapter-certs"
+        #     subPath: "tls.crt"
+        keystore: {} # using default certs, if not defined.
+
         # array of secrets with {secretName, subPath}
         # override default certs from secrets
-        truststore:
-          - secretName: "adapter-certs"
-            subPath: "tls.crt"
+        # truststore:
+        #   - secretName: "adapter-certs"
+        #     subPath: "tls.crt"
           # - secretName: "controlplane-cert"
           #   subPath: "wso2carbon.pem"
-        # truststore: [] # using default certs, if not defined.
+        truststore: [] # using default certs, if not defined.
 
         # certs for consul integration
         # override default certs from secrets
@@ -418,15 +410,6 @@ wso2:
           #     subPath: "mg.pem"
           keystore: {} # using default certs, if not defined.
           
-          # array of secrets with {secretName, subPath}
-          # override default certs from secrets
-          # truststore:
-          #   - secretName: "adapter-cert"
-          #     subPath: "tls.crt"
-          #   - secretName: "router-truststore"
-          #     subPath: "mg.pem"
-          truststore: [] # using default certs, if not defined.
-
 kubernetes:
   serviceAccount:
     # Specifies whether a service account should be created
