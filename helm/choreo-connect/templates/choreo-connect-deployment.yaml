@@ -84,10 +84,6 @@ spec:
           imagePullPolicy: {{ .Values.wso2.deployment.gatewayRuntime.enforcer.imagePullPolicy }}
           volumeMounts:
           {{- if not .Values.wso2.deployment.gatewayRuntime.enforcer.security.truststore }}
-            - mountPath: /home/wso2/security/truststore/mg.pem
-              name: enforcer-truststore
-              readOnly: true
-              subPath: mg.pem
             - mountPath: /home/wso2/security/truststore/wso2carbon.pem
               name: enforcer-truststore
               readOnly: true
@@ -95,9 +91,19 @@ spec:
           {{- else -}}
             {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" .Values.wso2.deployment.gatewayRuntime.enforcer.security.truststore "prefix" "enforcer") }}
           {{- end }}
-          {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" (list .Values.wso2.deployment.adapter.security.keystore.cert) "prefix" "enforcer") }}
-          {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert) "prefix" "enforcer") }}
-          {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert) "prefix" "enforcer") }}
+            - mountPath: /home/wso2/security/truststore/mg.pem
+              name: enforcer-keystore-cert
+              readOnly: true
+              subPath: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore -}}
+                {{- .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
+            - mountPath: /home/wso2/security/truststore/adapter-ca-cert.pem
+              name: adapter-keystore-cert
+              readOnly: true
+              subPath: {{ if .Values.wso2.deployment.adapter.security.keystore }}{{ .Values.wso2.deployment.adapter.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
+            - mountPath: /home/wso2/security/truststore/router-ca-cert.pem
+              name: router-keystore-cert
+              readOnly: true
+              subPath: {{ if .Values.wso2.deployment.gatewayRuntime.router.security.keystore }}{{ .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
             - mountPath: /home/wso2/security/keystore/mg.key
               name: enforcer-keystore-key
               readOnly: true
@@ -136,7 +142,7 @@ spec:
             - name: TRUSTED_CA_CERTS_PATH
               value: "/home/wso2/security/truststore"
             - name: ADAPTER_HOST_NAME
-              value: {{ .Values.wso2.deployment.adapter.security.adapterRestService.sslHostname | quote }}
+              value: {{ .Values.wso2.deployment.adapter.security.sslHostname | quote }}
             - name: ADAPTER_HOST
               value: {{ include "choreo-connect.adapterFullname" . | quote }}
             - name: ADAPTER_XDS_PORT
@@ -335,9 +341,6 @@ spec:
         {{- else }}
           {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" .Values.wso2.deployment.gatewayRuntime.enforcer.security.truststore "prefix" "enforcer") }}
         {{- end }}
-        {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" (list .Values.wso2.deployment.adapter.security.keystore.cert) "prefix" "enforcer") }}
-        {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert) "prefix" "enforcer") }}
-        {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert) "prefix" "enforcer") }}
         - name: enforcer-dropins
           emptyDir: {}
         - name: router-keystore-key
