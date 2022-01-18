@@ -72,10 +72,6 @@ spec:
               readOnly: true
               subPath: {{ if .Values.wso2.deployment.adapter.security.keystore }}{{ .Values.wso2.deployment.adapter.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
             {{- if not .Values.wso2.deployment.adapter.security.truststore }}
-            - mountPath: /home/wso2/security/truststore/mg.pem
-              name: adapter-truststore
-              readOnly: true
-              subPath: mg.pem
             - mountPath: /home/wso2/security/truststore/controlplane.pem
               name: adapter-truststore
               readOnly: true
@@ -83,9 +79,19 @@ spec:
             {{- else }}
               {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" .Values.wso2.deployment.adapter.security.truststore "prefix" "adapter") }}
             {{- end }}
-          {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" (list .Values.wso2.deployment.adapter.security.keystore.cert) "prefix" "adapter") }}
-          {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert) "prefix" "adapter") }}
-          {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert) "prefix" "adapter") }}
+            - mountPath: /home/wso2/security/truststore/mg.pem
+              name: adapter-keystore-cert
+              readOnly: true
+              subPath: {{ if .Values.wso2.deployment.adapter.security.keystore }}{{ .Values.wso2.deployment.adapter.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
+            - mountPath: /home/wso2/security/truststore/enforcer-ca-cert.pem
+              name: enforcer-keystore-cert
+              readOnly: true
+              subPath: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore -}}
+                {{- .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
+            - mountPath: /home/wso2/security/truststore/router-ca-cert.pem
+              name: router-keystore-cert
+              readOnly: true
+              subPath: {{ if .Values.wso2.deployment.gatewayRuntime.router.security.keystore }}{{ .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
             - mountPath: /home/wso2/security/truststore/consul/consul-agent-ca.pem
               name: consul-agent-ca-cert
               readOnly: true
@@ -156,9 +162,6 @@ spec:
         {{- else }}
           {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" .Values.wso2.deployment.adapter.security.truststore "prefix" "adpter") }}
         {{- end }}
-        {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" (list .Values.wso2.deployment.adapter.security.keystore.cert) "prefix" "adapter") }}
-        {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert) "prefix" "adapter") }}
-        {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" (list .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert) "prefix" "adapter") }}
         - name: consul-agent-ca-cert
           secret:
             secretName: {{ if .Values.wso2.deployment.adapter.security.consul }}{{ .Values.wso2.deployment.adapter.security.consul.agentCaCert.secretName }}{{ else }}{{printf "%s-default-consul-certs" (include "choreo-connect.adapterFullname" .) | trunc 63}}{{ end }}
@@ -174,6 +177,14 @@ spec:
         - name: logconfig-toml
           configMap:
             name: {{printf "%s-logconfig-toml" (include "choreo-connect.adapterFullname" .) | trunc 63}}
+        - name: enforcer-keystore-cert
+          secret:
+            secretName: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore -}}
+              {{- .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert.secretName -}}
+              {{- else }}{{ printf "%s-default-keystore" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}{{ end }}
+        - name: router-keystore-cert
+          secret:
+            secretName: {{ if .Values.wso2.deployment.gatewayRuntime.router.security.keystore }}{{ .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert.secretName }}{{ else }}{{ printf "%s-default-keystore" (include "choreo-connect.routerFullname" .) | trunc 63 }}{{ end }}
       restartPolicy: Always
       {{- with .Values.wso2.deployment.adapter.nodeSelector }}
       nodeSelector:
