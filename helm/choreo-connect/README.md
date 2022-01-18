@@ -42,7 +42,7 @@ You can install the relevant Helm chart either from [WSO2 Helm Chart Repository]
 
 * `NAMESPACE` should be the Kubernetes Namespace in which the resources are deployed.
 
-#### Install Chart From [WSO2 Helm Chart Repository](https://hub.helm.sh/charts/wso2)
+#### 1.1. Install Chart From [WSO2 Helm Chart Repository](https://hub.helm.sh/charts/wso2)
 
   Helm version 2
   
@@ -69,7 +69,7 @@ Please see the following example.
   --set wso2.subscription.password=<SUBSCRIPTION_PASSWORD>
 ```
 
-#### Install Chart From Source
+#### 1.2. Install Chart From Source
 
 >In the context of this document, <br>
 >* `KUBERNETES_HOME` will refer to a local copy of the [`wso2/kubernetes-microgateway`](https://github.com/wso2/kubernetes-microgateway/)
@@ -82,7 +82,7 @@ Git repository. <br>
 git clone https://github.com/wso2/kubernetes-microgateway.git
 ```
 
-##### Deploy Helm chart for Choreo Connect deployment.
+##### 2. Deploy Helm chart for Choreo Connect deployment.
 
  Helm version 2
 
@@ -115,7 +115,7 @@ There are two types of deployment options namely,
 
 For more information, please refer [Choreo Connect Deployment Options](https://apim.docs.wso2.com/en/latest/deploy-and-publish/deploy-on-gateway/choreo-connect/getting-started/deploy/cc-deploy-overview/)
 
-#### Standalone Mode (Default)
+#### 2.1. Standalone Mode (Default)
 
 The following example shows how to deploy Choreo Connect with "Standalone" deployment mode. This is the default mode,
 hence if you have not specified `wso2.deployment.mode` "Standalone" deployment mode is applied.
@@ -134,14 +134,9 @@ helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-1 --namespace <N
   --set wso2.deployment.mode=STANDALONE
 ```
 
-#### WSO2 API Manager as a Control Plane
+#### 2.2. WSO2 API Manager as a Control Plane
 
 ##### Setup 1: Deploy WSO2 API Manager
-
-Change the directory to `KUBERNETES_HOME`.
-```
-cd <KUBERNETES_HOME>
-```
 
 Add the WSO2 Helm chart repository.
 ```
@@ -150,26 +145,28 @@ Add the WSO2 Helm chart repository.
 
 Helm version 2
 
+[//]: # (TODO: here using the tag `1.0.0`, update if change)
 ```
 helm install --name apim-as-cp wso2/am-single-node --version 4.0.0-1 --namespace apim \
-  --set-file wso2.deployment.am.config."deployment\.toml"=resources/controlplane-deployment.toml
+  --set wso2.deployment.am.ingress.gateway.hostname=gw.wso2.com \
+  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/1.0.0/resources/controlplane-deployment.toml
 ```
 
 Helm version 3
 
 ```
 helm install apim-as-cp wso2/am-single-node --version 4.0.0-1 --namespace apim --create-namespace \
-  --set-file wso2.deployment.am.config."deployment\.toml"=resources/controlplane-deployment.toml
+  --set wso2.deployment.am.ingress.gateway.hostname=gw.wso2.com \
+  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/1.0.0/resources/controlplane-deployment.toml
 ```
 
-NOTE:
-  If you do not have sufficient resources you can adjust them setting following values when installing the chart.
-  ```
-  --set wso2.deployment.am.resources.requests.memory=2Gi \
-  --set wso2.deployment.am.resources.requests.cpu=1000m \
-  --set wso2.deployment.am.resources.limits.memory=2Gi \
-  --set wso2.deployment.am.resources.limits.cpu=1000m
-  ```
+NOTE: If you do not have sufficient resources you can adjust them setting following values when installing the chart.
+```
+--set wso2.deployment.am.resources.requests.memory=2Gi \
+--set wso2.deployment.am.resources.requests.cpu=1000m \
+--set wso2.deployment.am.resources.limits.memory=2Gi \
+--set wso2.deployment.am.resources.limits.cpu=1000m
+```
 
 
 The above steps will deploy the deployment pattern using WSO2 product Docker images available at DockerHub, in the namespace `apim`,
@@ -208,8 +205,7 @@ Helm v2
 helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-1 --namespace <NAMESPACE> \
   --set wso2.deployment.mode=APIM_AS_CP \
   --set wso2.apim.controlPlane.hostName=am.wso2.com \
-  --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim \
-  --set wso2.ingress.gateway.hostname=gateway.am.wso2.com
+  --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim
 ```
 
 Helm v3
@@ -218,28 +214,26 @@ Helm v3
 helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-1 --namespace <NAMESPACE> --create-namespace \
   --set wso2.deployment.mode=APIM_AS_CP \
   --set wso2.apim.controlPlane.hostName=am.wso2.com \
-  --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim \
-  --set wso2.ingress.gateway.hostname=gateway.am.wso2.com
+  --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim
 ```
 
-NOTE:
-  If you do not have sufficient resources you can adjust them setting following values when installing the chart.
-    ```
-    --set wso2.deployment.adapter.resources.requests.memory=300Mi \
-    --set wso2.deployment.adapter.resources.requests.cpu=300m \
-    --set wso2.deployment.adapter.resources.limits.memory=300Mi \
-    --set wso2.deployment.adapter.resources.limits.cpu=300m \
-    \
-    --set wso2.deployment.gatewayRuntime.enforcer.resources.requests.memory=1000Mi \
-    --set wso2.deployment.gatewayRuntime.enforcer.resources.requests.cpu=500m \
-    --set wso2.deployment.gatewayRuntime.enforcer.resources.limits.memory=1000Mi \
-    --set wso2.deployment.gatewayRuntime.enforcer.resources.limits.cpu=500m \
-    \
-    --set wso2.deployment.gatewayRuntime.router.resources.requests.memory=300Mi \
-    --set wso2.deployment.gatewayRuntime.router.resources.requests.cpu=500m \
-    --set wso2.deployment.gatewayRuntime.router.resources.limits.memory=300Mi \
-    --set wso2.deployment.gatewayRuntime.router.resources.limits.cpu=500m
-    ```
+NOTE: If you do not have sufficient resources you can adjust them setting following values when installing the chart.
+  ```
+  --set wso2.deployment.adapter.resources.requests.memory=300Mi \
+  --set wso2.deployment.adapter.resources.requests.cpu=300m \
+  --set wso2.deployment.adapter.resources.limits.memory=300Mi \
+  --set wso2.deployment.adapter.resources.limits.cpu=300m \
+  \
+  --set wso2.deployment.gatewayRuntime.enforcer.resources.requests.memory=1000Mi \
+  --set wso2.deployment.gatewayRuntime.enforcer.resources.requests.cpu=500m \
+  --set wso2.deployment.gatewayRuntime.enforcer.resources.limits.memory=1000Mi \
+  --set wso2.deployment.gatewayRuntime.enforcer.resources.limits.cpu=500m \
+  \
+  --set wso2.deployment.gatewayRuntime.router.resources.requests.memory=300Mi \
+  --set wso2.deployment.gatewayRuntime.router.resources.requests.cpu=500m \
+  --set wso2.deployment.gatewayRuntime.router.resources.limits.memory=300Mi \
+  --set wso2.deployment.gatewayRuntime.router.resources.limits.cpu=500m
+  ```
 
 ### 3. Choreo Analytics
 
@@ -299,7 +293,7 @@ If the defined hostnames are not backed by a DNS service, for the purpose of eva
 hostnames and the external IP in the `/etc/hosts` file at the client-side.
 
 ```
-<EXTERNAL-IP> adapter.wso2.com gateway.am.wso2.com
+<EXTERNAL-IP> adapter.wso2.com gw.wso2.com
 ```
 
 ### 4. Access Management Consoles (If you installed WSO2 API Manager as control plane for Choreo Connect)
@@ -336,23 +330,22 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.ingress.adapter.hostname`                                             | Hostname for adapter in STANDALONE mode                                                   | adapter.wso2.com            |
 | `wso2.ingress.adapter.tlsSecretName`                                        | TLS secret for the adapter host. Using default secret if not specified                    | -                           |
 | `wso2.ingress.adapter.annotations`                                          | Annotations for the adapter ingress                                                       | Community NGINX Ingress controller annotations |
-|                                                                             |                                                                                           |                             |
 | `wso2.ingress.gateway.enabled`                                              | If enabled, create the ingress for gateway                                                | true                        |
 | `wso2.ingress.gateway.hostname`                                             | Hostname for gateway                                                                      | gw.wso2.com                 |
 | `wso2.ingress.gateway.tlsSecretName`                                        | TLS secret for the gateway host. Using default secret if not specified                    | -                           |
 | `wso2.ingress.adapter.annotations`                                          | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
-|                                                                             |                                                                                           |                             |
 | `wso2.ingress.internal.enabled`                                             | Enable internal ingress resource only for the debugging purposes and check router related config_dumps etc. In a production scenario this should be disabled.   | false                        |
 | `wso2.ingress.internal.hostname`                                            | Hostname for gateway                                                                      | internal.wso2.com           |
 | `wso2.ingress.internal.annotations`                                         | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
 
-###### Externally installed WSO2 API Manager Control Plane Configurations
+######   Externally installed WSO2 API Manager Control Plane Configurations
 
 | Parameter                                                                   | Description                                                                               | Default Value               |
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
 | `wso2.apim.controlPlane.hostName`                                           | Hostname of the control plane                                                             | am.wso2.com                 |
 | `wso2.apim.controlPlane.serviceName`                                        | K8s service name (if in another namespace, `<serviceName>.<namespace>`) of the control plane   | wso2am-single-node-am-service.apim |
 | `wso2.apim.trafficManager.serviceName`                                      | K8s service name of the traffic manager. If not defined, default to control plane service name | -                      |
+
 
 ###### Choreo Connect Configurations
 
@@ -363,28 +356,109 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.dockerRegistry`                                            | If a custom image must be used, define the docker registry.                               | DockerHub registry          |
 | `wso2.deployment.imagePullSecrets`                                          | Image pull secrets to pull images from docker registry.                                   | -                           |
 
-####### Choreo Connect Adapter Configurations
+###### Choreo Connect Adapter Configurations
+
 | Parameter                                                                   | Description                                                                               | Default Value               |
+|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
 | `wso2.deployment.adapter.imageName`                                         | Image name for adapter                                                                    | "choreo-connect-adapter"    |
 | `wso2.deployment.adapter.imageTag`                                          | Image tag for adapter                                                                     | "1.0.0"                     |
 | `wso2.deployment.adapter.imagePullPolicy`                                   | Image pull policy of the container                                                        | "IfNotPresent"              |
-| `wso2.deployment.adapter.resources`                                   | Resources for the adapter container                                                        | "IfNotPresent"              |
+| `wso2.deployment.adapter.resources.requests.memory`                         | Resources for the adapter container - Memory request                                      | "300Mi"                     |
+| `wso2.deployment.adapter.resources.requests.cpu`                            | Resources for the adapter container - CPU request                                         | "300m"                      |
+| `wso2.deployment.adapter.resources.limits.memory`                           | Resources for the adapter container - Memory limit                                        | "500Mi"                     |
+| `wso2.deployment.adapter.resources.limits.cpu`                              | Resources for the adapter container - CPU limit                                           | "500m"                      |
+| `wso2.deployment.adapter.affinity`                                          | Affinity for adapter pods assignment                                                      | -                           |
+| `wso2.deployment.adapter.nodeSelector`                                      | Node labels for adapter pods assignment                                                   | -                           |
+| `wso2.deployment.adapter.tolerations`                                       | Tolerations for adapter pods assignment                                                   | -                           |
+| `wso2.deployment.adapter.containerSecurityContext`                          | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>&nbsp;&nbsp;add: ["NET_RAW"]|
+| `wso2.deployment.adapter.livenessProbe.initialDelaySeconds`                 | Number of seconds after the container has started before liveness probes are initiated    | 10                          |
+| `wso2.deployment.adapter.livenessProbe.periodSeconds`                       | How often (in seconds) to perform the probe                                               | 30                          |
+| `wso2.deployment.adapter.readinessProbe.initialDelaySeconds`                | Number of seconds after the container has started before readiness probes are initiated   | 8                           |
+| `wso2.deployment.adapter.readinessProbe.periodSeconds`                      | How often (in seconds) to perform the probe                                               | 5                           |
+| `wso2.deployment.adapter.podAnnotations`                                    | Key value pair of annotations for the pod                                                 | sidecar.istio.io/inject: "false" |
+| `wso2.deployment.adapter.configToml`                                        | Define templated config.toml file, if empty using default config.toml                     | Default templated config toml file |
+| `wso2.deployment.adapter.logConfigToml`                                     | Define templated log_config.toml file, if empty using default log_config.toml             | Default templated log config toml file |
+| `wso2.deployment.adapter.envOverride`                                       | Set (or override) environment variables as values or from ConfigMaps or Secrets           | -                           |
+| `wso2.deployment.adapter.security.keystore`                                 | Private key and cert in PEM format                                                        | Default Certs               |
+| `wso2.deployment.adapter.security.truststore`                               | Truststore certs as array of secrets {secretName, subPath}                                | Default Certs               |
+| `wso2.deployment.adapter.security.consul`                                   | Certs for consul integration                                                              | Default Certs               |
 
+###### Choreo Connect Gateway Runtime Configurations
 
+Gateway runtime (enforcer + router) deployment configurations
 
-| `wso2.deployment.wso2microgw.imageTag`                                      | Image tag for microgateway node                                                           | ""                          |
-| `wso2.deployment.wso2microgw.replicas`                                      | Number of replicas for microgateway node                                                  | 1                           |
-| `wso2.deployment.wso2microgw.minReadySeconds`                               | Refer to [doc](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#deploymentspec-v1-apps)| 1  75                        |
-| `wso2.deployment.wso2microgw.strategy.rollingUpdate.maxSurge`               | Refer to [doc](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#deploymentstrategy-v1-apps) | 1                           |
-| `wso2.deployment.wso2microgw.strategy.rollingUpdate.maxUnavailable`         | Refer to [doc](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/#deploymentstrategy-v1-apps) | 0                           |
-| `wso2.deployment.wso2microgw.livenessProbe.initialDelaySeconds`             | Initial delay for the live-ness probe for microgateway node                               | 40                           |
-| `wso2.deployment.wso2microgw.livenessProbe.periodSeconds`                   | Period of the live-ness probe for microgateway node                                       | 10                           |
-| `wso2.deployment.wso2microgw.readinessProbe.initialDelaySeconds`            | Initial delay for the readiness probe for microgateway node                               | 40                           |
-| `wso2.deployment.wso2microgw.readinessProbe.periodSeconds`                  | Period of the readiness probe for microgateway node                                       | 10                           |
-| `wso2.deployment.wso2microgw.imagePullPolicy`                               | Refer to [doc](https://kubernetes.io/docs/concepts/containers/images#updating-images)     | Always                       |
-| `wso2.deployment.wso2microgw.resources.requests.memory`                     | The minimum amount of memory that should be allocated for a Pod                           | 1Gi                          |
-| `wso2.deployment.wso2microgw.resources.requests.cpu`                        | The minimum amount of CPU that should be allocated for a Pod                              | 2000m                        |
-| `wso2.deployment.wso2microgw.resources.limits.memory`                       | The maximum amount of memory that should be allocated for a Pod                           | 2Gi                          |
-| `wso2.deployment.wso2microgw.resources.limits.cpu`                          | The maximum amount of CPU that should be allocated for a Pod                              | 2000m                        |
+| Parameter                                                                   | Description                                                                               | Default Value               |
+|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
+| `wso2.deployment.gatewayRuntime.podAnnotations`                             | Key value pair of annotations for the pod                                                 | -                           |
+| `wso2.deployment.gatewayRuntime.replicaCount`                               | Pod count                                                                                 | 1                           |
+| `wso2.deployment.gatewayRuntime.autoscaling.enabled`                        | Horizontal pod auto scaling is enabled                                                    | true                        |
+| `wso2.deployment.gatewayRuntime.autoscaling.minReplicas`                    | Horizontal pod auto scaling - Minimum replica count                                       | 1                           |
+| `wso2.deployment.gatewayRuntime.autoscaling.maxReplicas`                    | Horizontal pod auto scaling - Maximum replica count                                       | 5                           |
+| `wso2.deployment.gatewayRuntime.autoscaling.targetCPUUtilizationPercentage` | Horizontal pod auto scaling - target CPU Utilization percentage                           | 75                          |
+| `wso2.deployment.gatewayRuntime.autoscaling.targetMemoryUtilizationPercentage` | Horizontal pod auto scaling - target memory Utilization percentage                     | 75                          |
+| `wso2.deployment.adapter.affinity`                                          | Affinity for gateway runtime pods assignment                                              | -                           |
+| `wso2.deployment.adapter.nodeSelector`                                      | Node labels for gateway runtime pods assignment                                           | -                           |
+| `wso2.deployment.adapter.tolerations`                                       | Tolerations for gateway runtime pods assignment                                           | -                           |
+| `wso2.deployment.adapter.podSecurityContext`                                | Security context of the the gateway runtime pod                                           | runAsUser: 10500</br>runAsGroup: 10500|
 
-**Note**: The above mentioned default, minimum resource amounts for running WSO2 API Microgateway are based on its [official documentation](https://docs.wso2.com/display/MG301/Installation+Prerequisites#InstallationPrerequisites-MicrogatewayRuntime).
+###### Choreo Connect Gateway Runtime - Enforcer Configurations
+
+| Parameter                                                                   | Description                                                                               | Default Value               |
+|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
+| `wso2.deployment.gatewayRuntime.enforcer.imageName`                         | Image name for enforcer                                                                   | "choreo-connect-enforcer"   |
+| `wso2.deployment.gatewayRuntime.enforcer.imageTag`                          | Image tag for enforcer                                                                    | "1.0.0"                     |
+| `wso2.deployment.gatewayRuntime.enforcer.imagePullPolicy`                   | Image pull policy of the container                                                        | "IfNotPresent"              |
+| `wso2.deployment.gatewayRuntime.enforcer.envOverride`                       | Set (or override) environment variables as values or from ConfigMaps or Secrets           | -                           |
+| `wso2.deployment.gatewayRuntime.enforcer.resources.requests.memory`         | Resources for the adapter container - Memory request                                      | "500Mi"                     |
+| `wso2.deployment.gatewayRuntime.enforcer.resources.requests.cpu`            | Resources for the adapter container - CPU request                                         | "500m"                      |
+| `wso2.deployment.gatewayRuntime.enforcer.resources.limits.memory`           | Resources for the adapter container - Memory limit                                        | "1000Mi"                    |
+| `wso2.deployment.gatewayRuntime.enforcer.resources.limits.cpu`              | Resources for the adapter container - CPU limit                                           | "1000m"                     |
+| `wso2.deployment.gatewayRuntime.enforcer.startupProbe.periodSeconds`        | How often (in seconds) to perform the probe                                               | 5                           |
+| `wso2.deployment.gatewayRuntime.enforcer.startupProbe.failureThreshold`     | Number of time startup probe should be done before mark fail                              | 30                          |
+| `wso2.deployment.gatewayRuntime.enforcer.livenessProbe.initialDelaySeconds` | Number of seconds after the container has started before liveness probes are initiated    | 10                          |
+| `wso2.deployment.gatewayRuntime.enforcer.livenessProbe.periodSeconds`       | How often (in seconds) to perform the probe                                               | 30                          |
+| `wso2.deployment.gatewayRuntime.enforcer.readinessProbe.initialDelaySeconds`| Number of seconds after the container has started before readiness probes are initiated   | 8                           |
+| `wso2.deployment.gatewayRuntime.enforcer.readinessProbe.periodSeconds`      | How often (in seconds) to perform the probe                                               | 5                           |
+| `wso2.deployment.gatewayRuntime.enforcer.containerSecurityContext`          | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>&nbsp;&nbsp;add: ["NET_RAW"]|
+| `wso2.deployment.gatewayRuntime.enforcer.security.keystore`                 | Private key and cert in PEM format                                                        | Default Certs               |
+| `wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.enabled`       | Passing end user attributes to the backend - enabled                                      | false                       |
+| `wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore`      | Passing end user attributes to the backend - Keys for signing                             | Default Certs               |
+| `wso2.deployment.gatewayRuntime.enforcer.security.testTokenIssuer.enabled`  | Test token issuer - enabled                                                               | true                        |
+| `wso2.deployment.gatewayRuntime.enforcer.security.truststore`               | Truststore certs as array of secrets {secretName, subPath}                                | Default Certs               |
+| `wso2.deployment.gatewayRuntime.enforcer.log4j2Properties`                  | Define templated log4j2.properties file, if empty using default log4j2.properties         | Default templated log4j property file |
+
+###### Choreo Connect Gateway Runtime - Router Configurations
+
+| Parameter                                                                   | Description                                                                               | Default Value               |
+|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
+| `wso2.deployment.gatewayRuntime.router.imageName`                           | Image name for enforcer                                                                   | "choreo-connect-router"     |
+| `wso2.deployment.gatewayRuntime.router.imageTag`                            | Image tag for enforcer                                                                    | "1.0.0"                     |
+| `wso2.deployment.gatewayRuntime.router.imagePullPolicy`                     | Image pull policy of the container                                                        | "IfNotPresent"              |
+| `wso2.deployment.gatewayRuntime.router.envOverride`                         | Set (or override) environment variables as values or from ConfigMaps or Secrets           | -                           |
+| `wso2.deployment.gatewayRuntime.router.resources.requests.memory`           | Resources for the adapter container - Memory request                                      | "300Mi"                     |
+| `wso2.deployment.gatewayRuntime.router.resources.requests.cpu`              | Resources for the adapter container - CPU request                                         | "500m"                      |
+| `wso2.deployment.gatewayRuntime.router.resources.limits.memory`             | Resources for the adapter container - Memory limit                                        | "500Mi"                     |
+| `wso2.deployment.gatewayRuntime.router.resources.limits.cpu`                | Resources for the adapter container - CPU limit                                           | "1000m"                     |
+| `wso2.deployment.gatewayRuntime.router.startupProbe.periodSeconds`          | How often (in seconds) to perform the probe                                               | 5                           |
+| `wso2.deployment.gatewayRuntime.router.startupProbe.failureThreshold`       | Number of time startup probe should be done before mark fail                              | 30                          |
+| `wso2.deployment.gatewayRuntime.router.livenessProbe.initialDelaySeconds`   | Number of seconds after the container has started before liveness probes are initiated    | 20                          |
+| `wso2.deployment.gatewayRuntime.router.livenessProbe.periodSeconds`         | How often (in seconds) to perform the probe                                               | 10                          |
+| `wso2.deployment.gatewayRuntime.router.readinessProbe.initialDelaySeconds`  | Number of seconds after the container has started before readiness probes are initiated   | 20                          |
+| `wso2.deployment.gatewayRuntime.router.readinessProbe.periodSeconds`        | How often (in seconds) to perform the probe                                               | 5                           |
+| `wso2.deployment.gatewayRuntime.router.containerSecurityContext`            | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>&nbsp;&nbsp;add: ["NET_RAW"]|
+| `wso2.deployment.gatewayRuntime.router.security.keystore`                   | Private key and cert in PEM format                                                        | Default Certs               |
+
+###### Kubernetes Configurations
+
+| Parameter                                                                   | Description                                                                               | Default Value               |
+|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
+| `kubernetes.serviceAccount.create`                                          | Specifies whether a service account should be created                                     | true                        |
+| `kubernetes.serviceAccount.annotations`                                     | Annotations to add to the service account                                                 | -                           |
+| `kubernetes.serviceAccount.name`                                            | The name of the service account to use                                                    | -                           |
+
+###### Helm Release Name Configurations
+
+| Parameter                                                                   | Description                                                                               | Default Value               |
+|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
+| `nameOverride`                                                              | Name to override. Default to "choreo-connect"                                             | -                           |
+| `fullnameOverride`                                                          | Full name to override. Default to "<RELEASE_NAME>-choreo-connect"                         | -                           |
