@@ -16,7 +16,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ printf "%s-ingress" (include "choreo-connect.fullname" .) | trunc 63 }}
+  name: {{ printf "%s-gateway" (include "choreo-connect.fullname" .) | trunc 63 }}
   namespace: {{ .Release.Namespace }}
 {{- with .Values.wso2.ingress.gateway.annotations }}
   annotations:
@@ -29,7 +29,7 @@ spec:
   {{- if .Values.wso2.ingress.gateway.tlsSecretName }}
     secretName: {{ .Values.wso2.ingress.gateway.tlsSecretName }}
   {{- else }}
-    secretName: {{ printf "%s-ingress-tls-secret" (include "choreo-connect.fullname" .) | trunc 63 }}
+    secretName: {{ printf "%s-gateway-ingress-default-tls" (include "choreo-connect.fullname" .) | trunc 63 }}
   {{- end }}
   rules:
     - host: {{ .Values.wso2.ingress.gateway.hostname }}

@@ -313,7 +313,7 @@ spec:
       volumes:
         - name: enforcer-log4j2
           configMap:
-            name: {{ printf "%s-default-log4j2" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}
+            name: {{ printf "%s-log4j2-properties" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}
         - name: enforcer-keystore-key
           secret:
             secretName: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore -}}

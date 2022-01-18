@@ -182,10 +182,10 @@ wso2:
         # override default certs from secrets
         # keystore:
         #   key:
-        #     secretName: "adapter-certs"
+        #     secretName: "adapter-keystore"
         #     subPath: "tls.key"
         #   cert:
-        #     secretName: "adapter-certs"
+        #     secretName: "adapter-keystore"
         #     subPath: "tls.crt"
         keystore: {} # using default certs, if not defined.
 
@@ -312,10 +312,10 @@ wso2:
           # keystore:
           #   key:
           #     secretName: "enforcer-keystore"
-          #     subPath: "mg.key"
+          #     subPath: "tls.key"
           #   cert:
           #     secretName: "enforcer-keystore"
-          #     subPath: "mg.pem"
+          #     subPath: "tls.crt"
           keystore: {} # using default certs, if not defined.
 
           # Passing end user attributes to the backend
@@ -330,7 +330,10 @@ wso2:
             #     secretName: "backend-jwt-keystore"
             #     subPath: "backend-jwt.pem"
             keystore: {}
-          
+
+          testTokenIssuer:
+            enabled: true
+
           # array of secrets with {secretName, subPath}
           # override default certs from secrets
           # truststore:
@@ -405,11 +408,11 @@ wso2:
           # override default certs from secrets
           # keystore:
           #   key:
-          #     secretName: "adapter-keystore"
-          #     subPath: "mg.key"
+          #     secretName: "router-keystore"
+          #     subPath: "tls.key"
           #   cert:
-          #     secretName: "adapter-keystore"
-          #     subPath: "mg.pem"
+          #     secretName: "router-keystore"
+          #     subPath: "tls.crt"
           keystore: {} # using default certs, if not defined.
           
 kubernetes:
