@@ -73,7 +73,7 @@ data:
 
     [enforcer]
     [enforcer.jwtIssuer]
-      enabled = true
+      enabled = {{ .Values.wso2.deployment.gatewayRuntime.enforcer.security.testTokenIssuer.enabled }}
       issuer = "https://{{ .Values.wso2.ingress.gateway.hostname }}/testkey"
 
     [enforcer.throttling]
