@@ -145,11 +145,10 @@ Add the WSO2 Helm chart repository.
 
 Helm version 2
 
-[//]: # (TODO: here using the tag `1.0.0`, update if change)
 ```
 helm install --name apim-as-cp wso2/am-single-node --version 4.0.0-1 --namespace apim \
   --set wso2.deployment.am.ingress.gateway.hostname=gw.wso2.com \
-  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/1.0.0/resources/controlplane-deployment.toml
+  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/1.0.0-1/resources/controlplane-deployment.toml
 ```
 
 Helm version 3
@@ -157,7 +156,7 @@ Helm version 3
 ```
 helm install apim-as-cp wso2/am-single-node --version 4.0.0-1 --namespace apim --create-namespace \
   --set wso2.deployment.am.ingress.gateway.hostname=gw.wso2.com \
-  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/1.0.0/resources/controlplane-deployment.toml
+  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/1.0.0-1/resources/controlplane-deployment.toml
 ```
 
 NOTE: If you do not have sufficient resources you can adjust them setting following values when installing the chart.
@@ -172,7 +171,8 @@ NOTE: If you do not have sufficient resources you can adjust them setting follow
 The above steps will deploy the deployment pattern using WSO2 product Docker images available at DockerHub, in the namespace `apim`,
 with the service name `wso2am-single-node-am-service` and with the hostname `am.wso2.com`.
 
-Delete the Ingress resource of gateway component of the WSO2 API Manager, so let's install Choreo Connect as the gateway component.
+Choreo Connect is used as the gateway of API Manager, hence we need to delete the gateway Ingress resource of gateway component of the WSO2 API Manager.
+
 ```
 kubectl delete ing -n apim wso2am-single-node-am-gateway-ingress
 ```

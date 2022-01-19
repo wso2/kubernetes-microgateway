@@ -99,11 +99,11 @@ wso2:
       # Pod count
       replicaCount: 1 # TODO: do we need replica count for adapter? #TODO: add to readme
 
-      # Resources for the adapter container # TODO: check values
+      # Resources for the adapter container
       resources:
         requests:
-          memory: "300Mi"
-          cpu: "300m"
+          memory: "500Mi"
+          cpu: "500m"
         limits:
           memory: "500Mi"
           cpu: "500m"
@@ -214,8 +214,6 @@ wso2:
 
     # Gateway runtime (enforcer + router) deployment configurations
     gatewayRuntime:
-      # TODO: trustedCertPath for CC gateway
-
       # Key value pair of annotations for the pod
       podAnnotations: {}
 
@@ -268,8 +266,8 @@ wso2:
         # Resources for the enforcer container
         resources:
           requests:
-            memory: "500Mi"
-            cpu: "500m"
+            memory: "1000Mi"
+            cpu: "1000m"
           limits:
             memory: "1000Mi"
             cpu: "1000m"
@@ -370,8 +368,8 @@ wso2:
         # Resources for the router container
         resources:
           requests:
-            memory: "300Mi"
-            cpu: "500m"
+            memory: "500Mi"
+            cpu: "1000m"
           limits:
             memory: "500Mi"
             cpu: "1000m"
