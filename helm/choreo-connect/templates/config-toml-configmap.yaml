@@ -14,8 +14,6 @@
 # limitations under the License.
 # -----------------------------------------------------------------------
 
-# Config map containing config.toml file for adapter
-
 apiVersion: v1
 kind: ConfigMap
 metadata:

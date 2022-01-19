@@ -261,48 +261,6 @@ helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-1 --namespace <N
 
 You will be able to see the Analytics data when you log into Choreo Analytics Portal.
 
-
-### 2. Obtain the external IP
-
-Obtain the external IP (`EXTERNAL-IP`) of the Chore Connect Ingress resource, by listing down the Kubernetes Ingresses.
-
-```  
-kubectl get ing -n <NAMESPACE>
-```
-
-The output under the relevant column stands for the following.
-
-Choreo Connect Adapter (Only if you have installed Choreo Connect in "Standalone" mode)
-- NAME: Metadata name of the Kubernetes Ingress resource (defaults to "<RELEASE_NAME>-choreo-connect-adapter-ingress")
-- HOSTS: Hostname of the Choreo Connect Adapter (defaults to "adapter.wso2.com")
-- ADDRESS: External IP (`EXTERNAL-IP`) exposing the Chore Connect Adapter to outside of the Kubernetes environment
-- PORTS: Externally exposed service ports of the Choreo Connect Adapter
-
-Choreo Connect Gateway
-- NAME: Metadata name of the Kubernetes Ingress resource (defaults to "<RELEASE_NAME>-choreo-connect-ingress"")
-- HOSTS: Hostname of the gateway service (defaults to "gw.wso2.com")
-- ADDRESS: External IP (`EXTERNAL-IP`) exposing the gateway to outside of the Kubernetes environment
-- PORTS: Externally exposed gateway ports of the Choreo Connect
-
-### 3. Add a DNS record mapping the hostnames and the external IP
-
-If the defined hostnames (in the previous step) are backed by a DNS service, add a DNS record mapping the hostnames and
-the external IP (`EXTERNAL-IP`) in the relevant DNS service.
-
-If the defined hostnames are not backed by a DNS service, for the purpose of evaluation you may add an entry mapping the
-hostnames and the external IP in the `/etc/hosts` file at the client-side.
-
-```
-<EXTERNAL-IP> adapter.wso2.com gw.wso2.com
-```
-
-### 4. Access Management Consoles (If you installed WSO2 API Manager as control plane for Choreo Connect)
-
-- API Manager Publisher: [https://am.wso2.com/publisher](https://am.wso2.com/publisher)
-
-- API Manager DevPortal: [https://am.wso2.com/devportal](https://am.wso2.com/devportal)
-
-
 ## Configuration
 
 a. The default product configurations are available at `<HELM_HOME>/confs` folder. Change the
