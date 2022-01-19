@@ -1,17 +1,17 @@
-# Helm Resources for WSO2 API Microgateway
+# Kubernetes and Helm Resources for Choreo Connect
 
-*Helm Resources for container-based deployments of WSO2 API Microgateway in Kubernetes.*
+*This repository contains Kubernetes and Helm Resources for container-based deployments of Choreo Connect.*
 
 ## Deploy Helm resources
 
 In order to deploy Helm resources, follow the **Quick Start Guide** given below:
 
-* [A clustered deployment of WSO2 API Microgateway](helm/microgateway/README.md)
+* [Helm Chart for deployment of Choreo Connect](helm/choreo-connect/README.md)
 
 ## Reporting issues
 
 We encourage you to report any issues and documentation faults regarding Helm resources
-for WSO2 API Microgateway. Please report your issues [here](https://github.com/wso2/kubernetes-microgateway/issues).
+for Choreo Connect. Please report your issues [here](https://github.com/wso2/kubernetes-microgateway/issues).
 
 ## Contact us
 
