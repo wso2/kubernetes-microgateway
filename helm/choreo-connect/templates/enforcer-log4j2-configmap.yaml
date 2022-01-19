@@ -14,8 +14,6 @@
 # limitations under the License.
 # -----------------------------------------------------------------------
 
-# Config map containing the log4j2.properties file for adapter
-
 apiVersion: v1
 kind: ConfigMap
 metadata:

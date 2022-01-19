@@ -9,10 +9,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Added
 
-- Helm resources for Choreo Connect Deployment (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/498)).
+- Helm resources for Choreo Connect Deployment (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/22)).
 
 ### Removed
 
 - Helm resources for WSO2 Microgateway
 
-For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.0.0.1](https://github.com/wso2/kubernetes-microgateway/milestone/2)
+For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.0.0.1](https://github.com/wso2/kubernetes-microgateway/milestone/3)
