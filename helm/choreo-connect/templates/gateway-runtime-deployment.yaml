@@ -128,6 +128,9 @@ spec:
               name: enforcer-log4j2
               readOnly: true
               subPath: "log4j2.properties"
+            - mountPath: /home/wso2/check_health.sh
+              name: grpc-probe-health-check
+              subPath: "check_health.sh"
             - mountPath: /home/wso2/lib/dropins
               name: enforcer-dropins
           {{- with .Values.wso2.deployment.gatewayRuntime.enforcer.containerSecurityContext }}
@@ -341,6 +344,10 @@ spec:
         {{- else }}
           {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" .Values.wso2.deployment.gatewayRuntime.enforcer.security.truststore "prefix" "enforcer") }}
         {{- end }}
+        - name: grpc-probe-health-check
+          configMap:
+            name: {{ printf "%s-grpc-probe-script" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}
+            defaultMode: 0777
         - name: enforcer-dropins
           emptyDir: {}
         - name: router-keystore-key

@@ -304,6 +304,9 @@ wso2:
             add: ["NET_RAW"]
         
         security:
+          # Hostname for SSL verification
+          sslHostname: "enforcer"
+
           # private key and cert in PEM format
           # for more details: https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
           # override default certs from secrets
