@@ -22,7 +22,9 @@
   and [Kubernetes client](https://kubernetes.io/docs/tasks/tools/install-kubectl/) in order to run the steps provided in the
   following quick start guide.<br><br>
 
-* An already setup [Kubernetes cluster](https://kubernetes.io/docs/setup).<br><br>
+* An already setup [Kubernetes cluster](https://kubernetes.io/docs/setup).<br>
+  Minimum CPU: 6vCPU<br>
+  Minimum Memory: 6GB<br><br>
 
 * Install [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/deploy/).<br><br>
 
@@ -217,24 +219,6 @@ helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-1 --namespace <N
   --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim
 ```
 
-NOTE: If you do not have sufficient resources you can adjust them setting following values when installing the chart.
-  ```
-  --set wso2.deployment.adapter.resources.requests.memory=300Mi \
-  --set wso2.deployment.adapter.resources.requests.cpu=300m \
-  --set wso2.deployment.adapter.resources.limits.memory=300Mi \
-  --set wso2.deployment.adapter.resources.limits.cpu=300m \
-  \
-  --set wso2.deployment.gatewayRuntime.enforcer.resources.requests.memory=1000Mi \
-  --set wso2.deployment.gatewayRuntime.enforcer.resources.requests.cpu=500m \
-  --set wso2.deployment.gatewayRuntime.enforcer.resources.limits.memory=1000Mi \
-  --set wso2.deployment.gatewayRuntime.enforcer.resources.limits.cpu=500m \
-  \
-  --set wso2.deployment.gatewayRuntime.router.resources.requests.memory=300Mi \
-  --set wso2.deployment.gatewayRuntime.router.resources.requests.cpu=500m \
-  --set wso2.deployment.gatewayRuntime.router.resources.limits.memory=300Mi \
-  --set wso2.deployment.gatewayRuntime.router.resources.limits.cpu=500m
-  ```
-
 ### 3. Choreo Analytics
 
 If you need to enable Choreo Analytics with Choreo Connect, please follow the documentation on [API Analytics Getting Started Guide](https://apim.docs.wso2.com/en/latest/api-analytics/getting-started-guide/) to obtain the on-prem key for Analytics.
@@ -286,11 +270,11 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
 | `wso2.ingress.adapter.enabled`                                              | Create ingress resource for adapter Rest endpoint. Adapter ingress is disabled when the Choreo Connect Mode is "APIM_AS_CP" (i.e. not "STANDALONE") even it is enabled with this config | true                        |
 | `wso2.ingress.adapter.hostname`                                             | Hostname for adapter in STANDALONE mode                                                   | adapter.wso2.com            |
-| `wso2.ingress.adapter.tlsSecretName`                                        | TLS secret for the adapter host. Using default secret if not specified                    | -                           |
+| `wso2.ingress.adapter.tlsSecretName`                                        | TLS secret for the adapter host. Using default secret if not specified                    | Default TLS secret          |
 | `wso2.ingress.adapter.annotations`                                          | Annotations for the adapter ingress                                                       | Community NGINX Ingress controller annotations |
 | `wso2.ingress.gateway.enabled`                                              | If enabled, create the ingress for gateway                                                | true                        |
 | `wso2.ingress.gateway.hostname`                                             | Hostname for gateway                                                                      | gw.wso2.com                 |
-| `wso2.ingress.gateway.tlsSecretName`                                        | TLS secret for the gateway host. Using default secret if not specified                    | -                           |
+| `wso2.ingress.gateway.tlsSecretName`                                        | TLS secret for the gateway host. Using default secret if not specified                    | Default TLS secret          |
 | `wso2.ingress.adapter.annotations`                                          | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
 | `wso2.ingress.internal.enabled`                                             | Enable internal ingress resource only for the debugging purposes and check router related config_dumps etc. In a production scenario this should be disabled.   | false                        |
 | `wso2.ingress.internal.hostname`                                            | Hostname for gateway                                                                      | internal.wso2.com           |
@@ -321,8 +305,8 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.adapter.imageName`                                         | Image name for adapter                                                                    | "choreo-connect-adapter"    |
 | `wso2.deployment.adapter.imageTag`                                          | Image tag for adapter                                                                     | "1.0.0"                     |
 | `wso2.deployment.adapter.imagePullPolicy`                                   | Image pull policy of the container                                                        | "IfNotPresent"              |
-| `wso2.deployment.adapter.resources.requests.memory`                         | Resources for the adapter container - Memory request                                      | "300Mi"                     |
-| `wso2.deployment.adapter.resources.requests.cpu`                            | Resources for the adapter container - CPU request                                         | "300m"                      |
+| `wso2.deployment.adapter.resources.requests.memory`                         | Resources for the adapter container - Memory request                                      | "500Mi"                     |
+| `wso2.deployment.adapter.resources.requests.cpu`                            | Resources for the adapter container - CPU request                                         | "500m"                      |
 | `wso2.deployment.adapter.resources.limits.memory`                           | Resources for the adapter container - Memory limit                                        | "500Mi"                     |
 | `wso2.deployment.adapter.resources.limits.cpu`                              | Resources for the adapter container - CPU limit                                           | "500m"                      |
 | `wso2.deployment.adapter.affinity`                                          | Affinity for adapter pods assignment                                                      | -                           |
@@ -357,7 +341,7 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.adapter.affinity`                                          | Affinity for gateway runtime pods assignment                                              | -                           |
 | `wso2.deployment.adapter.nodeSelector`                                      | Node labels for gateway runtime pods assignment                                           | -                           |
 | `wso2.deployment.adapter.tolerations`                                       | Tolerations for gateway runtime pods assignment                                           | -                           |
-| `wso2.deployment.adapter.podSecurityContext`                                | Security context of the the gateway runtime pod                                           | runAsUser: 10500</br>runAsGroup: 10500|
+| `wso2.deployment.adapter.podSecurityContext`                                | Security context of the the gateway runtime pod                                           | runAsUser:&nbsp;10500</br>runAsGroup:&nbsp;10500|
 
 ###### Choreo Connect Gateway Runtime - Enforcer Configurations
 
@@ -367,8 +351,8 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.enforcer.imageTag`                          | Image tag for enforcer                                                                    | "1.0.0"                     |
 | `wso2.deployment.gatewayRuntime.enforcer.imagePullPolicy`                   | Image pull policy of the container                                                        | "IfNotPresent"              |
 | `wso2.deployment.gatewayRuntime.enforcer.envOverride`                       | Set (or override) environment variables as values or from ConfigMaps or Secrets           | -                           |
-| `wso2.deployment.gatewayRuntime.enforcer.resources.requests.memory`         | Resources for the adapter container - Memory request                                      | "500Mi"                     |
-| `wso2.deployment.gatewayRuntime.enforcer.resources.requests.cpu`            | Resources for the adapter container - CPU request                                         | "500m"                      |
+| `wso2.deployment.gatewayRuntime.enforcer.resources.requests.memory`         | Resources for the adapter container - Memory request                                      | "1000Mi"                    |
+| `wso2.deployment.gatewayRuntime.enforcer.resources.requests.cpu`            | Resources for the adapter container - CPU request                                         | "1000m"                     |
 | `wso2.deployment.gatewayRuntime.enforcer.resources.limits.memory`           | Resources for the adapter container - Memory limit                                        | "1000Mi"                    |
 | `wso2.deployment.gatewayRuntime.enforcer.resources.limits.cpu`              | Resources for the adapter container - CPU limit                                           | "1000m"                     |
 | `wso2.deployment.gatewayRuntime.enforcer.startupProbe.periodSeconds`        | How often (in seconds) to perform the probe                                               | 5                           |
@@ -393,8 +377,8 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.router.imageTag`                            | Image tag for enforcer                                                                    | "1.0.0"                     |
 | `wso2.deployment.gatewayRuntime.router.imagePullPolicy`                     | Image pull policy of the container                                                        | "IfNotPresent"              |
 | `wso2.deployment.gatewayRuntime.router.envOverride`                         | Set (or override) environment variables as values or from ConfigMaps or Secrets           | -                           |
-| `wso2.deployment.gatewayRuntime.router.resources.requests.memory`           | Resources for the adapter container - Memory request                                      | "300Mi"                     |
-| `wso2.deployment.gatewayRuntime.router.resources.requests.cpu`              | Resources for the adapter container - CPU request                                         | "500m"                      |
+| `wso2.deployment.gatewayRuntime.router.resources.requests.memory`           | Resources for the adapter container - Memory request                                      | "500Mi"                     |
+| `wso2.deployment.gatewayRuntime.router.resources.requests.cpu`              | Resources for the adapter container - CPU request                                         | "1000m"                     |
 | `wso2.deployment.gatewayRuntime.router.resources.limits.memory`             | Resources for the adapter container - Memory limit                                        | "500Mi"                     |
 | `wso2.deployment.gatewayRuntime.router.resources.limits.cpu`                | Resources for the adapter container - CPU limit                                           | "1000m"                     |
 | `wso2.deployment.gatewayRuntime.router.startupProbe.periodSeconds`          | How often (in seconds) to perform the probe                                               | 5                           |
