@@ -1,4 +1,4 @@
-{{- if .Values.wso2.ingress.internal.enabled }}
+{{- if .Values.wso2.deployment.gatewayRuntime.router.ingress.internal.enabled }}
 # --------------------------------------------------------------------
 # Copyright (c) 2022, WSO2 Inc. (http://wso2.com) All Rights Reserved.
 #
@@ -21,16 +21,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ printf "%s-ingress-internal" (include "choreo-connect.fullname" .) | trunc 63 }}
+  name: {{ printf "%s-internal" (include "choreo-connect.fullname" .) | trunc 63 }}
   namespace: {{ .Release.Namespace }}
-{{- with .Values.wso2.ingress.internal.annotations }}
+{{- with .Values.wso2.deployment.gatewayRuntime.router.ingress.internal.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
 {{- end }}
-spec:
+spec: # TODO: add ingress class https://github.com/wso2/kubernetes-apim/blob/master/advanced/am-pattern-3/templates/am/gateway/wso2am-pattern-3-am-gateway-ingress.yaml
   tls:
   - hosts:
-      - {{ .Values.wso2.ingress.internal.hostname }}
+      - {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.internal.hostname }}
   rules:
     - host: internal.wso2.com
       http:

@@ -32,6 +32,7 @@ data:
       {{- else }}
       enabled = {{ if (include "choreo-connect.deploymentMode.isStandalone" .) }}true{{ else }}false{{ end }}
       {{- end }}
+      host = {{ .Values.wso2.deployment.adapter.ingress.hostname | quote }}
       port = "9843"
       tokenPrivateKeyPath = "/home/wso2/security/keystore/mg.key"
       [[adapter.server.users]]
@@ -40,7 +41,7 @@ data:
 
     [[adapter.vhostMapping]]
       environment = "Default"
-      vhost = "{{ .Values.wso2.ingress.gateway.hostname }}"
+      vhost = "{{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }}"
 
     [adapter.keystore]
       certPath = "/home/wso2/security/keystore/mg.pem"
@@ -52,7 +53,7 @@ data:
     [router]
       listenerPort = 9090
       securedListenerPort = 9095
-      systemHost = "{{ .Values.wso2.ingress.gateway.hostname }}"
+      systemHost = "{{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }}"
 
     [router.keystore]
       certPath = "/home/wso2/security/keystore/mg.pem"
@@ -72,7 +73,7 @@ data:
     [enforcer]
     [enforcer.jwtIssuer]
       enabled = {{ .Values.wso2.deployment.gatewayRuntime.enforcer.security.testTokenIssuer.enabled }}
-      issuer = "https://{{ .Values.wso2.ingress.gateway.hostname }}/testkey"
+      issuer = "https://{{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }}/testkey"
 
     [enforcer.throttling]
       enableGlobalEventPublishing = {{ if (include "choreo-connect.deploymentMode.isStandalone" .) }}false{{ else }}true{{ end }}
@@ -96,7 +97,7 @@ data:
 
     [[enforcer.security.tokenService]]
       name = "MGW"
-      issuer = "https://{{ .Values.wso2.ingress.gateway.hostname }}/testkey"
+      issuer = "https://{{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }}/testkey"
       certificateAlias = "mgw"
       jwksURL = ""
       validateSubscription = false
