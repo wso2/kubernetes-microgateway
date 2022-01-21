@@ -23,8 +23,8 @@
   following quick start guide.<br><br>
 
 * An already setup [Kubernetes cluster](https://kubernetes.io/docs/setup).<br>
-  Minimum CPU: 6vCPU<br>
-  Minimum Memory: 6GB<br><br>
+  Minimum CPU: 4vCPU<br>
+  Minimum Memory: 4GB<br><br>
 
 * Install [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/deploy/).<br><br>
 
@@ -138,9 +138,13 @@ helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-1 --namespace <N
 
 #### 2.2. WSO2 API Manager as a Control Plane
 
-##### Setup 1: Deploy WSO2 API Manager
+In addition to the prerequisites defined above, the following deployment option require a Kubernetes cluster with following resources.
 
-TODO: SET prereq explictly to this section
+* An already setup [Kubernetes cluster](https://kubernetes.io/docs/setup).<br>
+  Minimum CPU: 6vCPU<br>
+  Minimum Memory: 6GB<br><br>
+
+##### Setup 1: Deploy WSO2 API Manager
 
 Add the WSO2 Helm chart repository.
 ```
@@ -307,6 +311,7 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.adapter.imageName`                                         | Image name for adapter                                                                    | "choreo-connect-adapter"    |
 | `wso2.deployment.adapter.imageTag`                                          | Image tag for adapter                                                                     | "1.0.0"                     |
 | `wso2.deployment.adapter.imagePullPolicy`                                   | Image pull policy of the container                                                        | "IfNotPresent"              |
+| `wso2.deployment.adapter.replicaCount`                                      | Pods count                                                                                | 1                           |
 | `wso2.deployment.adapter.resources.requests.memory`                         | Resources for the adapter container - Memory request                                      | "500Mi"                     |
 | `wso2.deployment.adapter.resources.requests.cpu`                            | Resources for the adapter container - CPU request                                         | "500m"                      |
 | `wso2.deployment.adapter.resources.limits.memory`                           | Resources for the adapter container - Memory limit                                        | "500Mi"                     |
@@ -323,8 +328,8 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.adapter.configToml`                                        | Define templated config.toml file, if empty using default config.toml                     | Default templated config toml file |
 | `wso2.deployment.adapter.logConfigToml`                                     | Define templated log_config.toml file, if empty using default log_config.toml             | Default templated log config toml file |
 | `wso2.deployment.adapter.envOverride`                                       | Set (or override) environment variables as values or from ConfigMaps or Secrets           | -                           |
-| `wso2.deployment.adapter.security.keystore`                                 | Private key and cert in PEM format                                                        | Default Certs               |
-| `wso2.deployment.adapter.security.truststore`                               | Truststore certs as array of secrets {secretName, subPath}                                | Default Certs               |
+| `wso2.deployment.adapter.security.keystore`                                 | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates))  | Default Certs           |
+| `wso2.deployment.adapter.security.truststore`                               | Truststore certs as array of secrets {secretName, subPath} (Refer [Configure Certificates](#configure-certificates))  | Default Certs |
 | `wso2.deployment.adapter.security.consul`                                   | Certs for consul integration                                                              | Default Certs               |
 
 ###### Choreo Connect Gateway Runtime Configurations
@@ -334,7 +339,7 @@ Gateway runtime (enforcer + router) deployment configurations
 | Parameter                                                                   | Description                                                                               | Default Value               |
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
 | `wso2.deployment.gatewayRuntime.podAnnotations`                             | Key value pair of annotations for the pod                                                 | -                           |
-| `wso2.deployment.gatewayRuntime.replicaCount`                               | Pod count                                                                                 | 1                           |
+| `wso2.deployment.gatewayRuntime.replicaCount`                               | Pod count, this is applicable only if `wso2.deployment.gatewayRuntime.autoscaling.enabled` is disabled | 1              |
 | `wso2.deployment.gatewayRuntime.autoscaling.enabled`                        | Horizontal pod auto scaling is enabled                                                    | true                        |
 | `wso2.deployment.gatewayRuntime.autoscaling.minReplicas`                    | Horizontal pod auto scaling - Minimum replica count                                       | 1                           |
 | `wso2.deployment.gatewayRuntime.autoscaling.maxReplicas`                    | Horizontal pod auto scaling - Maximum replica count                                       | 5                           |
@@ -364,11 +369,12 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.enforcer.readinessProbe.initialDelaySeconds`| Number of seconds after the container has started before readiness probes are initiated   | 8                           |
 | `wso2.deployment.gatewayRuntime.enforcer.readinessProbe.periodSeconds`      | How often (in seconds) to perform the probe                                               | 5                           |
 | `wso2.deployment.gatewayRuntime.enforcer.containerSecurityContext`          | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>&nbsp;&nbsp;add: ["NET_RAW"]|
-| `wso2.deployment.gatewayRuntime.enforcer.security.keystore`                 | Private key and cert in PEM format                                                        | Default Certs               |
+| `wso2.deployment.gatewayRuntime.enforcer.security.backendCaCerts`           | Trusted backend certs in PEM format (Refer [Configure Certificates](#configure-certificates)) | Default envoy CA Certs  |
+| `wso2.deployment.gatewayRuntime.enforcer.security.keystore`                 | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates)) | Default Certs            |
 | `wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.enabled`       | Passing end user attributes to the backend - enabled                                      | false                       |
-| `wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore`      | Passing end user attributes to the backend - Keys for signing                             | Default Certs               |
+| `wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore`      | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates))  | Default Certs           |
 | `wso2.deployment.gatewayRuntime.enforcer.security.testTokenIssuer.enabled`  | Test token issuer - enabled                                                               | true                        |
-| `wso2.deployment.gatewayRuntime.enforcer.security.truststore`               | Truststore certs as array of secrets {secretName, subPath}                                | Default Certs               |
+| `wso2.deployment.gatewayRuntime.enforcer.security.truststore`               | Truststore certs as array of secrets {secretName, subPath} (Refer [Configure Certificates](#configure-certificates))  | Default Certs |
 | `wso2.deployment.gatewayRuntime.enforcer.log4j2Properties`                  | Define templated log4j2.properties file, if empty using default log4j2.properties         | Default templated log4j property file |
 
 ###### Choreo Connect Gateway Runtime - Router Configurations
@@ -390,19 +396,57 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.router.readinessProbe.initialDelaySeconds`  | Number of seconds after the container has started before readiness probes are initiated   | 20                          |
 | `wso2.deployment.gatewayRuntime.router.readinessProbe.periodSeconds`        | How often (in seconds) to perform the probe                                               | 5                           |
 | `wso2.deployment.gatewayRuntime.router.containerSecurityContext`            | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>&nbsp;&nbsp;add: ["NET_RAW"]|
-| `wso2.deployment.gatewayRuntime.router.security.keystore`                   | Private key and cert in PEM format                                                        | Default Certs               |
+| `wso2.deployment.gatewayRuntime.router.security.keystore`                   | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates))  | Default Certs           |
 
-###### Kubernetes Configurations
+## Kubernetes Specific Configurations
 
 | Parameter                                                                   | Description                                                                               | Default Value               |
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
-| `kubernetes.serviceAccount.create`                                          | Specifies whether a service account should be created                                     | true                        |
-| `kubernetes.serviceAccount.annotations`                                     | Annotations to add to the service account                                                 | -                           |
-| `kubernetes.serviceAccount.name`                                            | The name of the service account to use                                                    | -                           |
+| `kubernetes.ingress.className`                                              | Kubernetes ingress class name to be applied to all ingress resources                      | -                           |
 
-###### Helm Release Name Configurations
+## Helm Release Name Configurations
 
 | Parameter                                                                   | Description                                                                               | Default Value               |
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
 | `nameOverride`                                                              | Name to override. Default to "choreo-connect"                                             | -                           |
 | `fullnameOverride`                                                          | Full name to override. Default to "<RELEASE_NAME>-choreo-connect"                         | -                           |
+
+## Configure Certificates
+
+You can refer a value in a secret by specifying values as follows.
+
+- secretName: Name of the secret in the same namespace that Choreo Connect is going to be installed
+- subPath: Sub path in the K8s secret (or the key of the K8s secret).
+
+```yaml
+secretName: "router-keystore"
+subPath: "tls.key"
+```
+
+### Keystore
+
+The following is a sample how to define the keystore. If you have created a secret in the same namespace that Choreo Connect going to be installed, you can refer them in the config as follows.
+
+```yaml
+keystore:
+  key:
+    secretName: "router-keystore"
+    subPath: "tls.key"
+  cert:
+    secretName: "router-keystore"
+    subPath: "tls.crt"
+```
+
+### Truststore
+
+The following is a sample how to define the truststore. If you have created a secret in the same namespace that Choreo Connect going to be installed, you can refer them in the config as follows.
+
+```yaml
+truststore:
+  - secretName: "adapter-certs"
+    subPath: "tls.crt"
+  - secretName: "controlplane-cert"
+    subPath: "wso2carbon.pem"
+```
+
+## Configure Passwords

@@ -25,6 +25,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
 {{- end }}
 spec:
+  {{- if .Values.kubernetes.ingress.className }}
+  ingressClassName: {{ .Values.kubernetes.ingress.className }}
+  {{- end }}
   tls:
   - hosts:
       - {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }}

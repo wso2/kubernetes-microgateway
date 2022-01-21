@@ -54,7 +54,6 @@ spec:
       imagePullSecrets:
         - name: {{ include "choreo-connect.subscriptionCredsSecretName" . }}
       {{- end }}
-      serviceAccountName: {{ include "choreo-connect.serviceAccountName" . }}
       automountServiceAccountToken: false
       {{- with .Values.wso2.deployment.gatewayRuntime.podSecurityContext }}
       securityContext:
@@ -203,6 +202,12 @@ spec:
               name: router-keystore-cert
               readOnly: true
               subPath: {{ if .Values.wso2.deployment.gatewayRuntime.router.security.keystore }}{{ .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
+            {{- if .Values.wso2.deployment.gatewayRuntime.router.security.backendCaCerts }}
+            - mountPath: /etc/ssl/certs/ca-certificates.crt
+              name: router-backend-ca-certs
+              readOnly: true
+              subPath: {{- .Values.wso2.deployment.gatewayRuntime.router.security.backendCaCerts.subPath | quote }}
+            {{- end }}
             - mountPath: /home/wso2/security/truststore/adapter-ca-cert.pem
               name: adapter-keystore-cert
               readOnly: true
@@ -338,6 +343,11 @@ spec:
         - name: router-keystore-cert
           secret:
             secretName: {{ if .Values.wso2.deployment.gatewayRuntime.router.security.keystore }}{{ .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert.secretName }}{{ else }}{{ printf "%s-default-keystore" (include "choreo-connect.routerFullname" .) | trunc 63 }}{{ end }}
+      {{- if .Values.wso2.deployment.gatewayRuntime.router.security.backendCaCerts }}
+        - name: router-backend-ca-certs
+          secret:
+            secretName: {{ .Values.wso2.deployment.gatewayRuntime.router.security.backendCaCerts.secretName }}
+      {{- end }}
         - name: adapter-keystore-cert
           secret:
             secretName: {{ if .Values.wso2.deployment.adapter.security.keystore }}{{ .Values.wso2.deployment.adapter.security.keystore.cert.secretName }}{{ else }}{{printf "%s-default-keystore" (include "choreo-connect.adapterFullname" .) | trunc 63}}{{ end }}
