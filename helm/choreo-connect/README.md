@@ -319,7 +319,7 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.adapter.affinity`                                          | Affinity for adapter pods assignment                                                      | -                           |
 | `wso2.deployment.adapter.nodeSelector`                                      | Node labels for adapter pods assignment                                                   | -                           |
 | `wso2.deployment.adapter.tolerations`                                       | Tolerations for adapter pods assignment                                                   | -                           |
-| `wso2.deployment.adapter.containerSecurityContext`                          | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>&nbsp;&nbsp;add: ["NET_RAW"]|
+| `wso2.deployment.adapter.containerSecurityContext`                          | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>|
 | `wso2.deployment.adapter.livenessProbe.initialDelaySeconds`                 | Number of seconds after the container has started before liveness probes are initiated    | 10                          |
 | `wso2.deployment.adapter.livenessProbe.periodSeconds`                       | How often (in seconds) to perform the probe                                               | 30                          |
 | `wso2.deployment.adapter.readinessProbe.initialDelaySeconds`                | Number of seconds after the container has started before readiness probes are initiated   | 8                           |
@@ -358,6 +358,7 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.enforcer.imageTag`                          | Image tag for enforcer                                                                    | "1.0.0"                     |
 | `wso2.deployment.gatewayRuntime.enforcer.imagePullPolicy`                   | Image pull policy of the container                                                        | "IfNotPresent"              |
 | `wso2.deployment.gatewayRuntime.enforcer.envOverride`                       | Set (or override) environment variables as values or from ConfigMaps or Secrets           | -                           |
+| `wso2.deployment.gatewayRuntime.enforcer.dropins`                           | Mount enforcer lib dropins JARs to the `dropins` directory, array of ConfigMap names      | -                           |
 | `wso2.deployment.gatewayRuntime.enforcer.resources.requests.memory`         | Resources for the adapter container - Memory request                                      | "1000Mi"                    |
 | `wso2.deployment.gatewayRuntime.enforcer.resources.requests.cpu`            | Resources for the adapter container - CPU request                                         | "1000m"                     |
 | `wso2.deployment.gatewayRuntime.enforcer.resources.limits.memory`           | Resources for the adapter container - Memory limit                                        | "1000Mi"                    |
@@ -368,7 +369,7 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.enforcer.livenessProbe.periodSeconds`       | How often (in seconds) to perform the probe                                               | 30                          |
 | `wso2.deployment.gatewayRuntime.enforcer.readinessProbe.initialDelaySeconds`| Number of seconds after the container has started before readiness probes are initiated   | 8                           |
 | `wso2.deployment.gatewayRuntime.enforcer.readinessProbe.periodSeconds`      | How often (in seconds) to perform the probe                                               | 5                           |
-| `wso2.deployment.gatewayRuntime.enforcer.containerSecurityContext`          | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>&nbsp;&nbsp;add: ["NET_RAW"]|
+| `wso2.deployment.gatewayRuntime.enforcer.containerSecurityContext`          | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>|
 | `wso2.deployment.gatewayRuntime.enforcer.security.backendCaCerts`           | Trusted backend certs in PEM format (Refer [Configure Certificates](#configure-certificates)) | Default envoy CA Certs  |
 | `wso2.deployment.gatewayRuntime.enforcer.security.keystore`                 | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates)) | Default Certs            |
 | `wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.enabled`       | Passing end user attributes to the backend - enabled                                      | false                       |
@@ -395,7 +396,7 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.router.livenessProbe.periodSeconds`         | How often (in seconds) to perform the probe                                               | 10                          |
 | `wso2.deployment.gatewayRuntime.router.readinessProbe.initialDelaySeconds`  | Number of seconds after the container has started before readiness probes are initiated   | 20                          |
 | `wso2.deployment.gatewayRuntime.router.readinessProbe.periodSeconds`        | How often (in seconds) to perform the probe                                               | 5                           |
-| `wso2.deployment.gatewayRuntime.router.containerSecurityContext`            | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>&nbsp;&nbsp;add: ["NET_RAW"]|
+| `wso2.deployment.gatewayRuntime.router.containerSecurityContext`            | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>|
 | `wso2.deployment.gatewayRuntime.router.security.keystore`                   | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates))  | Default Certs           |
 
 ## Kubernetes Specific Configurations
@@ -450,3 +451,17 @@ truststore:
 ```
 
 ## Configure Passwords
+
+You can configure passwords thorough environment variables. Additionally, any other environments variables can be set/override as follows.
+You can use plain values in the `value` section or else you can use `valueFrom`. This configuration is the same way you can define environment variables in Kubernetes Pods.
+
+```yaml
+envOverride:
+  - name: enforcer_admin_pwd
+    value: admin
+  - name: tm_admin_pwd
+    valueFrom:
+      secretKeyRef:
+        name: my-secret
+        key: tm_password
+```

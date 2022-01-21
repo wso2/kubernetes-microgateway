@@ -91,14 +91,14 @@ image: {{ $dockerRegistry }}/{{ $imageName }}{{- if not (eq $imageTag "") }}:{{ 
 {{- end -}}
 
 {{/*
-Truststore Secret Volumes
+Truststore Secret Volume Names
 */}}
 {{- define "choreo-connect.deployment.secretVolumeName" -}}
 {{ (regexReplaceAll "\\W+" (printf "%s-%s-%s" .prefix .secret.secretName .secret.subPath | lower | trunc 63 ) "-" ) | trimSuffix "-"}}
 {{- end -}}
 
 {{/*
-Truststore Secret Volumes
+Truststore Secret Volumes Mounts
 */}}
 {{- define "choreo-connect.deployment.trustore.volumes" -}}
 {{- range .truststore -}}
