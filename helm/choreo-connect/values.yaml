@@ -154,8 +154,8 @@ wso2:
 
         adapterRestService:
           # Enable or disable adapter Rest service
-          # if not defined, default to true in "STANDALONE" mode and default to false in "APIM_AS_CP" mode
-          enabled: ""
+          # If "default": enabled in "STANDALONE" mode and disabled in "APIM_AS_CP" mode
+          enabled: "default" # an string value: "default" or "true" or "false"
           
         # Private key and cert in PEM format
         # for more details: https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
