@@ -17,7 +17,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{printf "%s-%s" (include "choreo-connect.fullname" .) "adapter-deployment" | trunc 63 }}
+  name: {{ printf "%s-%s" (include "choreo-connect.fullname" .) "adapter" | trunc 63 }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "choreo-connect.labels" . | nindent 4 }}
@@ -52,7 +52,6 @@ spec:
       imagePullSecrets:
         - name: {{ include "choreo-connect.subscriptionCredsSecretName" . }}
       {{- end }}
-      serviceAccountName: {{ include "choreo-connect.serviceAccountName" . }}
       automountServiceAccountToken: false
       {{- with .Values.wso2.deployment.adapter.podSecurityContext }}
       securityContext:
@@ -122,10 +121,6 @@ spec:
               value: "/home/wso2/security/keystore/mg.key"
             - name: ADAPTER_PUBLIC_CERT_PATH
               value: "/home/wso2/security/keystore/mg.pem"
-            - name: cp_admin_pwd
-              value: "admin"
-            - name: adapter_admin_pwd
-              value: "admin"
           {{- with .Values.wso2.deployment.adapter.envOverride }}
             {{- toYaml . | nindent 12}}
           {{- end }}

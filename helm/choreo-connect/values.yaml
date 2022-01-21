@@ -27,43 +27,6 @@ wso2:
     endpoint: "https://analytics-event-auth.choreo.dev/auth/v1"
     onpremKey: ""
 
-  ingress:
-    adapter:
-      # Create ingress resource for adapter Rest endpoint. Adapter ingress is disabled when the Choreo Connect Mode is "APIM_AS_CP" (i.e. not "STANDALONE")
-      # even it is enabled with this config
-      enabled: true
-      # Hostname for adapter in STANDALONE mode
-      hostname: adapter.wso2.com
-      # TLS secret for the adapter host. Using default secret if not specified
-      tlsSecretName: ""
-      # Annotations for the adapter Ingress
-      annotations:
-        kubernetes.io/ingress.class: nginx
-        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-        nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    gateway:
-      # If enabled, create the ingress for gateway
-      enabled: true
-      # Hostname for gateway
-      hostname: gw.wso2.com
-      # TLS secret for the gateway host. Using default secret if not specified
-      tlsSecretName: ""
-      # Annotations for the gateway Ingress
-      annotations:
-        kubernetes.io/ingress.class: nginx
-        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-        nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    internal:
-      # Enable internal ingress resource only for the debugging purposes
-      # and check router related config_dumps etc. In a production scenario this should be disabled.
-      enabled: false
-      # Hostname for the internal service
-      hostname: internal.wso2.com
-      # Annotations for the internal service
-      annotations:
-        kubernetes.io/ingress.class: nginx
-        nginx.ingress.kubernetes.io/ssl-redirect: "false"
-
   # Configuration of externally installed APIM service. Configure this, if the deployment.mode is "APIM_AS_CP"
   apim:
     controlPlane:
@@ -97,7 +60,21 @@ wso2:
       # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
       imagePullPolicy: IfNotPresent
       # Pod count
-      replicaCount: 1 # TODO: do we need replica count for adapter? #TODO: add to readme
+      replicaCount: 1 #TODO: add to readme
+
+      ingress:
+        # Create ingress resource for adapter Rest endpoint. Adapter ingress is disabled when the Choreo Connect Mode is "APIM_AS_CP" (i.e. not "STANDALONE")
+        # even it is enabled with this config
+        enabled: true
+        # Hostname for adapter in STANDALONE mode
+        hostname: adapter.wso2.com # TODO: Move this to deployment profile and ingress -> k8s section, even though this is not used
+        # TLS secret for the adapter host. Using default secret if not specified
+        tlsSecretName: ""
+        # Annotations for the adapter Ingress
+        annotations:
+          kubernetes.io/ingress.class: nginx
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+          nginx.ingress.kubernetes.io/ssl-redirect: "false"
 
       # Resources for the adapter container
       resources:
@@ -158,7 +135,7 @@ wso2:
       # Define templated log_config.toml file, if empty using default log_config.toml
       logConfigToml: ""
 
-      # envOverride:
+      # envOverride: # TODO: document this
       #   - name: cp_admin_pwd
       #     value: admin
       #   - name: adapter_admin_pwd
@@ -166,7 +143,11 @@ wso2:
       #       secretKeyRef:
       #         name: my-secret
       #         key: password
-      envOverride: []
+      envOverride:
+        - name: cp_admin_pwd
+          value: admin
+        - name: adapter_admin_pwd
+          value: admin
 
       security:
         # Hostname for SSL verification
@@ -299,7 +280,7 @@ wso2:
           capabilities:
             drop:
               - all
-            add: ["NET_RAW"]
+            add: ["NET_RAW"] # TODO: get confirmation
         
         security:
           # Hostname for SSL verification
@@ -355,6 +336,30 @@ wso2:
         # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
         imagePullPolicy: IfNotPresent
 
+        ingress:
+          gateway:
+            # If enabled, create the ingress for gateway
+            enabled: true
+            # Hostname for gateway
+            hostname: gw.wso2.com # TODO: Move this to deployment profile and ingress -> k8s section
+            # TLS secret for the gateway host. Using default secret if not specified
+            tlsSecretName: ""
+            # Annotations for the gateway Ingress
+            annotations:
+              kubernetes.io/ingress.class: nginx
+              nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+              nginx.ingress.kubernetes.io/ssl-redirect: "false"
+          internal:
+            # Enable internal ingress resource only for the debugging purposes
+            # and check router related config_dumps etc. In a production scenario this should be disabled.
+            enabled: true
+            # Hostname for the internal service
+            hostname: internal.wso2.com # TODO: add this to deployment section
+            # Annotations for the internal service
+            annotations:
+              kubernetes.io/ingress.class: nginx
+              nginx.ingress.kubernetes.io/ssl-redirect: "false"
+
         # envOverride:
         #   - name: CONCURRENCY
         #     value: 2
@@ -404,6 +409,10 @@ wso2:
             add: ["NET_RAW"]
 
         security:
+          # TODO: desc
+          backendCaCerts:
+            secretName: "trusted-ca-certs"
+            subPath: "cacerts.crt"
           # private key and cert in PEM format
           # for more details: https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
           # override default certs from secrets
@@ -417,6 +426,8 @@ wso2:
           keystore: {} # using default certs, if not defined.
           
 kubernetes:
+  # TODO: add ingress class: https://github.com/wso2/kubernetes-is/pull/317/files
+  # TODO: remove serviceAccount
   serviceAccount:
     # Specifies whether a service account should be created
     create: true

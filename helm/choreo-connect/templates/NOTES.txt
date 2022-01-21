@@ -2,8 +2,8 @@ Thank you for installing Chore Connect.
 
 Installation Mode: {{ .Values.wso2.deployment.mode | quote }}
 
-{{- $adapterIngEnabled := and (include "choreo-connect.deploymentMode.isStandalone" .) .Values.wso2.ingress.adapter.enabled }}
-{{- $gatewayIngEnabled := .Values.wso2.ingress.gateway.enabled }}
+{{- $adapterIngEnabled := and (include "choreo-connect.deploymentMode.isStandalone" .) .Values.wso2.deployment.adapter.ingress.enabled }}
+{{- $gatewayIngEnabled := .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.enabled }}
 {{- if or $adapterIngEnabled $gatewayIngEnabled }}
 Please follow these configure DNS records.
 
@@ -17,7 +17,7 @@ Please follow these configure DNS records.
 
     Choreo Connect Adapter
     - NAME: Metadata name of the Kubernetes Ingress resource ("{{ printf "%s-ingress" (include "choreo-connect.adapterFullname" .) | trunc 63 }}")
-    - HOSTS: Hostname of the Choreo Connect Adapter ("{{ .Values.wso2.ingress.adapter.hostname }}")
+    - HOSTS: Hostname of the Choreo Connect Adapter ("{{ .Values.wso2.deployment.adapter.ingress.hostname }}")
     - ADDRESS: External IP (`EXTERNAL-IP`) exposing the Chore Connect Adapter to outside of the Kubernetes environment
     - PORTS: Externally exposed service ports of the Choreo Connect Adapter
     {{- end }}
@@ -26,7 +26,7 @@ Please follow these configure DNS records.
 
     Choreo Connect Gateway
     - NAME: Metadata name of the Kubernetes Ingress resource ("{{ printf "%s-ingress" (include "choreo-connect.fullname" .) | trunc 63 }}"")
-    - HOSTS: Hostname of the gateway service ("{{ .Values.wso2.ingress.gateway.hostname }}")
+    - HOSTS: Hostname of the gateway service ("{{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }}")
     - ADDRESS: External IP (`EXTERNAL-IP`) exposing the gateway to outside of the Kubernetes environment
     - PORTS: Externally exposed gateway ports of the Choreo Connect
     {{- end }}
@@ -39,7 +39,7 @@ Please follow these configure DNS records.
     If the defined hostnames are not backed by a DNS service, for the purpose of evaluation you may add an entry mapping the
     hostnames and the external IP in the `/etc/hosts` file at the client-side.
 
-    <EXTERNAL-IP> {{ if $adapterIngEnabled }}{{ .Values.wso2.ingress.adapter.hostname }}{{ end }} {{ if $gatewayIngEnabled }}{{ .Values.wso2.ingress.gateway.hostname }}{{ end }}
+    <EXTERNAL-IP> {{ if $adapterIngEnabled }}{{ .Values.wso2.deployment.adapter.ingress.hostname }}{{ end }} {{ if $gatewayIngEnabled }}{{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }}{{ end }}
 {{- end }}
 
 Please refer the official documentation at https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/getting-started/choreo-connect-overview/ for additional information on Choreo Connect.

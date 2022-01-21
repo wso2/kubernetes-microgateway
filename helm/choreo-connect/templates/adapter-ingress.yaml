@@ -1,4 +1,4 @@
-{{- if and (include "choreo-connect.deploymentMode.isStandalone" .) .Values.wso2.ingress.adapter.enabled }}
+{{- if and (include "choreo-connect.deploymentMode.isStandalone" .) .Values.wso2.deployment.adapter.ingress.enabled }}
 # --------------------------------------------------------------------
 # Copyright (c) 2022, WSO2 Inc. (http://wso2.com) All Rights Reserved.
 #
@@ -18,23 +18,23 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ printf "%s-ingress" (include "choreo-connect.adapterFullname" .) | trunc 63 }}
+  name: {{ include "choreo-connect.adapterFullname" . }}
   namespace: {{ .Release.Namespace }}
-{{- with .Values.wso2.ingress.adapter.annotations }}
+{{- with .Values.wso2.deployment.adapter.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
 {{- end }}
 spec:
   tls:
   - hosts:
-      - {{ .Values.wso2.ingress.adapter.hostname }}
-  {{- if .Values.wso2.ingress.adapter.tlsSecretName }}
-    secretName: {{ .Values.wso2.ingress.adapter.tlsSecretName }}
+      - {{ .Values.wso2.deployment.adapter.ingress.hostname }}
+  {{- if .Values.wso2.deployment.adapter.ingress.tlsSecretName }}
+    secretName: {{ .Values.wso2.deployment.adapter.ingress.tlsSecretName }}
   {{- else }}
     secretName: {{ printf "%s-ingress-tls-secret" (include "choreo-connect.fullname" .) | trunc 63 }}
   {{- end }}
   rules:
-    - host: {{ .Values.wso2.ingress.adapter.hostname }}
+    - host: {{ .Values.wso2.deployment.adapter.ingress.hostname }}
       http:
           paths:
             - path: /

@@ -21,3 +21,6 @@
 .idea/
 *.tmproj
 .vscode/
+
+# Config Template file
+confs/config.toml.template
