@@ -60,24 +60,6 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8}}
       {{- end }}
-      initContainers:
-        - name: init-adapter-service
-          image: busybox:1.31
-          imagePullPolicy: IfNotPresent
-          command: [ 'sh', '-c', 'echo -e "Checking for the availability of Adapter"; while ! nc -z {{ include "choreo-connect.adapterFullname" . }} 18000; do sleep 1; printf "-"; done; echo -e "  >> Adapter has started";' ]
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
-          resources:
-            requests:
-              memory: "100Mi"
-              cpu: "100m"
-            limits:
-              memory: "100Mi"
-              cpu: "100m"
       containers:
         - name: choreo-connect-enforcer
           image: {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.gatewayRuntime.enforcer) | indent 10 }}
@@ -290,7 +272,7 @@ spec:
               scheme: HTTPS
               httpHeaders:
                 - name: Host
-                  value: {{ .Values.wso2.ingress.gateway.hostname }}
+                  value: {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }} # TODO: this should be localhost
             failureThreshold: {{ .Values.wso2.deployment.gatewayRuntime.router.startupProbe.failureThreshold }}
             periodSeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.startupProbe.periodSeconds }}
           livenessProbe:
@@ -300,7 +282,7 @@ spec:
               scheme: HTTPS
               httpHeaders:
                 - name: Host
-                  value: {{ .Values.wso2.ingress.gateway.hostname }}
+                  value: {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }}
             initialDelaySeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.livenessProbe.periodSeconds }}
           readinessProbe:
@@ -310,7 +292,7 @@ spec:
               scheme: HTTPS
               httpHeaders:
                 - name: Host
-                  value: {{ .Values.wso2.ingress.gateway.hostname }}
+                  value: {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }}
             initialDelaySeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.livenessProbe.periodSeconds }}
       volumes:
@@ -349,7 +331,7 @@ spec:
             name: {{ printf "%s-grpc-probe-script" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}
             defaultMode: 0777
         - name: enforcer-dropins
-          emptyDir: {}
+          emptyDir: {} # TODO: configure conrigmap
         - name: router-keystore-key
           secret:
             secretName: {{ if .Values.wso2.deployment.gatewayRuntime.router.security.keystore }}{{ .Values.wso2.deployment.gatewayRuntime.router.security.keystore.key.secretName }}{{ else }}{{ printf "%s-default-keystore" (include "choreo-connect.routerFullname" .) | trunc 63 }}{{ end }}

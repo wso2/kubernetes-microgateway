@@ -140,6 +140,8 @@ helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-1 --namespace <N
 
 ##### Setup 1: Deploy WSO2 API Manager
 
+TODO: SET prereq explictly to this section
+
 Add the WSO2 Helm chart repository.
 ```
  helm repo add wso2 https://helm.wso2.com && helm repo update
@@ -268,17 +270,17 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 
 | Parameter                                                                   | Description                                                                               | Default Value               |
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
-| `wso2.ingress.adapter.enabled`                                              | Create ingress resource for adapter Rest endpoint. Adapter ingress is disabled when the Choreo Connect Mode is "APIM_AS_CP" (i.e. not "STANDALONE") even it is enabled with this config | true                        |
-| `wso2.ingress.adapter.hostname`                                             | Hostname for adapter in STANDALONE mode                                                   | adapter.wso2.com            |
-| `wso2.ingress.adapter.tlsSecretName`                                        | TLS secret for the adapter host. Using default secret if not specified                    | Default TLS secret          |
-| `wso2.ingress.adapter.annotations`                                          | Annotations for the adapter ingress                                                       | Community NGINX Ingress controller annotations |
-| `wso2.ingress.gateway.enabled`                                              | If enabled, create the ingress for gateway                                                | true                        |
-| `wso2.ingress.gateway.hostname`                                             | Hostname for gateway                                                                      | gw.wso2.com                 |
-| `wso2.ingress.gateway.tlsSecretName`                                        | TLS secret for the gateway host. Using default secret if not specified                    | Default TLS secret          |
-| `wso2.ingress.adapter.annotations`                                          | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
-| `wso2.ingress.internal.enabled`                                             | Enable internal ingress resource only for the debugging purposes and check router related config_dumps etc. In a production scenario this should be disabled.   | false                        |
-| `wso2.ingress.internal.hostname`                                            | Hostname for gateway                                                                      | internal.wso2.com           |
-| `wso2.ingress.internal.annotations`                                         | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
+| `wso2.deployment.adapter.ingress.enabled`                                              | Create ingress resource for adapter Rest endpoint. Adapter ingress is disabled when the Choreo Connect Mode is "APIM_AS_CP" (i.e. not "STANDALONE") even it is enabled with this config | true                        |
+| `wso2.deployment.adapter.ingress.hostname`                                             | Hostname for adapter in STANDALONE mode                                                   | adapter.wso2.com            |
+| `wso2.deployment.adapter.ingress.tlsSecretName`                                        | TLS secret for the adapter host. Using default secret if not specified                    | Default TLS secret          |
+| `wso2.deployment.adapter.ingress.annotations`                                          | Annotations for the adapter ingress                                                       | Community NGINX Ingress controller annotations |
+| `wso2.deployment.gatewayRuntime.router.ingress.gateway.enabled`                                              | If enabled, create the ingress for gateway                                                | true                        |
+| `wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname`                                             | Hostname for gateway                                                                      | gw.wso2.com                 |
+| `wso2.deployment.gatewayRuntime.router.ingress.gateway.tlsSecretName`                                        | TLS secret for the gateway host. Using default secret if not specified                    | Default TLS secret          |
+| `wso2.deployment.gatewayRuntime.router.ingress.gateway.annotations`                                          | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
+| `wso2.deployment.gatewayRuntime.router.ingress.internal.enabled`                                             | Enable internal ingress resource only for the debugging purposes and check router related config_dumps etc. In a production scenario this should be disabled.   | false                        |
+| `wso2.deployment.gatewayRuntime.router.ingress.internal.hostname`                                            | Hostname for gateway                                                                      | internal.wso2.com           |
+| `wso2.deployment.gatewayRuntime.router.ingress.internal.annotations`                                         | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
 
 ######   Externally installed WSO2 API Manager Control Plane Configurations
 
