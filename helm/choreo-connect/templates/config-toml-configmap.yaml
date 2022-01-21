@@ -32,7 +32,6 @@ data:
       {{- else }}
       enabled = {{ if (include "choreo-connect.deploymentMode.isStandalone" .) }}true{{ else }}false{{ end }}
       {{- end }}
-      host = {{ .Values.wso2.deployment.adapter.ingress.hostname | quote }}
       port = "9843"
       tokenPrivateKeyPath = "/home/wso2/security/keystore/mg.key"
       [[adapter.server.users]]

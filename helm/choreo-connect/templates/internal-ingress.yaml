@@ -27,7 +27,10 @@ metadata:
   annotations:
     {{- toYaml . | nindent 4 }}
 {{- end }}
-spec: # TODO: add ingress class https://github.com/wso2/kubernetes-apim/blob/master/advanced/am-pattern-3/templates/am/gateway/wso2am-pattern-3-am-gateway-ingress.yaml
+spec:
+  {{- if .Values.kubernetes.ingress.className }}
+  ingressClassName: {{ .Values.kubernetes.ingress.className }}
+  {{- end }}
   tls:
   - hosts:
       - {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.internal.hostname }}
