@@ -142,7 +142,7 @@ In addition to the prerequisites defined above, the following deployment option 
 
 * An already setup [Kubernetes cluster](https://kubernetes.io/docs/setup).<br>
   Minimum CPU: 6vCPU<br>
-  Minimum Memory: 6GB<br><br>
+  Minimum Memory: 6GB<br>
 
 ##### Setup 1: Deploy WSO2 API Manager
 
@@ -202,7 +202,7 @@ hostnames and the external IP in the `/etc/hosts` file at the client-side.
 <EXTERNAL-IP>  am.wso2.com
 ```
 
-For more information on installing WSO2 API Manager, ref the repository [wso2/kubernetes-apim](https://github.com/wso2/kubernetes-apim)
+For more information on installing WSO2 API Manager, refer the repository [wso2/kubernetes-apim](https://github.com/wso2/kubernetes-apim)
 
 ##### Setup 2: Deploy Choreo Connect
 The following example shows how to deploy Choreo Connect with "WSO2 API Manager as a Control Plane" deployment mode.
@@ -270,22 +270,6 @@ b. Open the `<HELM_HOME>/values.yaml` and provide the following values.
 
 If you do not have active WSO2 subscription do not change the parameters `wso2.deployment.username`, `wso2.deployment.password`. 
 
-###### Ingress Configurations
-
-| Parameter                                                                   | Description                                                                               | Default Value               |
-|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
-| `wso2.deployment.adapter.ingress.enabled`                                              | Create ingress resource for adapter Rest endpoint. Adapter ingress is disabled when the Choreo Connect Mode is "APIM_AS_CP" (i.e. not "STANDALONE") even it is enabled with this config | true                        |
-| `wso2.deployment.adapter.ingress.hostname`                                             | Hostname for adapter in STANDALONE mode                                                   | adapter.wso2.com            |
-| `wso2.deployment.adapter.ingress.tlsSecretName`                                        | TLS secret for the adapter host. Using default secret if not specified                    | Default TLS secret          |
-| `wso2.deployment.adapter.ingress.annotations`                                          | Annotations for the adapter ingress                                                       | Community NGINX Ingress controller annotations |
-| `wso2.deployment.gatewayRuntime.router.ingress.gateway.enabled`                                              | If enabled, create the ingress for gateway                                                | true                        |
-| `wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname`                                             | Hostname for gateway                                                                      | gw.wso2.com                 |
-| `wso2.deployment.gatewayRuntime.router.ingress.gateway.tlsSecretName`                                        | TLS secret for the gateway host. Using default secret if not specified                    | Default TLS secret          |
-| `wso2.deployment.gatewayRuntime.router.ingress.gateway.annotations`                                          | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
-| `wso2.deployment.gatewayRuntime.router.ingress.internal.enabled`                                             | Enable internal ingress resource only for the debugging purposes and check router related config_dumps etc. In a production scenario this should be disabled.   | false                        |
-| `wso2.deployment.gatewayRuntime.router.ingress.internal.hostname`                                            | Hostname for gateway                                                                      | internal.wso2.com           |
-| `wso2.deployment.gatewayRuntime.router.ingress.internal.annotations`                                         | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
-
 ######   Externally installed WSO2 API Manager Control Plane Configurations
 
 | Parameter                                                                   | Description                                                                               | Default Value               |
@@ -312,6 +296,10 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.adapter.imageTag`                                          | Image tag for adapter                                                                     | "1.0.0"                     |
 | `wso2.deployment.adapter.imagePullPolicy`                                   | Image pull policy of the container                                                        | "IfNotPresent"              |
 | `wso2.deployment.adapter.replicaCount`                                      | Pods count                                                                                | 1                           |
+| `wso2.deployment.adapter.ingress.enabled`                                   | Create ingress resource for adapter Rest endpoint. Adapter ingress is disabled when the Choreo Connect Mode is "APIM_AS_CP" (i.e. not "STANDALONE") even it is enabled with this config | true                        |
+| `wso2.deployment.adapter.ingress.hostname`                                  | Hostname for adapter in STANDALONE mode                                                   | adapter.wso2.com            |
+| `wso2.deployment.adapter.ingress.tlsSecretName`                             | TLS secret for the adapter host. Using default secret if not specified                    | Default TLS secret          |
+| `wso2.deployment.adapter.ingress.annotations`                               | Annotations for the adapter ingress                                                       | Community NGINX Ingress controller annotations |
 | `wso2.deployment.adapter.resources.requests.memory`                         | Resources for the adapter container - Memory request                                      | "500Mi"                     |
 | `wso2.deployment.adapter.resources.requests.cpu`                            | Resources for the adapter container - CPU request                                         | "500m"                      |
 | `wso2.deployment.adapter.resources.limits.memory`                           | Resources for the adapter container - Memory limit                                        | "500Mi"                     |
@@ -327,8 +315,10 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.adapter.podAnnotations`                                    | Key value pair of annotations for the pod                                                 | sidecar.istio.io/inject: "false" |
 | `wso2.deployment.adapter.configToml`                                        | Define templated config.toml file, if empty using default config.toml                     | Default templated config toml file |
 | `wso2.deployment.adapter.logConfigToml`                                     | Define templated log_config.toml file, if empty using default log_config.toml             | Default templated log config toml file |
-| `wso2.deployment.adapter.envOverride`                                       | Set (or override) environment variables as values or from ConfigMaps or Secrets           | -                           |
-| `wso2.deployment.adapter.security.keystore`                                 | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates))  | Default Certs           |
+| `wso2.deployment.adapter.envOverride`                                       | Set (or override) environment variables as values or from ConfigMaps or Secrets           | Default passwords           |
+| `wso2.deployment.adapter.security.sslHostname`                              | Hostname for SSL verification, this value should be included in SAN of keystore certs     | adapter                     |
+| `wso2.deployment.adapter.security.adapterRestService.enabled`               | Enable or disable adapter Rest service. If "default": enabled in "STANDALONE" mode and disabled in "APIM_AS_CP" mode <oneof `"default"` or `"true"` or `"false"`> | "default" |
+| `wso2.deployment.adapter.security.keystore`                                 | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates)) | Default Certs           |
 | `wso2.deployment.adapter.security.truststore`                               | Truststore certs as array of secrets {secretName, subPath} (Refer [Configure Certificates](#configure-certificates))  | Default Certs |
 | `wso2.deployment.adapter.security.consul`                                   | Certs for consul integration                                                              | Default Certs               |
 
@@ -357,7 +347,7 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.enforcer.imageName`                         | Image name for enforcer                                                                   | "choreo-connect-enforcer"   |
 | `wso2.deployment.gatewayRuntime.enforcer.imageTag`                          | Image tag for enforcer                                                                    | "1.0.0"                     |
 | `wso2.deployment.gatewayRuntime.enforcer.imagePullPolicy`                   | Image pull policy of the container                                                        | "IfNotPresent"              |
-| `wso2.deployment.gatewayRuntime.enforcer.envOverride`                       | Set (or override) environment variables as values or from ConfigMaps or Secrets           | -                           |
+| `wso2.deployment.gatewayRuntime.enforcer.envOverride`                       | Set (or override) environment variables as values or from ConfigMaps or Secrets           | Default Passwords           |
 | `wso2.deployment.gatewayRuntime.enforcer.dropins`                           | Mount enforcer lib dropins JARs to the `dropins` directory, array of ConfigMap names      | -                           |
 | `wso2.deployment.gatewayRuntime.enforcer.resources.requests.memory`         | Resources for the adapter container - Memory request                                      | "1000Mi"                    |
 | `wso2.deployment.gatewayRuntime.enforcer.resources.requests.cpu`            | Resources for the adapter container - CPU request                                         | "1000m"                     |
@@ -370,7 +360,7 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.enforcer.readinessProbe.initialDelaySeconds`| Number of seconds after the container has started before readiness probes are initiated   | 8                           |
 | `wso2.deployment.gatewayRuntime.enforcer.readinessProbe.periodSeconds`      | How often (in seconds) to perform the probe                                               | 5                           |
 | `wso2.deployment.gatewayRuntime.enforcer.containerSecurityContext`          | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>|
-| `wso2.deployment.gatewayRuntime.enforcer.security.backendCaCerts`           | Trusted backend certs in PEM format (Refer [Configure Certificates](#configure-certificates)) | Default envoy CA Certs  |
+| `wso2.deployment.gatewayRuntime.enforcer.security.sslHostname`              | Hostname for SSL verification, this value should be included in SAN of keystore certs     | enforcer                    |
 | `wso2.deployment.gatewayRuntime.enforcer.security.keystore`                 | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates)) | Default Certs            |
 | `wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.enabled`       | Passing end user attributes to the backend - enabled                                      | false                       |
 | `wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore`      | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates))  | Default Certs           |
@@ -385,6 +375,13 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.router.imageName`                           | Image name for enforcer                                                                   | "choreo-connect-router"     |
 | `wso2.deployment.gatewayRuntime.router.imageTag`                            | Image tag for enforcer                                                                    | "1.0.0"                     |
 | `wso2.deployment.gatewayRuntime.router.imagePullPolicy`                     | Image pull policy of the container                                                        | "IfNotPresent"              |
+| `wso2.deployment.gatewayRuntime.router.ingress.gateway.enabled`             | If enabled, create the ingress for gateway                                                | true                        |
+| `wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname`            | Hostname for gateway                                                                      | gw.wso2.com                 |
+| `wso2.deployment.gatewayRuntime.router.ingress.gateway.tlsSecretName`       | TLS secret for the gateway host. Using default secret if not specified                    | Default TLS secret          |
+| `wso2.deployment.gatewayRuntime.router.ingress.gateway.annotations`         | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
+| `wso2.deployment.gatewayRuntime.router.ingress.internal.enabled`            | Enable internal ingress resource only for the debugging purposes and check router related config_dumps etc. In a production scenario this should be disabled.   | false                        |
+| `wso2.deployment.gatewayRuntime.router.ingress.internal.hostname`           | Hostname for gateway                                                                      | internal.wso2.com           |
+| `wso2.deployment.gatewayRuntime.router.ingress.internal.annotations`        | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
 | `wso2.deployment.gatewayRuntime.router.envOverride`                         | Set (or override) environment variables as values or from ConfigMaps or Secrets           | -                           |
 | `wso2.deployment.gatewayRuntime.router.resources.requests.memory`           | Resources for the adapter container - Memory request                                      | "500Mi"                     |
 | `wso2.deployment.gatewayRuntime.router.resources.requests.cpu`              | Resources for the adapter container - CPU request                                         | "1000m"                     |
@@ -397,6 +394,7 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.router.readinessProbe.initialDelaySeconds`  | Number of seconds after the container has started before readiness probes are initiated   | 20                          |
 | `wso2.deployment.gatewayRuntime.router.readinessProbe.periodSeconds`        | How often (in seconds) to perform the probe                                               | 5                           |
 | `wso2.deployment.gatewayRuntime.router.containerSecurityContext`            | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>|
+| `wso2.deployment.gatewayRuntime.router.security.backendCaCerts`             | Trusted backend certs in PEM format (Refer [Configure Certificates](#configure-certificates)) | Default envoy CA Certs  |
 | `wso2.deployment.gatewayRuntime.router.security.keystore`                   | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates))  | Default Certs           |
 
 ## Kubernetes Specific Configurations
