@@ -137,14 +137,6 @@ spec:
               value: "4194304"
             - name: XDS_MAX_RETRIES
               value: "3"
-            - name: JAVA_OPTS
-              value: "-Dhttpclient.hostnameVerifier=AllowAll -Xms512m -Xmx512m"
-            - name: apim_admin_pwd
-              value: "admin"
-            - name: enforcer_admin_pwd
-              value: "admin"
-            - name: tm_admin_pwd
-              value: "admin"
           {{- with .Values.wso2.deployment.gatewayRuntime.enforcer.envOverride }}
             {{- toYaml . | nindent 12}}
           {{- end }}
@@ -277,7 +269,7 @@ spec:
               scheme: HTTPS
               httpHeaders:
                 - name: Host
-                  value: {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }} # TODO: this should be localhost
+                  value: {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }}
             failureThreshold: {{ .Values.wso2.deployment.gatewayRuntime.router.startupProbe.failureThreshold }}
             periodSeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.startupProbe.periodSeconds }}
           livenessProbe:
@@ -336,7 +328,16 @@ spec:
             name: {{ printf "%s-grpc-probe-script" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}
             defaultMode: 0777
         - name: enforcer-dropins
-          emptyDir: {} # TODO: configure conrigmap
+        {{- if .Values.wso2.deployment.gatewayRuntime.enforcer.dropins }}
+          projected:
+            sources:
+            {{- range .Values.wso2.deployment.gatewayRuntime.enforcer.dropins }}
+              - configMap:
+                  name: {{ .configMapName }}
+            {{- end }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
         - name: router-keystore-key
           secret:
             secretName: {{ if .Values.wso2.deployment.gatewayRuntime.router.security.keystore }}{{ .Values.wso2.deployment.gatewayRuntime.router.security.keystore.key.secretName }}{{ else }}{{ printf "%s-default-keystore" (include "choreo-connect.routerFullname" .) | trunc 63 }}{{ end }}

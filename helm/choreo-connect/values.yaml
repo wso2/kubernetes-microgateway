@@ -134,7 +134,7 @@ wso2:
       # Define templated log_config.toml file, if empty using default log_config.toml
       logConfigToml: ""
 
-      # envOverride: # TODO: document this
+      # envOverride:
       #   - name: cp_admin_pwd
       #     value: admin
       #   - name: adapter_admin_pwd
@@ -241,7 +241,21 @@ wso2:
         #       secretKeyRef:
         #         name: my-secret
         #         key: tm_password
-        envOverride: []
+        envOverride:
+          - name: JAVA_OPTS
+            value: "-Dhttpclient.hostnameVerifier=AllowAll -Xms512m -Xmx512m"
+          - name: apim_admin_pwd
+            value: "admin"
+          - name: enforcer_admin_pwd
+            value: "admin"
+          - name: tm_admin_pwd
+            value: "admin"
+        
+        # enforcer dropins JARs
+        # dropins:
+        #   - configMapName: "dropins-cm1"
+        #   - configMapName: "dropins-cm2"
+        dropins: {}
 
         # Resources for the enforcer container
         resources:
