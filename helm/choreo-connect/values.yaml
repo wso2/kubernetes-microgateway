@@ -60,14 +60,14 @@ wso2:
       # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
       imagePullPolicy: IfNotPresent
       # Pod count
-      replicaCount: 1 #TODO: add to readme
+      replicaCount: 1
 
       ingress:
         # Create ingress resource for adapter Rest endpoint. Adapter ingress is disabled when the Choreo Connect Mode is "APIM_AS_CP" (i.e. not "STANDALONE")
         # even it is enabled with this config
         enabled: true
         # Hostname for adapter in STANDALONE mode
-        hostname: adapter.wso2.com # TODO: Move this to deployment profile and ingress -> k8s section, even though this is not used
+        hostname: adapter.wso2.com
         # TLS secret for the adapter host. Using default secret if not specified
         tlsSecretName: ""
         # Annotations for the adapter Ingress
@@ -111,7 +111,6 @@ wso2:
         capabilities:
           drop:
             - all
-          add: ["NET_RAW"]
 
       # Indicates whether the container is running
       livenessProbe:
@@ -175,8 +174,8 @@ wso2:
         # truststore:
         #   - secretName: "adapter-certs"
         #     subPath: "tls.crt"
-          # - secretName: "controlplane-cert"
-          #   subPath: "wso2carbon.pem"
+        #   - secretName: "controlplane-cert"
+        #     subPath: "wso2carbon.pem"
         truststore: [] # using default certs, if not defined.
 
         # Certs for consul integration
@@ -280,8 +279,7 @@ wso2:
           capabilities:
             drop:
               - all
-            add: ["NET_RAW"] # TODO: get confirmation
-        
+
         security:
           # Hostname for SSL verification
           sslHostname: "enforcer"
@@ -341,7 +339,7 @@ wso2:
             # If enabled, create the ingress for gateway
             enabled: true
             # Hostname for gateway
-            hostname: gw.wso2.com # TODO: Move this to deployment profile and ingress -> k8s section
+            hostname: gw.wso2.com
             # TLS secret for the gateway host. Using default secret if not specified
             tlsSecretName: ""
             # Annotations for the gateway Ingress
@@ -354,7 +352,7 @@ wso2:
             # and check router related config_dumps etc. In a production scenario this should be disabled.
             enabled: true
             # Hostname for the internal service
-            hostname: internal.wso2.com # TODO: add this to deployment section
+            hostname: internal.wso2.com
             # Annotations for the internal service
             annotations:
               kubernetes.io/ingress.class: nginx
@@ -406,13 +404,13 @@ wso2:
           capabilities:
             drop:
               - all
-            add: ["NET_RAW"]
 
         security:
-          # TODO: desc
-          backendCaCerts:
-            secretName: "trusted-ca-certs"
-            subPath: "cacerts.crt"
+          # Trusted backend certs in PEM format
+          # backendCaCerts:
+          #   secretName: "trusted-ca-certs"
+          #   subPath: "ca-certs.crt"
+          backendCaCerts: {}
           # private key and cert in PEM format
           # for more details: https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
           # override default certs from secrets
@@ -426,16 +424,9 @@ wso2:
           keystore: {} # using default certs, if not defined.
           
 kubernetes:
-  # TODO: add ingress class: https://github.com/wso2/kubernetes-is/pull/317/files
-  # TODO: remove serviceAccount
-  serviceAccount:
-    # Specifies whether a service account should be created
-    create: true
-    # Annotations to add to the service account
-    annotations: {}
-    # The name of the service account to use
-    # If not set and create is true, a name is generated using the fullname template
-    name: ""
+  # Configure common ingress properties for all ingress resources
+  ingress:
+    className: ""
 
 # Name to override. Default to "choreo-connect"
 nameOverride: ""
