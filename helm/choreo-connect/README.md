@@ -265,17 +265,17 @@ The output under the relevant column stands for the following.
 
 Choreo Connect Adapter
 
-- NAME: Metadata name of the Kubernetes Ingress resource (Default to "<RELEASE_NAME>-choreo-connect-adapter-ingress")
+- NAME: Metadata name of the Kubernetes Ingress resource (Default to "<RELEASE_NAME>-choreo-connect-adapter")
 - HOSTS: Hostname of the Choreo Connect Adapter (Default to "adapter.wso2.com")
 - ADDRESS: External IP (`EXTERNAL-IP`) exposing the Chore Connect Adapter to outside of the Kubernetes environment
 - PORTS: Externally exposed service ports of the Choreo Connect Adapter
 
-Choreo Connect Gateway Runtime
+Choreo Connect Router
 
-- NAME: Metadata name of the Kubernetes Ingress resource (Default to "<RELEASE_NAME>-choreo-connect-ingress")
-- HOSTS: Hostname of the gateway service (Default to "gw.wso2.com")
-- ADDRESS: External IP (`EXTERNAL-IP`) exposing the gateway to outside of the Kubernetes environment
-- PORTS: Externally exposed gateway ports of the Choreo Connect
+- NAME: Metadata name of the Kubernetes Ingress resource (Default to "<RELEASE_NAME>-choreo-connect-router")
+- HOSTS: Hostname of the router service (Default to "gw.wso2.com")
+- ADDRESS: External IP (`EXTERNAL-IP`) exposing the router to outside of the Kubernetes environment
+- PORTS: Externally exposed router ports of the Choreo Connect
 
 #### 2. Deployment Mode: API Manager as Control Plane
 
@@ -300,12 +300,12 @@ kubectl get ing -n <NAMESPACE>
 
 The output under the relevant column stands for the following.
 
-Choreo Connect Gateway Runtime
+Choreo Connect Router
 
-- NAME: Metadata name of the Kubernetes Ingress resource (Default to "<RELEASE_NAME>-choreo-connect-ingress")
-- HOSTS: Hostname of the gateway service (Default to "gw.wso2.com")
-- ADDRESS: External IP (`EXTERNAL-IP`) exposing the gateway to outside of the Kubernetes environment
-- PORTS: Externally exposed gateway ports of the Choreo Connect
+- NAME: Metadata name of the Kubernetes Ingress resource (Default to "<RELEASE_NAME>-choreo-connect-router")
+- HOSTS: Hostname of the router service (Default to "gw.wso2.com")
+- ADDRESS: External IP (`EXTERNAL-IP`) exposing the router to outside of the Kubernetes environment
+- PORTS: Externally exposed router ports of the Choreo Connect
 
 ### 5. Add a DNS record mapping the hostnames and the external IP
 
@@ -320,7 +320,7 @@ hostnames and the external IP in the `/etc/hosts` file at the client-side.
 #### 1. Deployment Mode: Standalone
 
 - Adapter Endpoint: `https://<wso2.deployment.adapter.ingress.hostname>` (Default to `https://adapter.wso2.com`)
-- Gateway Endpoint: `https://<wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname>` (Default to `https://gw.wso2.com`)
+- Router Endpoint: `https://<wso2.deployment.gatewayRuntime.router.ingress.hostname>` (Default to `https://gw.wso2.com`)
 
 Follow the document [Deploying a REST API in Choreo Connect](https://apim.docs.wso2.com/en/latest/deploy-and-publish/deploy-on-gateway/choreo-connect/deploy-api/deploy-rest-api-in-choreo-connect/#choreo-connect-as-a-standalone-gateway) to deploy an API.
 
@@ -415,10 +415,10 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.autoscaling.maxReplicas`                    | Horizontal pod auto scaling - Maximum replica count                                       | 5                           |
 | `wso2.deployment.gatewayRuntime.autoscaling.targetCPUUtilizationPercentage` | Horizontal pod auto scaling - target CPU Utilization percentage                           | 75                          |
 | `wso2.deployment.gatewayRuntime.autoscaling.targetMemoryUtilizationPercentage` | Horizontal pod auto scaling - target memory Utilization percentage                     | 75                          |
-| `wso2.deployment.adapter.affinity`                                          | Affinity for gateway runtime pods assignment                                              | -                           |
-| `wso2.deployment.adapter.nodeSelector`                                      | Node labels for gateway runtime pods assignment                                           | -                           |
-| `wso2.deployment.adapter.tolerations`                                       | Tolerations for gateway runtime pods assignment                                           | -                           |
-| `wso2.deployment.adapter.podSecurityContext`                                | Security context of the the gateway runtime pod                                           | runAsUser:&nbsp;10500</br>runAsGroup:&nbsp;10500|
+| `wso2.deployment.gatewayRuntime.affinity`                                   | Affinity for gateway runtime pods assignment                                              | -                           |
+| `wso2.deployment.gatewayRuntime.nodeSelector`                               | Node labels for gateway runtime pods assignment                                           | -                           |
+| `wso2.deployment.gatewayRuntime.tolerations`                                | Tolerations for gateway runtime pods assignment                                           | -                           |
+| `wso2.deployment.gatewayRuntime.podSecurityContext`                         | Security context of the the gateway runtime pod                                           | runAsUser:&nbsp;10500</br>runAsGroup:&nbsp;10500|
 
 ###### Choreo Connect Gateway Runtime - Enforcer Configurations
 
@@ -455,13 +455,10 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.router.imageName`                           | Image name for enforcer                                                                   | "choreo-connect-router"     |
 | `wso2.deployment.gatewayRuntime.router.imageTag`                            | Image tag for enforcer                                                                    | "1.0.0"                     |
 | `wso2.deployment.gatewayRuntime.router.imagePullPolicy`                     | Image pull policy of the container                                                        | "IfNotPresent"              |
-| `wso2.deployment.gatewayRuntime.router.ingress.gateway.enabled`             | If enabled, create the ingress for gateway                                                | true                        |
-| `wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname`            | Hostname for gateway                                                                      | gw.wso2.com                 |
-| `wso2.deployment.gatewayRuntime.router.ingress.gateway.tlsSecretName`       | TLS secret for the gateway host. Using default secret if not specified                    | Default TLS secret          |
-| `wso2.deployment.gatewayRuntime.router.ingress.gateway.annotations`         | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
-| `wso2.deployment.gatewayRuntime.router.ingress.internal.enabled`            | Enable internal ingress resource only for the debugging purposes and check router related config_dumps etc. In a production scenario this should be disabled.   | false                        |
-| `wso2.deployment.gatewayRuntime.router.ingress.internal.hostname`           | Hostname for gateway                                                                      | internal.wso2.com           |
-| `wso2.deployment.gatewayRuntime.router.ingress.internal.annotations`        | Annotations for the gateway ingress                                                       | Community NGINX Ingress controller annotations |
+| `wso2.deployment.gatewayRuntime.router.ingress.enabled`                     | If enabled, create the ingress for router (gateway)                                       | true                        |
+| `wso2.deployment.gatewayRuntime.router.ingress.hostname`                    | Hostname for router (gateway)                                                             | gw.wso2.com                 |
+| `wso2.deployment.gatewayRuntime.router.ingress.tlsSecretName`               | TLS secret for the router host. Using default secret if not specified                     | Default TLS secret          |
+| `wso2.deployment.gatewayRuntime.router.ingress.annotations`                 | Annotations for the router ingress                                                        | Community NGINX Ingress controller annotations |
 | `wso2.deployment.gatewayRuntime.router.envOverride`                         | Set (or override) environment variables as values or from ConfigMaps or Secrets           | -                           |
 | `wso2.deployment.gatewayRuntime.router.resources.requests.memory`           | Resources for the adapter container - Memory request                                      | "500Mi"                     |
 | `wso2.deployment.gatewayRuntime.router.resources.requests.cpu`              | Resources for the adapter container - CPU request                                         | "1000m"                     |

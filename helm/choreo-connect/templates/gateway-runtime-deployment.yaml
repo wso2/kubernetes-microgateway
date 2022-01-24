@@ -269,7 +269,7 @@ spec:
               scheme: HTTPS
               httpHeaders:
                 - name: Host
-                  value: {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }}
+                  value: {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.hostname }}
             failureThreshold: {{ .Values.wso2.deployment.gatewayRuntime.router.startupProbe.failureThreshold }}
             periodSeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.startupProbe.periodSeconds }}
           livenessProbe:
@@ -279,7 +279,7 @@ spec:
               scheme: HTTPS
               httpHeaders:
                 - name: Host
-                  value: {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }}
+                  value: {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.hostname }}
             initialDelaySeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.livenessProbe.periodSeconds }}
           readinessProbe:
@@ -289,7 +289,7 @@ spec:
               scheme: HTTPS
               httpHeaders:
                 - name: Host
-                  value: {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }}
+                  value: {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.hostname }}
             initialDelaySeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.livenessProbe.periodSeconds }}
       volumes:

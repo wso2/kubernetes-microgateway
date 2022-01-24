@@ -34,7 +34,7 @@ spec:
   {{- if .Values.wso2.deployment.adapter.ingress.tlsSecretName }}
     secretName: {{ .Values.wso2.deployment.adapter.ingress.tlsSecretName }}
   {{- else }}
-    secretName: {{ printf "%s-ingress-tls-secret" (include "choreo-connect.fullname" .) | trunc 63 }}
+    secretName: {{ printf "%s-default-ingress-tls" (include "choreo-connect.fullname" .) | trunc 63 }}
   {{- end }}
   rules:
     - host: {{ .Values.wso2.deployment.adapter.ingress.hostname }}
