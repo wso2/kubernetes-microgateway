@@ -89,13 +89,13 @@ git clone https://github.com/wso2/kubernetes-microgateway.git
  Helm version 2
 
  ```
- helm install --name <RELEASE_NAME> <HELM_HOME>/choreo-connect --version 1.0.0-1 --namespace <NAMESPACE>
+ helm install --name <RELEASE_NAME> <HELM_HOME>/choreo-connect --namespace <NAMESPACE>
  ```
 
  Helm version 3
 
 ```
-helm install <RELEASE_NAME> <HELM_HOME>/choreo-connect --version 1.0.0-1 --namespace <NAMESPACE> --create-namespace
+helm install <RELEASE_NAME> <HELM_HOME>/choreo-connect --namespace <NAMESPACE> --create-namespace
 ```
 
 The above steps will deploy the deployment pattern using WSO2 product Docker images available at DockerHub.
@@ -106,7 +106,7 @@ please provide your WSO2 Subscription credentials via input values (using `--set
 Please see the following example.
 
 ```
- helm install --name <RELEASE_NAME> <HELM_HOME>/choreo-connect --version 1.0.0-1 --namespace <NAMESPACE> --set wso2.subscription.username=<SUBSCRIPTION_USERNAME> --set wso2.subscription.password=<SUBSCRIPTION_PASSWORD>
+ helm install --name <RELEASE_NAME> <HELM_HOME>/choreo-connect --namespace <NAMESPACE> --set wso2.subscription.username=<SUBSCRIPTION_USERNAME> --set wso2.subscription.password=<SUBSCRIPTION_PASSWORD>
 ```
 
 ### 2. Deployment Mode (Deployment Options)

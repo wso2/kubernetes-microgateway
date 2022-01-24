@@ -375,11 +375,6 @@ wso2:
         # envOverride:
         #   - name: CONCURRENCY
         #     value: 2
-        #   - name: adapter_admin_pwd
-        #     valueFrom:
-        #       secretKeyRef:
-        #         name: my-secret
-        #         key: password
         envOverride: []
 
         # Resources for the router container
