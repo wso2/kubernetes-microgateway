@@ -251,6 +251,86 @@ helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-1 --namespace <N
 
 You will be able to see the Analytics data when you log into Choreo Analytics Portal.
 
+### 4. Obtain the external IP
+
+#### 1. Deployment Mode: Standalone
+
+Obtain the external IP (`EXTERNAL-IP`) of the Choreo Connect Ingress resources, by listing down the Kubernetes Ingresses.
+
+```  
+kubectl get ing -n <NAMESPACE>
+```
+
+The output under the relevant column stands for the following.
+
+Choreo Connect Adapter
+
+- NAME: Metadata name of the Kubernetes Ingress resource (Default to "<RELEASE_NAME>-choreo-connect-adapter-ingress")
+- HOSTS: Hostname of the Choreo Connect Adapter (Default to "adapter.wso2.com")
+- ADDRESS: External IP (`EXTERNAL-IP`) exposing the Chore Connect Adapter to outside of the Kubernetes environment
+- PORTS: Externally exposed service ports of the Choreo Connect Adapter
+
+Choreo Connect Gateway
+
+- NAME: Metadata name of the Kubernetes Ingress resource (Default to "<RELEASE_NAME>-choreo-connect-ingress")
+- HOSTS: Hostname of the gateway service (Default to "gw.wso2.com")
+- ADDRESS: External IP (`EXTERNAL-IP`) exposing the gateway to outside of the Kubernetes environment
+- PORTS: Externally exposed gateway ports of the Choreo Connect
+
+#### 2. Deployment Mode: API Manager as Control Plane
+
+Obtain the external IP (`EXTERNAL-IP`) of the Choreo Connect Ingress resources, by listing down the Kubernetes Ingresses.
+
+```  
+kubectl get ing -n apim
+```
+
+The output under the relevant column stands for the following.
+
+API Manager Control Plane
+
+- NAME: Metadata name of the Kubernetes Ingress resource (`wso2am-pattern-3-am-cp-ingress`)
+- HOSTS: Hostname of the WSO2 API Manager's Control Plane service (`am.wso2.com`)
+- ADDRESS: External IP (`EXTERNAL-IP`) exposing the API Manager's Control Plane service to outside of the Kubernetes environment
+- PORTS: Externally exposed service ports of the API Manager's Control Plane service
+
+```  
+kubectl get ing -n <NAMESPACE>
+```
+
+The output under the relevant column stands for the following.
+
+Choreo Connect Gateway
+
+- NAME: Metadata name of the Kubernetes Ingress resource (Default to "<RELEASE_NAME>-choreo-connect-ingress")
+- HOSTS: Hostname of the gateway service (Default to "gw.wso2.com")
+- ADDRESS: External IP (`EXTERNAL-IP`) exposing the gateway to outside of the Kubernetes environment
+- PORTS: Externally exposed gateway ports of the Choreo Connect
+
+### 5. Add a DNS record mapping the hostnames and the external IP
+
+If the defined hostnames (in the previous step) are backed by a DNS service, add a DNS record mapping the hostnames and
+the external IP (`EXTERNAL-IP`) in the relevant DNS service.
+
+If the defined hostnames are not backed by a DNS service, for the purpose of evaluation you may add an entry mapping the
+hostnames and the external IP in the `/etc/hosts` file at the client-side.
+
+### 6. Access Services
+
+#### 1. Deployment Mode: Standalone
+
+- Adapter Endpoint: `https://<wso2.deployment.adapter.ingress.hostname>` (Default to `https://adapter.wso2.com`)
+- Gateway Endpoint: `https://<wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname>` (Default to `https://gw.wso2.com`)
+
+Follow the document [Deploying a REST API in Choreo Connect](https://apim.docs.wso2.com/en/latest/deploy-and-publish/deploy-on-gateway/choreo-connect/deploy-api/deploy-rest-api-in-choreo-connect/#choreo-connect-as-a-standalone-gateway) to deploy an API.
+
+#### 2. Deployment Mode: API Manager as Control Plane
+
+- API Manager Publisher: [https://am.wso2.com/publisher/](https://am.wso2.com/publisher/)
+- API Manager DevPortal: [https://am.wso2.com/devportal/](https://am.wso2.com/devportal/)
+
+Follow the document [Deploying a REST API in Choreo Connect](https://apim.docs.wso2.com/en/latest/deploy-and-publish/deploy-on-gateway/choreo-connect/deploy-api/deploy-rest-api-in-choreo-connect/#choreo-connect-with-wso2-api-manager-as-a-control-plane) to deploy an API.
+
 ## Configuration
 
 a. The default product configurations are available at `<HELM_HOME>/confs` folder. Change the

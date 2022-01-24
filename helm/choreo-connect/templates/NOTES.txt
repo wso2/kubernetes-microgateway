@@ -25,7 +25,7 @@ Please follow these configure DNS records.
     {{- if $gatewayIngEnabled }}
 
     Choreo Connect Gateway
-    - NAME: Metadata name of the Kubernetes Ingress resource ("{{ printf "%s-ingress" (include "choreo-connect.fullname" .) | trunc 63 }}"")
+    - NAME: Metadata name of the Kubernetes Ingress resource ("{{ printf "%s-ingress" (include "choreo-connect.fullname" .) | trunc 63 }}")
     - HOSTS: Hostname of the gateway service ("{{ .Values.wso2.deployment.gatewayRuntime.router.ingress.gateway.hostname }}")
     - ADDRESS: External IP (`EXTERNAL-IP`) exposing the gateway to outside of the Kubernetes environment
     - PORTS: Externally exposed gateway ports of the Choreo Connect
