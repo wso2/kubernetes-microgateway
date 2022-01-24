@@ -270,7 +270,7 @@ Choreo Connect Adapter
 - ADDRESS: External IP (`EXTERNAL-IP`) exposing the Chore Connect Adapter to outside of the Kubernetes environment
 - PORTS: Externally exposed service ports of the Choreo Connect Adapter
 
-Choreo Connect Gateway
+Choreo Connect Gateway Runtime
 
 - NAME: Metadata name of the Kubernetes Ingress resource (Default to "<RELEASE_NAME>-choreo-connect-ingress")
 - HOSTS: Hostname of the gateway service (Default to "gw.wso2.com")
@@ -300,7 +300,7 @@ kubectl get ing -n <NAMESPACE>
 
 The output under the relevant column stands for the following.
 
-Choreo Connect Gateway
+Choreo Connect Gateway Runtime
 
 - NAME: Metadata name of the Kubernetes Ingress resource (Default to "<RELEASE_NAME>-choreo-connect-ingress")
 - HOSTS: Hostname of the gateway service (Default to "gw.wso2.com")
