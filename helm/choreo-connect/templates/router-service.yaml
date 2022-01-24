@@ -20,7 +20,7 @@ metadata:
   labels:
     {{- include "choreo-connect.labels" . | nindent 4 }}
     app.kubernetes.io/component: choreo-connect-gateway-runtime
-  name: {{printf "%s-%s" (include "choreo-connect.fullname" .) "router-service" | trunc 63 }}
+  name: {{printf "%s-%s" (include "choreo-connect.fullname" .) "router" | trunc 63 }}
   namespace: {{ .Release.Namespace }}
 spec:
   type: ClusterIP
