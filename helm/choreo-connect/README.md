@@ -156,7 +156,7 @@ Helm version 2
 ```
 helm install --name apim-as-cp wso2/am-single-node --version 4.0.0-1 --namespace apim \
   --set wso2.deployment.am.ingress.gateway.hostname=gw.wso2.com \
-  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/1.0.0-1/resources/controlplane-deployment.toml
+  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/v1.0.0-1/resources/controlplane-deployment.toml
 ```
 
 Helm version 3
@@ -164,7 +164,7 @@ Helm version 3
 ```
 helm install apim-as-cp wso2/am-single-node --version 4.0.0-1 --namespace apim --create-namespace \
   --set wso2.deployment.am.ingress.gateway.hostname=gw.wso2.com \
-  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/1.0.0-1/resources/controlplane-deployment.toml
+  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/v1.0.0-1/resources/controlplane-deployment.toml
 ```
 
 NOTE: If you do not have sufficient resources you can adjust them setting following values when installing the chart.
@@ -387,6 +387,7 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.adapter.affinity`                                          | Affinity for adapter pods assignment                                                      | -                           |
 | `wso2.deployment.adapter.nodeSelector`                                      | Node labels for adapter pods assignment                                                   | -                           |
 | `wso2.deployment.adapter.tolerations`                                       | Tolerations for adapter pods assignment                                                   | -                           |
+| `wso2.deployment.adapter.podSecurityContext`                               | Security context of the the adapter pod                                                    | runAsUser:&nbsp;10500</br>runAsGroup:&nbsp;10500 |
 | `wso2.deployment.adapter.containerSecurityContext`                          | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>|
 | `wso2.deployment.adapter.livenessProbe.initialDelaySeconds`                 | Number of seconds after the container has started before liveness probes are initiated    | 10                          |
 | `wso2.deployment.adapter.livenessProbe.periodSeconds`                       | How often (in seconds) to perform the probe                                               | 30                          |
@@ -400,7 +401,7 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.adapter.security.adapterRestService.enabled`               | Enable or disable adapter Rest service. If "default": enabled in "STANDALONE" mode and disabled in "APIM_AS_CP" mode <oneof `"default"` or `"true"` or `"false"`> | "default" |
 | `wso2.deployment.adapter.security.keystore`                                 | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates)) | Default Certs           |
 | `wso2.deployment.adapter.security.truststore`                               | Truststore certs as array of secrets {secretName, subPath} (Refer [Configure Certificates](#configure-certificates))  | Default Certs |
-| `wso2.deployment.adapter.security.consul`                                   | Certs for consul integration                                                              | Default Certs               |
+| `wso2.deployment.adapter.security.consul`                                   | Certs for consul integration                                                              | -                         |
 
 ###### Choreo Connect Gateway Runtime Configurations
 
