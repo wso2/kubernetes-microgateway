@@ -179,7 +179,7 @@ wso2:
         truststore: [] # using default certs, if not defined.
 
         # Certs for consul integration
-        # override default certs from secrets
+        #
         # consul:
         #   agentCaCert:
         #     secretName: ""
@@ -190,7 +190,7 @@ wso2:
         #   clientKey:
         #     secretName: ""
         #     subPath: ""
-        consul: {} # using default certs, if not defined.
+        consul: {}
 
     # Gateway runtime (enforcer + router) deployment configurations
     gatewayRuntime:
