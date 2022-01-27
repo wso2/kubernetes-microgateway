@@ -156,7 +156,7 @@ Helm version 2
 ```
 helm install --name apim-as-cp wso2/am-single-node --version 4.0.0-1 --namespace apim \
   --set wso2.deployment.am.ingress.gateway.hostname=gw.wso2.com \
-  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/v1.0.0-1/resources/controlplane-deployment.toml
+  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/v1.0.0.1/resources/controlplane-deployment.toml
 ```
 
 Helm version 3
@@ -164,7 +164,7 @@ Helm version 3
 ```
 helm install apim-as-cp wso2/am-single-node --version 4.0.0-1 --namespace apim --create-namespace \
   --set wso2.deployment.am.ingress.gateway.hostname=gw.wso2.com \
-  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/v1.0.0-1/resources/controlplane-deployment.toml
+  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/v1.0.0.1/resources/controlplane-deployment.toml
 ```
 
 NOTE: If you do not have sufficient resources you can adjust them setting following values when installing the chart.
