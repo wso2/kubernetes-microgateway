@@ -112,6 +112,8 @@ spec:
             - mountPath: /home/wso2/conf/log_config.toml
               name: logconfig-toml
               subPath: "log_config.toml"
+            - mountPath: /home/wso2/artifacts/apis
+              name: api-artifacts-vol
             - mountPath: /home/wso2/check_health.sh
               name: grpc-probe-health-check
               subPath: "check_health.sh"
@@ -180,6 +182,8 @@ spec:
         - name: logconfig-toml
           configMap:
             name: {{printf "%s-logconfig-toml" (include "choreo-connect.adapterFullname" .) | trunc 63}}
+        - name: api-artifacts-vol
+          emptyDir: {}
         - name: grpc-probe-health-check
           configMap:
             name: {{printf "%s-grpc-probe-script" (include "choreo-connect.adapterFullname" .) | trunc 63}}

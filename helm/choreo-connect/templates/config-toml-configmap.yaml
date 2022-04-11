@@ -74,15 +74,24 @@ data:
       enabled = {{ .Values.wso2.deployment.gatewayRuntime.enforcer.security.testTokenIssuer.enabled }}
       issuer = "https://{{ .Values.wso2.deployment.gatewayRuntime.router.ingress.hostname }}/testkey"
 
+{{- /* Setting values for section [enforcer.throttling] */ -}}
+{{- $tmSVCs := (include "choreo-connect.apim.trafficManagerServiceNames" .) | split ";" -}}
+{{- $brokerList := list -}}
+{{- range $tmSVCs -}}
+  {{- $brokerList = append $brokerList (printf "tcp://%s:5672" .) -}}
+{{- end }}
+
     [enforcer.throttling]
       enableGlobalEventPublishing = {{ if (include "choreo-connect.deploymentMode.isStandalone" .) }}false{{ else }}true{{ end }}
-      jmsConnectionProviderURL = "amqp://admin:admin@carbon/carbon?brokerlist='tcp://{{ include "choreo-connect.apim.trafficManagerServiceName" . }}:5672'"
+      jmsConnectionProviderURL = "amqp://admin:admin@carbon/carbon?brokerlist='{{ $brokerList | join ";" }}'"
       [enforcer.throttling.publisher]
         username = "admin"
         password = "$env{tm_admin_pwd}"
+        {{- range $tmSVCs }}
         [[enforcer.throttling.publisher.URLGroup]]
-          receiverURLs = ["tcp://{{ include "choreo-connect.apim.trafficManagerServiceName" . }}:9611"]
-          authURLs = ["ssl://{{ include "choreo-connect.apim.trafficManagerServiceName" . }}:9711"]
+          receiverURLs = ["tcp://{{ . }}:9611"]
+          authURLs = ["ssl://{{ . }}:9711"]
+        {{- end }}
 
     [enforcer.security]
     [[enforcer.security.tokenService]]
