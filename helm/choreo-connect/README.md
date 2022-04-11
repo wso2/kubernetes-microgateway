@@ -352,12 +352,11 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 
 ######   Externally installed WSO2 API Manager Control Plane Configurations
 
-| Parameter                                                                   | Description                                                                               | Default Value               |
-|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
-| `wso2.apim.controlPlane.hostName`                                           | Hostname of the control plane                                                             | am.wso2.com                 |
-| `wso2.apim.controlPlane.serviceName`                                        | K8s service name (if in another namespace, `<serviceName>.<namespace>`) of the control plane   | wso2am-single-node-am-service.apim |
-| `wso2.apim.trafficManager.serviceName`                                      | K8s service name of the traffic manager. If not defined, default to control plane service name | -                      |
-
+| Parameter                                | Description                                                                               | Default Value                    |
+|------------------------------------------|-------------------------------------------------------------------------------------------|----------------------------------|
+| `wso2.apim.controlPlane.hostName`        | Hostname of the control plane                                                             | am.wso2.com                      |
+| `wso2.apim.controlPlane.serviceName`     | K8s service name (if in another namespace, `<serviceName>.<namespace>`) of the control plane   | wso2am-single-node-am-service.apim |
+| `wso2.apim.trafficManagers.serviceNames` | List of traffic managers with K8s service names ex: `[{"serviceName": "tm1.apim"},{"serviceName": "tm2.apim"}]` | []                               |
 
 ###### Choreo Connect Configurations
 
