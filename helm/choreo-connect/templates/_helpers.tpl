@@ -171,8 +171,16 @@ Router
 {{- end -}}
 
 {{/*
-Traffic manager service name
+Traffic manager service names
 */}}
-{{- define "choreo-connect.apim.trafficManagerServiceName" -}}
-{{ .Values.wso2.apim.trafficManager.serviceName | default .Values.wso2.apim.controlPlane.serviceName }}
+{{- define "choreo-connect.apim.trafficManagerServiceNames" -}}
+{{- $tmSVCs := list -}}
+{{- if .Values.wso2.apim.trafficManagers -}}
+  {{- range .Values.wso2.apim.trafficManagers -}}
+    {{- $tmSVCs = append $tmSVCs .serviceName -}}
+  {{- end -}}
+{{- else -}}
+  {{- $tmSVCs = append $tmSVCs .Values.wso2.apim.controlPlane.serviceName -}}
+{{- end -}}
+{{- join ";" $tmSVCs -}}
 {{- end -}}

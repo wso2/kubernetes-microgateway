@@ -34,9 +34,12 @@ wso2:
       hostName: am.wso2.com
       # K8s service name (if in another namespace, `<serviceName>.<namespace>`) of the control plane
       serviceName: wso2am-single-node-am-service.apim
-    trafficManager:
-      # K8s service name of the traffic manager. If not defined, default to control plane service name
-      serviceName: ""
+
+    # List of K8s service names of the traffic managers. If an empty list, default to control plane service name
+    # trafficManagers:
+    #   - serviceName: wso2am-pattern-1-am-1-service.apim
+    #   - serviceName: wso2am-pattern-1-am-2-service.apim
+    trafficManagers: []
 
   deployment:
     # Deployment option: one of "STANDALONE" or "APIM_AS_CP"
