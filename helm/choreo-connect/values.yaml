@@ -49,7 +49,7 @@ wso2:
 
   deployment:
     # Deployment option: one of "STANDALONE" or "APIM_AS_CP"
-    # Refer deployment options: https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/getting-started/deploy/cc-deploy-overview/
+    # Refer deployment options: https://apim.docs.wso2.com/en/4.1.0/deploy-and-publish/deploy-on-gateway/choreo-connect/getting-started/deploy/cc-deploy-overview/
     mode: "STANDALONE"
 
     # Label (environment) name of the deployment
@@ -65,7 +65,7 @@ wso2:
       # Image name for adapter
       imageName: "choreo-connect-adapter"
       # Image tag for adapter
-      imageTag: "1.0.0"
+      imageTag: "1.1.0"
       # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
       imagePullPolicy: IfNotPresent
       # Pod count
@@ -167,7 +167,7 @@ wso2:
           enabled: "default" # an string value: "default" or "true" or "false"
           
         # Private key and cert in PEM format
-        # for more details: https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
+        # for more details: https://apim.docs.wso2.com/en/4.1.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
         # override default certs from secrets
         # keystore:
         #   key:
@@ -238,7 +238,7 @@ wso2:
         # Image name for enforcer
         imageName: "choreo-connect-enforcer"
         # Image tag for enforcer
-        imageTag: "1.0.0"
+        imageTag: "1.1.0"
         # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
         imagePullPolicy: IfNotPresent
 
@@ -308,7 +308,7 @@ wso2:
           sslHostname: "enforcer"
 
           # private key and cert in PEM format
-          # for more details: https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
+          # for more details: https://apim.docs.wso2.com/en/4.1.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
           # override default certs from secrets
           # keystore:
           #   key:
@@ -353,7 +353,7 @@ wso2:
         # Image name for router
         imageName: "choreo-connect-router"
         # Image tag for router
-        imageTag: "1.0.0"
+        imageTag: "1.1.0"
         # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
         imagePullPolicy: IfNotPresent
 
@@ -419,7 +419,7 @@ wso2:
           #   subPath: "ca-certs.crt"
           backendCaCerts: {}
           # private key and cert in PEM format
-          # for more details: https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
+          # for more details: https://apim.docs.wso2.com/en/4.1.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
           # override default certs from secrets
           # keystore:
           #   key:
