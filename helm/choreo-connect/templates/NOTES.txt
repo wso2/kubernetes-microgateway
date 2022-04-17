@@ -42,4 +42,4 @@ Please follow these configure DNS records.
     <EXTERNAL-IP> {{ if $adapterIngEnabled }}{{ .Values.wso2.deployment.adapter.ingress.hostname }}{{ end }} {{ if $gatewayIngEnabled }}{{ .Values.wso2.deployment.gatewayRuntime.router.ingress.hostname }}{{ end }}
 {{- end }}
 
-Please refer the official documentation at https://apim.docs.wso2.com/en/4.0.0/deploy-and-publish/deploy-on-gateway/choreo-connect/getting-started/choreo-connect-overview/ for additional information on Choreo Connect.
+Please refer the official documentation at https://apim.docs.wso2.com/en/4.1.0/deploy-and-publish/deploy-on-gateway/choreo-connect/getting-started/choreo-connect-overview/ for additional information on Choreo Connect.
