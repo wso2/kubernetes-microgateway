@@ -34,11 +34,17 @@ wso2:
       hostName: am.wso2.com
       # K8s service name (if in another namespace, `<serviceName>.<namespace>`) of the control plane
       serviceName: wso2am-single-node-am-service.apim
+      # List of K8s service names of control plane, which Choreo Connect listen for events
+      # If list is empty, default to controlPlane.serviceName
+      # eventListeners:
+      #   - wso2am-pattern-1-am-1-service.apim
+      #   - wso2am-pattern-1-am-2-service.apim
+      eventListeners: []
 
-    # List of K8s service names of the traffic managers. If an empty list, default to control plane service name
+    # List of K8s service names of the traffic managers. If list is empty, default to controlPlane.eventListeners
     # trafficManagers:
-    #   - serviceName: wso2am-pattern-1-am-1-service.apim
-    #   - serviceName: wso2am-pattern-1-am-2-service.apim
+    #   - wso2am-pattern-1-am-1-service.apim
+    #   - wso2am-pattern-1-am-2-service.apim
     trafficManagers: []
 
   deployment:
