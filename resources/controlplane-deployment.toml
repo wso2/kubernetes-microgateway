@@ -113,8 +113,8 @@ auth_token = ""
 {{ end }}
 
 # Only the section "[apim.key_manager].service_url" is updated of APIM template for the choreo connect QSG.
-[apim.key_manager]
-service_url = "https://{{ template "am-single-node.resource.prefix" . }}-am-service.{{ .Release.Namespace }}:${mgt.transport.https.port}/services/"
+#[apim.key_manager]
+#service_url = "https://{{ template "am-single-node.resource.prefix" . }}-am-service.{{ .Release.Namespace }}:${mgt.transport.https.port}/services/"
 #username = "$ref{super_admin.username}"
 #password = "$ref{super_admin.password}"
 #pool.init_idle_capacity = 50
