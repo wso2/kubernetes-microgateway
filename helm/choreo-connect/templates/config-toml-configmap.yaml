@@ -75,7 +75,7 @@ data:
       issuer = "https://{{ .Values.wso2.deployment.gatewayRuntime.router.ingress.hostname }}/testkey"
 
 {{- /* Setting values for section [enforcer.throttling] */ -}}
-{{- $tmSVCs := (include "choreo-connect.apim.trafficManagerServiceNames" .) | split ";" -}}
+{{- $tmSVCs := .Values.wso2.apim.trafficManagers | default .Values.wso2.apim.controlPlane.eventListeners | default (list .Values.wso2.apim.controlPlane.serviceName) -}}
 {{- $brokerList := list -}}
 {{- range $tmSVCs -}}
   {{- $brokerList = append $brokerList (printf "tcp://%s:5672" .) -}}
@@ -125,8 +125,15 @@ data:
       password = "$env{cp_admin_pwd}"
       environmentLabels = [{{ .Values.wso2.deployment.labelName | quote }}]
       skipSSLVerification = true
+
       [controlPlane.brokerConnectionParameters]
-      eventListeningEndpoints = ["amqp://admin:$env{cp_admin_pwd}@{{ .Values.wso2.apim.controlPlane.serviceName }}:5672?retries='10'&connectdelay='30'"]
+      {{- /* Setting control plane JMS eventListeningEndpoints */ -}}
+{{- $eventListeners := .Values.wso2.apim.controlPlane.eventListeners | default (list .Values.wso2.apim.controlPlane.serviceName) -}}
+{{- $eventListenerEPs := list -}}
+{{- range $eventListeners -}}
+  {{- $eventListenerEPs = append $eventListenerEPs (printf "amqp://admin:$env{cp_admin_pwd}@%s:5672?retries='10'&connectdelay='30'" . | quote) -}}
+{{- end }}
+      eventListeningEndpoints = [{{ $eventListenerEPs | join ", " }}]
 
     [analytics]
       enabled = {{ .Values.wso2.choreoAnalytics.enabled | default "false" }}

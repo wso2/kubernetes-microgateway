@@ -356,7 +356,8 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 |------------------------------------------|-------------------------------------------------------------------------------------------|----------------------------------|
 | `wso2.apim.controlPlane.hostName`        | Hostname of the control plane                                                             | am.wso2.com                      |
 | `wso2.apim.controlPlane.serviceName`     | K8s service name (if in another namespace, `<serviceName>.<namespace>`) of the control plane   | wso2am-single-node-am-service.apim |
-| `wso2.apim.trafficManagers.serviceNames` | List of traffic managers with K8s service names ex: `[{"serviceName": "tm1.apim"},{"serviceName": "tm2.apim"}]` | []                               |
+| `wso2.apim.controlPlane.eventListeners`  | List of K8s service names of control plane, which Choreo Connect listen for events. If empty default to `wso2.apim.controlPlane.serviceName`  | [] |
+| `wso2.apim.trafficManagers`              | List of K8s service names of traffic managers. If empty default to `wso2.apim.controlPlane.eventListeners` | []          |
 
 ###### Choreo Connect Configurations
 
