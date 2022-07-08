@@ -62,6 +62,8 @@ wso2:
     imagePullSecrets: []
 
     adapter:
+      # Docker registry. If this value is not empty, this overrides the value in 'wso2.deployment.dockerRegistry'
+      dockerRegistry: ""
       # Image name for adapter
       imageName: "choreo-connect-adapter"
       # Image tag for adapter
@@ -235,6 +237,8 @@ wso2:
         runAsGroup: 10500
       
       enforcer:
+        # Docker registry. If this value is not empty, this overrides the value in 'wso2.deployment.dockerRegistry'
+        dockerRegistry: ""
         # Image name for enforcer
         imageName: "choreo-connect-enforcer"
         # Image tag for enforcer
@@ -350,6 +354,8 @@ wso2:
         log4j2Properties: ""
 
       router:
+        # Docker registry. If this value is not empty, this overrides the value in 'wso2.deployment.dockerRegistry'
+        dockerRegistry: ""
         # Image name for router
         imageName: "choreo-connect-router"
         # Image tag for router
