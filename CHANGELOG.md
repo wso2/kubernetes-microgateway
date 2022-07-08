@@ -20,3 +20,12 @@ For detailed information on the tasks carried out during this release, please se
 - Readiness and liveness probe endpoints (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/38)).
 
 For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.1.0.2](https://github.com/wso2/kubernetes-microgateway/milestone/6)
+
+## [v1.1.0.3] - 2022-07-11
+
+### Added
+
+- Mount empty dir to write Router heap/CPU profile data (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/45)).
+- Override Docker registry in component level (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/46)).
+
+For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.1.0.3](https://github.com/wso2/kubernetes-microgateway/milestone/8)
