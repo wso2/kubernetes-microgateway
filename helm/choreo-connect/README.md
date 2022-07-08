@@ -470,6 +470,8 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.router.containerSecurityContext`            | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>|
 | `wso2.deployment.gatewayRuntime.router.security.backendCaCerts`             | Trusted backend certs in PEM format (Refer [Configure Certificates](#configure-certificates)) | Default envoy CA Certs  |
 | `wso2.deployment.gatewayRuntime.router.security.keystore`                   | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates))  | Default Certs           |
+| `wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountEmptyDir`     | Mount an K8s empty dir to write Heap/CPU profile data                                     | false                       |
+| `wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountPath`         | Path to mount the empty dir to write Heap/CPU profile data                                | "/var/log/envoy"            |
 
 ## Kubernetes Specific Configurations
 
