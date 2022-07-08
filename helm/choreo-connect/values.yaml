@@ -429,6 +429,14 @@ wso2:
           #     secretName: "router-keystore"
           #     subPath: "tls.crt"
           keystore: {} # using default certs, if not defined.
+        
+        debug:
+          # Store heap profile data for analyzing memory leaks
+          heapProfile:
+            # Mount an K8s empty dir to write profile data
+            mountEmptyDir: false
+            # Path to mount the empty dir
+            mountPath: /var/log/envoy
           
 kubernetes:
   # Service account configurations

@@ -201,6 +201,10 @@ spec:
               readOnly: true
               subPath: {{- .Values.wso2.deployment.gatewayRuntime.router.security.backendCaCerts.subPath | quote }}
             {{- end }}
+            {{- if Values.wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountEmptyDir }}
+            - mountPath: {{ .Values.wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountPath }}
+              name: router-heap-profile-data
+            {{- end }}
             - mountPath: /home/wso2/security/truststore/adapter-ca-cert.pem
               name: adapter-keystore-cert
               readOnly: true
@@ -337,6 +341,10 @@ spec:
                   name: {{ .configMapName }}
             {{- end }}
         {{- else }}
+          emptyDir: {}
+        {{- end }}
+        {{- if Values.wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountEmptyDir }}
+        - name: router-heap-profile-data
           emptyDir: {}
         {{- end }}
         - name: router-keystore-key
