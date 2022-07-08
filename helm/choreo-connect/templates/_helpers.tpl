@@ -85,13 +85,14 @@ Subscriptions secret name.
 Docker image name.
 */}}
 {{- define "image" }}
+{{- $componentLevelDockerRegistry := .deployment.dockerRegistry }}
 {{- $imageName := .deployment.imageName }}
 {{- $imageTag := .deployment.imageTag | default "" }}
 {{- if or (eq .Values.wso2.subscription.username "") (eq .Values.wso2.subscription.password "") -}}
-{{- $dockerRegistry := .Values.wso2.deployment.dockerRegistry | default "wso2" }}
+{{- $dockerRegistry := $componentLevelDockerRegistry | default .Values.wso2.deployment.dockerRegistry | default "wso2" }}
 image: {{ $dockerRegistry }}/{{ $imageName }}{{- if not (eq $imageTag "") }}{{- printf ":%s" $imageTag -}}{{- end }}
 {{- else }}
-{{- $dockerRegistry := .Values.wso2.deployment.dockerRegistry | default "docker.wso2.com" }}
+{{- $dockerRegistry := $componentLevelDockerRegistry | default .Values.wso2.deployment.dockerRegistry | default "docker.wso2.com" }}
 {{- $parts := len (split "." $imageTag) }}
 {{- if and (eq $parts 3) (eq $dockerRegistry "docker.wso2.com") }}
 image: {{ $dockerRegistry }}/{{ $imageName }}{{- if not (eq $imageTag "") }}:{{ $imageTag }}.0{{- end }}
