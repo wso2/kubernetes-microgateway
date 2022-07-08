@@ -62,7 +62,7 @@ spec:
       {{- end }}
       containers:
         - name: choreo-connect-enforcer
-          image: {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.gatewayRuntime.enforcer) | indent 10 }}
+          {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.gatewayRuntime.enforcer) | indent 10 }}
           imagePullPolicy: {{ .Values.wso2.deployment.gatewayRuntime.enforcer.imagePullPolicy }}
           volumeMounts:
           {{- if not .Values.wso2.deployment.gatewayRuntime.enforcer.security.truststore }}
@@ -184,7 +184,7 @@ spec:
             initialDelaySeconds: {{ .Values.wso2.deployment.gatewayRuntime.enforcer.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.wso2.deployment.gatewayRuntime.enforcer.livenessProbe.periodSeconds }}
         - name: choreo-connect-router
-          image: {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.gatewayRuntime.router) | indent 10 }}
+          {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.gatewayRuntime.router) | indent 10 }}
           imagePullPolicy: {{ .Values.wso2.deployment.gatewayRuntime.router.imagePullPolicy }}
           volumeMounts:
             - mountPath:  /home/wso2/security/keystore/mg.key
@@ -201,7 +201,7 @@ spec:
               readOnly: true
               subPath: {{- .Values.wso2.deployment.gatewayRuntime.router.security.backendCaCerts.subPath | quote }}
             {{- end }}
-            {{- if Values.wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountEmptyDir }}
+            {{- if .Values.wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountEmptyDir }}
             - mountPath: {{ .Values.wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountPath }}
               name: router-heap-profile-data
             {{- end }}
@@ -343,7 +343,7 @@ spec:
         {{- else }}
           emptyDir: {}
         {{- end }}
-        {{- if Values.wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountEmptyDir }}
+        {{- if .Values.wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountEmptyDir }}
         - name: router-heap-profile-data
           emptyDir: {}
         {{- end }}

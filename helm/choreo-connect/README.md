@@ -368,6 +368,7 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 
 | Parameter                                                                   | Description                                                                               | Default Value               |
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
+| `wso2.deployment.adapter.dockerRegistry`                                    | Docker registry. If this value is not empty, this overrides the value in `wso2.deployment.dockerRegistry` | -           |
 | `wso2.deployment.adapter.imageName`                                         | Image name for adapter                                                                    | "choreo-connect-adapter"    |
 | `wso2.deployment.adapter.imageTag`                                          | Image tag for adapter                                                                     | "1.1.0"                     |
 | `wso2.deployment.adapter.imagePullPolicy`                                   | Image pull policy of the container                                                        | "IfNotPresent"              |
@@ -383,7 +384,7 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.adapter.affinity`                                          | Affinity for adapter pods assignment                                                      | -                           |
 | `wso2.deployment.adapter.nodeSelector`                                      | Node labels for adapter pods assignment                                                   | -                           |
 | `wso2.deployment.adapter.tolerations`                                       | Tolerations for adapter pods assignment                                                   | -                           |
-| `wso2.deployment.adapter.podSecurityContext`                               | Security context of the the adapter pod                                                    | runAsUser:&nbsp;10500</br>runAsGroup:&nbsp;10500 |
+| `wso2.deployment.adapter.podSecurityContext`                                | Security context of the the adapter pod                                                   | runAsUser:&nbsp;10500</br>runAsGroup:&nbsp;10500 |
 | `wso2.deployment.adapter.containerSecurityContext`                          | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>|
 | `wso2.deployment.adapter.livenessProbe.initialDelaySeconds`                 | Number of seconds after the container has started before liveness probes are initiated    | 10                          |
 | `wso2.deployment.adapter.livenessProbe.periodSeconds`                       | How often (in seconds) to perform the probe                                               | 30                          |
@@ -421,6 +422,7 @@ Gateway runtime (enforcer + router) deployment configurations
 
 | Parameter                                                                   | Description                                                                               | Default Value               |
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
+| `wso2.deployment.gatewayRuntime.enforcer.dockerRegistry`                    | Docker registry. If this value is not empty, this overrides the value in `wso2.deployment.dockerRegistry` | -           |
 | `wso2.deployment.gatewayRuntime.enforcer.imageName`                         | Image name for enforcer                                                                   | "choreo-connect-enforcer"   |
 | `wso2.deployment.gatewayRuntime.enforcer.imageTag`                          | Image tag for enforcer                                                                    | "1.1.0"                     |
 | `wso2.deployment.gatewayRuntime.enforcer.imagePullPolicy`                   | Image pull policy of the container                                                        | "IfNotPresent"              |
@@ -449,6 +451,7 @@ Gateway runtime (enforcer + router) deployment configurations
 
 | Parameter                                                                   | Description                                                                               | Default Value               |
 |-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|-----------------------------|
+| `wso2.deployment.gatewayRuntime.router.dockerRegistry`                      | Docker registry. If this value is not empty, this overrides the value in `wso2.deployment.dockerRegistry` | -           |
 | `wso2.deployment.gatewayRuntime.router.imageName`                           | Image name for enforcer                                                                   | "choreo-connect-router"     |
 | `wso2.deployment.gatewayRuntime.router.imageTag`                            | Image tag for enforcer                                                                    | "1.1.0"                     |
 | `wso2.deployment.gatewayRuntime.router.imagePullPolicy`                     | Image pull policy of the container                                                        | "IfNotPresent"              |
