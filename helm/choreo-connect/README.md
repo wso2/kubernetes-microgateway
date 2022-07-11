@@ -49,13 +49,13 @@ You can install the relevant Helm chart either from [WSO2 Helm Chart Repository]
   Helm version 2
   
   ```
-  helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-3 --namespace <NAMESPACE>
+  helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-4 --namespace <NAMESPACE>
   ```
   
   Helm version 3
 
   ```
-  helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-3 --namespace <NAMESPACE> --create-namespace
+  helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-4 --namespace <NAMESPACE> --create-namespace
   ```
 
 The above steps will deploy the Choreo Connect using WSO2 product Docker images available at DockerHub.
@@ -66,7 +66,7 @@ please provide your WSO2 Subscription credentials via input values (using `--set
 Please see the following example.
 
 ```
- helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-3 --namespace <NAMESPACE> \
+ helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-4 --namespace <NAMESPACE> \
   --set wso2.subscription.username=<SUBSCRIPTION_USERNAME> \
   --set wso2.subscription.password=<SUBSCRIPTION_PASSWORD>
 ```
@@ -125,14 +125,14 @@ hence if you have not specified `wso2.deployment.mode` "Standalone" deployment m
 Helm v2
 
 ```
-helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-3 --namespace <NAMESPACE> \
+helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-4 --namespace <NAMESPACE> \
   --set wso2.deployment.mode=STANDALONE
 ```
 
 Helm v3
 
 ```
-helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-3 --namespace <NAMESPACE> --create-namespace
+helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-4 --namespace <NAMESPACE> --create-namespace
   --set wso2.deployment.mode=STANDALONE
 ```
 
@@ -156,7 +156,7 @@ Helm version 2
 ```
 helm install --name apim-as-cp wso2/am-single-node --version 4.0.0-1 --namespace apim \
   --set wso2.deployment.am.ingress.gateway.hostname=gw.wso2.com \
-  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/v1.0.0.3/resources/controlplane-deployment.toml
+  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/v1.0.0.4/resources/controlplane-deployment.toml
 ```
 
 Helm version 3
@@ -164,7 +164,7 @@ Helm version 3
 ```
 helm install apim-as-cp wso2/am-single-node --version 4.0.0-1 --namespace apim --create-namespace \
   --set wso2.deployment.am.ingress.gateway.hostname=gw.wso2.com \
-  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/v1.0.0.3/resources/controlplane-deployment.toml
+  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/v1.0.0.4/resources/controlplane-deployment.toml
 ```
 
 NOTE: If you do not have sufficient resources you can adjust them setting following values when installing the chart.
@@ -210,7 +210,7 @@ The following example shows how to deploy Choreo Connect with "WSO2 API Manager 
 Helm v2
 
 ```
-helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-3 --namespace <NAMESPACE> \
+helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-4 --namespace <NAMESPACE> \
   --set wso2.deployment.mode=APIM_AS_CP \
   --set wso2.apim.controlPlane.hostName=am.wso2.com \
   --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim
@@ -219,7 +219,7 @@ helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-3 --names
 Helm v3
 
 ```
-helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-3 --namespace <NAMESPACE> --create-namespace \
+helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-4 --namespace <NAMESPACE> --create-namespace \
   --set wso2.deployment.mode=APIM_AS_CP \
   --set wso2.apim.controlPlane.hostName=am.wso2.com \
   --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim
@@ -234,7 +234,7 @@ The following example shows how to enable Analytics with the helm charts.
 Helm v2
 
 ```
-helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-3 --namespace <NAMESPACE> \
+helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-4 --namespace <NAMESPACE> \
   --set wso2.choreoAnalytics.enabled=true \
   --set wso2.choreoAnalytics.endpoint=<CHOREO_ANALYTICS_ENDPOINT> \
   --set wso2.choreoAnalytics.onpremKey=<ONPREM_KEY>
@@ -243,7 +243,7 @@ helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-3 --names
 Helm v3
 
 ```
-helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-3 --namespace <NAMESPACE> --create-namespace \
+helm install <RELEASE_NAME> wso2/choreo-connect --version 1.0.0-4 --namespace <NAMESPACE> --create-namespace \
   --set wso2.choreoAnalytics.enabled=true \
   --set wso2.choreoAnalytics.endpoint=<CHOREO_ANALYTICS_ENDPOINT> \
   --set wso2.choreoAnalytics.onpremKey=<ONPREM_KEY>
