@@ -46,5 +46,5 @@ spec:
                 service:
                   name: {{printf "%s-%s" (include "choreo-connect.fullname" .) "router" | trunc 63 | quote }}
                   port:
-                    number: 9095
+                    number: {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.targetPort }}
 {{- end -}}

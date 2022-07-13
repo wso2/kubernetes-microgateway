@@ -107,6 +107,9 @@ wso2:
       # Tolerations for adapter pods assignment
       # ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
       tolerations: []
+
+      # Auto mount Service Account Token to the pod
+      automountServiceAccountToken: false
       
       # Security context of the the adapter pod
       # ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
@@ -229,6 +232,9 @@ wso2:
       # Tolerations for gateway runtime pods assignment
       # ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
       tolerations: []
+
+      # Auto mount Service Account Token to the pod
+      automountServiceAccountToken: false
 
       # Security context of the the gateway runtime pod
       # ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
@@ -375,6 +381,9 @@ wso2:
             kubernetes.io/ingress.class: nginx
             nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
             nginx.ingress.kubernetes.io/ssl-redirect: "false"
+          # Port of the router service to route requests, default to HTTPS port.
+          # Use 9090 to route requests to HTTP port, make sure to update the annotations 'nginx.ingress.kubernetes.io/backend-protocol' as HTTP
+          targetPort: 9095
 
         # envOverride:
         #   - name: CONCURRENCY

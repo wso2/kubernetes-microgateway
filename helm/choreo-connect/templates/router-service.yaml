@@ -32,6 +32,10 @@ spec:
       port: 9000
       targetPort: 9000
       protocol: TCP
+    - name: "http-router"
+      port: 9090
+      targetPort: 9090
+      protocol: TCP
     - name: "https-router"
       port: 9095
       targetPort: 9095
