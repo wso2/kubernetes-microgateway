@@ -53,7 +53,7 @@ spec:
         - name: {{ include "choreo-connect.subscriptionCredsSecretName" . }}
       {{- end }}
       serviceAccountName: {{ include "choreo-connect.serviceAccountName" . }}
-      automountServiceAccountToken: false
+      automountServiceAccountToken: {{ .Values.wso2.deployment.adapter.automountServiceAccountToken }}
       {{- with .Values.wso2.deployment.adapter.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8}}

@@ -384,6 +384,7 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.adapter.affinity`                                          | Affinity for adapter pods assignment                                                      | -                           |
 | `wso2.deployment.adapter.nodeSelector`                                      | Node labels for adapter pods assignment                                                   | -                           |
 | `wso2.deployment.adapter.tolerations`                                       | Tolerations for adapter pods assignment                                                   | -                           |
+| `wso2.deployment.adapter.automountServiceAccountToken`                      | Auto mount Service Account Token to the pod                                               | false                       |
 | `wso2.deployment.adapter.podSecurityContext`                                | Security context of the the adapter pod                                                   | runAsUser:&nbsp;10500</br>runAsGroup:&nbsp;10500 |
 | `wso2.deployment.adapter.containerSecurityContext`                          | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>|
 | `wso2.deployment.adapter.livenessProbe.initialDelaySeconds`                 | Number of seconds after the container has started before liveness probes are initiated    | 10                          |
@@ -416,6 +417,7 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.affinity`                                   | Affinity for gateway runtime pods assignment                                              | -                           |
 | `wso2.deployment.gatewayRuntime.nodeSelector`                               | Node labels for gateway runtime pods assignment                                           | -                           |
 | `wso2.deployment.gatewayRuntime.tolerations`                                | Tolerations for gateway runtime pods assignment                                           | -                           |
+| `wso2.deployment.gatewayRuntime.automountServiceAccountToken`               | Auto mount Service Account Token to the pod                                               | false                       |
 | `wso2.deployment.gatewayRuntime.podSecurityContext`                         | Security context of the the gateway runtime pod                                           | runAsUser:&nbsp;10500</br>runAsGroup:&nbsp;10500|
 
 ###### Choreo Connect Gateway Runtime - Enforcer Configurations
@@ -459,6 +461,7 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.router.ingress.hostname`                    | Hostname for router (gateway)                                                             | gw.wso2.com                 |
 | `wso2.deployment.gatewayRuntime.router.ingress.tlsSecretName`               | TLS secret for the router host. Using default secret if not specified                     | Default TLS secret          |
 | `wso2.deployment.gatewayRuntime.router.ingress.annotations`                 | Annotations for the router ingress                                                        | Community NGINX Ingress controller annotations |
+| `wso2.deployment.gatewayRuntime.router.ingress.targetPort`                  | Port of the router service to route requests                                              | 9095                        |
 | `wso2.deployment.gatewayRuntime.router.envOverride`                         | Set (or override) environment variables as values or from ConfigMaps or Secrets           | -                           |
 | `wso2.deployment.gatewayRuntime.router.resources.requests.memory`           | Resources for the adapter container - Memory request                                      | "500Mi"                     |
 | `wso2.deployment.gatewayRuntime.router.resources.requests.cpu`              | Resources for the adapter container - CPU request                                         | "1000m"                     |
