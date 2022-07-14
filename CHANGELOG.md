@@ -37,3 +37,12 @@ For detailed information on the tasks carried out during this release, please se
 - Override Docker registry in component level (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/50)).
 
 For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.0.0.4](https://github.com/wso2/kubernetes-microgateway/milestone/9)
+
+## [v1.0.0.5] - 2022-07-14
+
+### Added
+
+- Expose HTTP port of the Router component and make ingress target port configurable (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/54)).
+- Make automountServiceAccountToken configurable in each component (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/55)).
+
+For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.0.0.5](https://github.com/wso2/kubernetes-microgateway/milestone/11)
