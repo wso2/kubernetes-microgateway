@@ -278,6 +278,8 @@ wso2:
         #   - configMapName: "dropins-cm1"
         #   - configMapName: "dropins-cm2"
         dropins: {}
+        # Mount dropins JARs directory if the directory is empty
+        dropinsMountEmptyDir: true
 
         # Resources for the enforcer container
         resources:

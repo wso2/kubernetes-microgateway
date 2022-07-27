@@ -435,6 +435,7 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.enforcer.imagePullPolicy`                   | Image pull policy of the container                                                        | "IfNotPresent"              |
 | `wso2.deployment.gatewayRuntime.enforcer.envOverride`                       | Set (or override) environment variables as values or from ConfigMaps or Secrets           | Default Passwords           |
 | `wso2.deployment.gatewayRuntime.enforcer.dropins`                           | Mount enforcer lib dropins JARs to the `dropins` directory, array of ConfigMap names      | -                           |
+| `wso2.deployment.gatewayRuntime.enforcer.dropinsMountEmptyDir`          | Mount dropins JARs directory if the directory is empty          |           true          |
 | `wso2.deployment.gatewayRuntime.enforcer.resources.requests.memory`         | Resources for the adapter container - Memory request                                      | "1000Mi"                    |
 | `wso2.deployment.gatewayRuntime.enforcer.resources.requests.cpu`            | Resources for the adapter container - CPU request                                         | "1000m"                     |
 | `wso2.deployment.gatewayRuntime.enforcer.resources.limits.memory`           | Resources for the adapter container - Memory limit                                        | "1000Mi"                    |
