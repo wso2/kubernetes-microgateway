@@ -113,8 +113,10 @@ spec:
             - mountPath: /home/wso2/check_health.sh
               name: grpc-probe-health-check
               subPath: "check_health.sh"
+          {{- if or (.Values.wso2.deployment.gatewayRuntime.enforcer.dropins) (.Values.wso2.deployment.gatewayRuntime.enforcer.dropinsMountEmptyDir) }}
             - mountPath: /home/wso2/lib/dropins
               name: enforcer-dropins
+          {{- end }}
           {{- with .Values.wso2.deployment.gatewayRuntime.enforcer.containerSecurityContext }}
           securityContext:
             {{- toYaml . | nindent 12}}
