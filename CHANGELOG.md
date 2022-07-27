@@ -54,4 +54,4 @@ For detailed information on the tasks carried out during this release, please se
 - Add new configuration to prevent mounting an empty directory for adapter artifacts (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/63))
 - Add new configuration to prevent mounting an empty directory for enforcer dropins JARs (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/65))
 
-For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.1.0.5](https://github.com/wso2/kubernetes-microgateway/milestone/13) 
+For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.1.0.6](https://github.com/wso2/kubernetes-microgateway/milestone/13) 
