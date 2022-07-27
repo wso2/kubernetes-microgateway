@@ -149,7 +149,7 @@ wso2:
       logConfigToml: ""
 
       # Mount an empty directory on API artifacts directory
-      apiArtifactsMountEmptyDir: false
+      apiArtifactsMountEmptyDir: true
 
       # envOverride:
       #   - name: cp_admin_pwd
