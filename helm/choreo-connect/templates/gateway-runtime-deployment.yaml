@@ -334,6 +334,7 @@ spec:
           configMap:
             name: {{ printf "%s-grpc-probe-script" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}
             defaultMode: 0777
+      {{- if or (.Values.wso2.deployment.gatewayRuntime.enforcer.dropins) (.Values.wso2.deployment.gatewayRuntime.enforcer.dropinsMountEmptyDir) }}
         - name: enforcer-dropins
         {{- if .Values.wso2.deployment.gatewayRuntime.enforcer.dropins }}
           projected:
@@ -345,6 +346,7 @@ spec:
         {{- else }}
           emptyDir: {}
         {{- end }}
+      {{- end }}
         {{- if .Values.wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountEmptyDir }}
         - name: router-heap-profile-data
           emptyDir: {}
