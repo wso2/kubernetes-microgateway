@@ -398,6 +398,7 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.adapter.podAnnotations`                                    | Key value pair of annotations for the pod                                                 | sidecar.istio.io/inject: "false" |
 | `wso2.deployment.adapter.configToml`                                        | Define templated config.toml file, if empty using default config.toml                     | Default templated config toml file |
 | `wso2.deployment.adapter.logConfigToml`                                     | Define templated log_config.toml file, if empty using default log_config.toml             | Default templated log config toml file |
+| `wso2.deployment.adapter.apiArtifactsMountEmptyDir`         | Mount API artifacts directory if the directory is empty         |           false         |
 | `wso2.deployment.adapter.envOverride`                                       | Set (or override) environment variables as values or from ConfigMaps or Secrets           | Default passwords           |
 | `wso2.deployment.adapter.security.sslHostname`                              | Hostname for SSL verification, this value should be included in SAN of keystore certs     | adapter                     |
 | `wso2.deployment.adapter.security.adapterRestService.enabled`               | Enable or disable adapter Rest service. If "default": enabled in "STANDALONE" mode and disabled in "APIM_AS_CP" mode <oneof `"default"` or `"true"` or `"false"`> | "default" |

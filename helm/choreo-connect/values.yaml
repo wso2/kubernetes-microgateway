@@ -148,6 +148,9 @@ wso2:
       # Define templated log_config.toml file, if empty using default log_config.toml
       logConfigToml: ""
 
+      # Mount API artifacts directory if the directory is empty
+      apiArtifactsMountEmptyDir: false
+
       # envOverride:
       #   - name: cp_admin_pwd
       #     value: admin
