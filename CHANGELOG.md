@@ -23,7 +23,7 @@ For detailed information on the tasks carried out during this release, please se
 
 ## [v1.0.0.3] - 2022-06-23
 
-### Modified
+### Changed
 
 - Readiness and liveness probe endpoints (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/40)).
 
@@ -47,11 +47,15 @@ For detailed information on the tasks carried out during this release, please se
 
 For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.0.0.5](https://github.com/wso2/kubernetes-microgateway/milestone/11)
 
-## [v1.0.0.6] - 2022-07-27
+## [v1.0.0.6] - 2022-07-29
 
 ### Added
 
 - Add new configuration to prevent mounting an empty directory for adapter artifacts (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/63))
 - Add new configuration to prevent mounting an empty directory for enforcer dropins JARs (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/65))
+
+### Changed
+
+- Update default ingress TLS secrets (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/69))
 
 For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.0.0.6](https://github.com/wso2/kubernetes-microgateway/milestone/13) 
