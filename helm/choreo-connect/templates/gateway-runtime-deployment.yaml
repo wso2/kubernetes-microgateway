@@ -113,8 +113,10 @@ spec:
             - mountPath: /home/wso2/check_health.sh
               name: grpc-probe-health-check
               subPath: "check_health.sh"
+          {{- if or (.Values.wso2.deployment.gatewayRuntime.enforcer.dropins) (.Values.wso2.deployment.gatewayRuntime.enforcer.dropinsMountEmptyDir) }}
             - mountPath: /home/wso2/lib/dropins
               name: enforcer-dropins
+          {{- end }}
           {{- with .Values.wso2.deployment.gatewayRuntime.enforcer.containerSecurityContext }}
           securityContext:
             {{- toYaml . | nindent 12}}
@@ -332,6 +334,7 @@ spec:
           configMap:
             name: {{ printf "%s-grpc-probe-script" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}
             defaultMode: 0777
+      {{- if or (.Values.wso2.deployment.gatewayRuntime.enforcer.dropins) (.Values.wso2.deployment.gatewayRuntime.enforcer.dropinsMountEmptyDir) }}
         - name: enforcer-dropins
         {{- if .Values.wso2.deployment.gatewayRuntime.enforcer.dropins }}
           projected:
@@ -343,6 +346,7 @@ spec:
         {{- else }}
           emptyDir: {}
         {{- end }}
+      {{- end }}
         {{- if .Values.wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountEmptyDir }}
         - name: router-heap-profile-data
           emptyDir: {}
