@@ -148,6 +148,9 @@ wso2:
       # Define templated log_config.toml file, if empty using default log_config.toml
       logConfigToml: ""
 
+      # Mount an empty directory on API artifacts directory
+      apiArtifactsMountEmptyDir: true
+
       # envOverride:
       #   - name: cp_admin_pwd
       #     value: admin
@@ -275,6 +278,8 @@ wso2:
         #   - configMapName: "dropins-cm1"
         #   - configMapName: "dropins-cm2"
         dropins: {}
+        # Mount an empty directory on dropins JARs directory
+        dropinsMountEmptyDir: true
 
         # Resources for the enforcer container
         resources:
