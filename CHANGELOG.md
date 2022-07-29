@@ -51,3 +51,11 @@ For detailed information on the tasks carried out during this release, please se
 - Update default ingress TLS secrets (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/68))
 
 For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.1.0.5](https://github.com/wso2/kubernetes-microgateway/milestone/12)
+
+## [v1.1.0.6] - 2022-07-29
+
+### Fixed
+
+- Error applying Router backendCaCerts (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/74))
+
+For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.1.0.6](https://github.com/wso2/kubernetes-microgateway/milestone/14)
