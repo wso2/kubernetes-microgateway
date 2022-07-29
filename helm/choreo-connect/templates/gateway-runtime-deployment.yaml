@@ -201,7 +201,7 @@ spec:
             - mountPath: /etc/ssl/certs/ca-certificates.crt
               name: router-backend-ca-certs
               readOnly: true
-              subPath: {{- .Values.wso2.deployment.gatewayRuntime.router.security.backendCaCerts.subPath | quote }}
+              subPath: {{ .Values.wso2.deployment.gatewayRuntime.router.security.backendCaCerts.subPath | quote }}
             {{- end }}
             {{- if .Values.wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountEmptyDir }}
             - mountPath: {{ .Values.wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountPath }}
