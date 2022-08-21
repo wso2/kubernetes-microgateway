@@ -263,7 +263,7 @@ Choreo Connect Adapter
 
 - NAME: Metadata name of the Kubernetes Ingress resource (Default to "<RELEASE_NAME>-choreo-connect-adapter")
 - HOSTS: Hostname of the Choreo Connect Adapter (Default to "adapter.wso2.com")
-- ADDRESS: External IP (`EXTERNAL-IP`) exposing the Chore Connect Adapter to outside of the Kubernetes environment
+- ADDRESS: External IP (`EXTERNAL-IP`) exposing the Choreo Connect Adapter to outside of the Kubernetes environment
 - PORTS: Externally exposed service ports of the Choreo Connect Adapter
 
 Choreo Connect Router

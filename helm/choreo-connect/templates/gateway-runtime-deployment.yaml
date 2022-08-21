@@ -71,7 +71,7 @@ spec:
               readOnly: true
               subPath: wso2carbon.pem
           {{- else -}}
-            {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" .Values.wso2.deployment.gatewayRuntime.enforcer.security.truststore "prefix" "enforcer") }}
+            {{- include "choreo-connect.deployment.truststore.mounts" (dict "truststore" .Values.wso2.deployment.gatewayRuntime.enforcer.security.truststore "prefix" "enforcer") }}
           {{- end }}
             - mountPath: /home/wso2/security/truststore/mg.pem
               name: enforcer-keystore-cert
@@ -250,7 +250,7 @@ spec:
               value: "18090"
             - name: CONCURRENCY
               value: "2"
-          {{- with .Values.wso2.deployment.gatewayRuntime.enforcer.envOverride }}
+          {{- with .Values.wso2.deployment.gatewayRuntime.router.envOverride }}
             {{- toYaml . | nindent 12}}
           {{- end }}
           {{- with .Values.wso2.deployment.labelName }}
@@ -328,7 +328,7 @@ spec:
           secret:
             secretName: {{ printf "%s-default-truststore" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}
         {{- else }}
-          {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" .Values.wso2.deployment.gatewayRuntime.enforcer.security.truststore "prefix" "enforcer") }}
+          {{- include "choreo-connect.deployment.truststore.volumes" (dict "truststore" .Values.wso2.deployment.gatewayRuntime.enforcer.security.truststore "prefix" "enforcer") }}
         {{- end }}
         - name: grpc-probe-health-check
           configMap:
