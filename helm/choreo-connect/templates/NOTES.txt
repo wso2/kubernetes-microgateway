@@ -1,4 +1,4 @@
-Thank you for installing Chore Connect.
+Thank you for installing Choreo Connect.
 
 Installation Mode: {{ .Values.wso2.deployment.mode | quote }}
 
@@ -18,7 +18,7 @@ Please follow these configure DNS records.
     Choreo Connect Adapter
     - NAME: Metadata name of the Kubernetes Ingress resource ("{{ include "choreo-connect.adapterFullname" . }}")
     - HOSTS: Hostname of the Choreo Connect Adapter ("{{ .Values.wso2.deployment.adapter.ingress.hostname }}")
-    - ADDRESS: External IP (`EXTERNAL-IP`) exposing the Chore Connect Adapter to outside of the Kubernetes environment
+    - ADDRESS: External IP (`EXTERNAL-IP`) exposing the Choreo Connect Adapter to outside of the Kubernetes environment
     - PORTS: Externally exposed service ports of the Choreo Connect Adapter
     {{- end }}
 
