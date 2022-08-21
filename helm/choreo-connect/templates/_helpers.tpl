@@ -112,7 +112,7 @@ Truststore Secret Volume Names
 {{/*
 Truststore Secret Volumes Mounts
 */}}
-{{- define "choreo-connect.deployment.trustore.volumes" -}}
+{{- define "choreo-connect.deployment.truststore.volumes" -}}
 {{- range .truststore -}}
 {{- if . -}}
 {{- /* Didn't used "nindent" when using this template, that makes new lines, hence do the indentation here */}}
@@ -126,7 +126,7 @@ Truststore Secret Volumes Mounts
 {{/*
 Truststore Secret Volume Mounts
 */}}
-{{- define "choreo-connect.deployment.trustore.mounts" -}}
+{{- define "choreo-connect.deployment.truststore.mounts" -}}
 {{- range .truststore -}}
 {{- if . -}}
 {{- /* Didn't used "nindent" when using this template, that makes new lines, hence do the indentation here */ -}}
