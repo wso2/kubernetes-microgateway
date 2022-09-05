@@ -77,7 +77,7 @@ spec:
               readOnly: true
               subPath: controlplane.pem
             {{- else }}
-              {{- include "choreo-connect.deployment.trustore.mounts" (dict "truststore" .Values.wso2.deployment.adapter.security.truststore "prefix" "adapter") }}
+              {{- include "choreo-connect.deployment.truststore.mounts" (dict "truststore" .Values.wso2.deployment.adapter.security.truststore "prefix" "adapter") }}
             {{- end }}
             - mountPath: /home/wso2/security/truststore/mg.pem
               name: adapter-keystore-cert
@@ -165,7 +165,7 @@ spec:
           secret:
             secretName: {{ printf "%s-default-truststore" (include "choreo-connect.adapterFullname" .) | trunc 63 }}
         {{- else }}
-          {{- include "choreo-connect.deployment.trustore.volumes" (dict "truststore" .Values.wso2.deployment.adapter.security.truststore "prefix" "adpter") }}
+          {{- include "choreo-connect.deployment.truststore.volumes" (dict "truststore" .Values.wso2.deployment.adapter.security.truststore "prefix" "adapter") }}
         {{- end }}
         {{- if .Values.wso2.deployment.adapter.security.consul }}
         - name: consul-agent-ca-cert
