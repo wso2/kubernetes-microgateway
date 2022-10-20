@@ -83,7 +83,7 @@ data:
 
     [enforcer.throttling]
       enableGlobalEventPublishing = {{ if (include "choreo-connect.deploymentMode.isStandalone" .) }}false{{ else }}true{{ end }}
-      jmsConnectionProviderURL = "amqp://admin:admin@carbon/carbon?brokerlist='{{ $brokerList | join ";" }}'"
+      jmsConnectionProviderURL = "amqp://admin:$env{tm_admin_pwd}@carbon/carbon?brokerlist='{{ $brokerList | join ";" }}'"
       [enforcer.throttling.publisher]
         username = "admin"
         password = "$env{tm_admin_pwd}"
@@ -124,7 +124,7 @@ data:
       username = "admin"
       password = "$env{cp_admin_pwd}"
       environmentLabels = [{{ .Values.wso2.deployment.labelName | quote }}]
-      skipSSLVerification = true
+      skipSSLVerification = false
 
       [controlPlane.brokerConnectionParameters]
       {{- /* Setting control plane JMS eventListeningEndpoints */ -}}
