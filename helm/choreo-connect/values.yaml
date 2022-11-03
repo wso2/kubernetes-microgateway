@@ -144,8 +144,12 @@ wso2:
         sidecar.istio.io/inject: "false"
 
       # Define templated config.toml file, if empty using default config.toml
+      # Use --set-file arg as follows to specify an external templated config file
+      # --set-file wso2.deployment.adapter.configToml=<FILE_PATH_FOR_TEMPLATED_CONFIG_TOML>
       configToml: ""
       # Define templated log_config.toml file, if empty using default log_config.toml
+      # Use --set-file arg as follows to specify an external templated config file
+      # --set-file wso2.deployment.adapter.logConfigToml=<FILE_PATH_FOR_TEMPLATED_LOG_CONFIG_TOML>
       logConfigToml: ""
 
       # Mount an empty directory on API artifacts directory
