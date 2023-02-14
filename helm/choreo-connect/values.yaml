@@ -207,7 +207,7 @@ wso2:
         #     # Optional file name to mount the secret with the given name inside the container.
         #     # Default to auto-generated file name `{secretName}-{subPath | replace "." with "-"}.pem`.
         #     # Auto-generated file name for this sample: "control-plane-cert-tls-crt.pem"
-        #     mountAs: "wso2carbon.pem"
+        #     mountAs: "controlplane.pem"
         truststore: [] # using default certs, if not defined.
 
         # Certs for consul integration
@@ -367,13 +367,17 @@ wso2:
             # Test token should be disabled in a production deployment
             enabled: true
 
-          # array of secrets with {secretName, subPath}
+          # Truststore certs as an array of secrets {secretName, subPath, mountAs}
           # override default certs from secrets
           # truststore:
-          #   - secretName: "adapter-cert"
+          #   - # Name of the secret
+          #     secretName: "control-plane-cert"
+          #     # Key name of the secret
           #     subPath: "tls.crt"
-          #   - secretName: "enforcer-truststore"
-          #     subPath: "mg.pem"
+          #     # Optional file name to mount the secret with the given name inside the container.
+          #     # Default to auto-generated file name `{secretName}-{subPath | replace "." with "-"}.pem`.
+          #     # Auto-generated file name for this sample: "control-plane-cert-tls-crt.pem"
+          #     mountAs: "controlplane.pem"
           truststore: [] # using default certs, if not defined.
 
         # Define templated log4j2.properties file, if empty using default log4j2.properties
