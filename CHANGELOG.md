@@ -60,7 +60,7 @@ For detailed information on the tasks carried out during this release, please se
 
 For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.1.0.6](https://github.com/wso2/kubernetes-microgateway/milestone/14)
 
-## [v1.1.0.7] - 2023-02-14
+## [v1.1.0.7] - 2023-02-15
 
 ### Added
 
