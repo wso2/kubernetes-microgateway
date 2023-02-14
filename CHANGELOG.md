@@ -68,7 +68,11 @@ For detailed information on the tasks carried out during this release, please se
 
 For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.0.0.7](https://github.com/wso2/kubernetes-microgateway/milestone/15)
 
-## [v1.0.0.8] - 2023-02-14
+## [v1.0.0.8] - 2023-02-15
+
+### Added
+
+- Mount files to truststore with a manual name (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/99))
 
 ### Fixed
 

@@ -131,7 +131,7 @@ Truststore Secret Volume Mounts
 {{- if . -}}
 {{- /* Didn't used "nindent" when using this template, that makes new lines, hence do the indentation here */ -}}
 {{- /* Appended '.pem' since there can be file extension check inside the component */}}
-            - mountPath: /home/wso2/security/truststore{{ if .subPath  }}{{ printf "/%s-%s.pem" .secretName (.subPath | replace "." "-") }}{{- end }}
+            - mountPath: /home/wso2/security/truststore{{ if .subPath  }}/{{ .mountAs | default (printf "%s-%s.pem" .secretName (.subPath | replace "." "-")) }}{{- end }}
               name: {{ include "choreo-connect.deployment.secretVolumeName" (dict "prefix" $.prefix "secret" .) }}
               readOnly: true
               subPath: {{ .subPath | quote }}
