@@ -68,7 +68,7 @@ For detailed information on the tasks carried out during this release, please se
 
 For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.0.0.7](https://github.com/wso2/kubernetes-microgateway/milestone/15)
 
-## [v1.0.0.8] - 2023-02-15
+## [v1.0.0.8] - 2023-02-16
 
 ### Added
 
@@ -79,5 +79,6 @@ For detailed information on the tasks carried out during this release, please se
 - Traffic Manager password is hardcoded in the config file (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/88))
 - Skip SSL verification to the Control Plane (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/88))
 - Invalid helm keys when configuring Adapter Truststore and Router environment variables (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/79))
+- Readiness probes are read from liveness probes in gateway runtime (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/101))
 
 For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.0.0.8](https://github.com/wso2/kubernetes-microgateway/milestone/16)
