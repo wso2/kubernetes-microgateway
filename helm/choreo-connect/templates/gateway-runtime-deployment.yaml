@@ -178,13 +178,15 @@ spec:
           livenessProbe:
             exec:
               command: [ "sh", "check_health.sh" ]
+            failureThreshold: {{ .Values.wso2.deployment.gatewayRuntime.enforcer.livenessProbe.failureThreshold }}
             initialDelaySeconds: {{ .Values.wso2.deployment.gatewayRuntime.enforcer.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.wso2.deployment.gatewayRuntime.enforcer.livenessProbe.periodSeconds }}
           readinessProbe:
             exec:
               command: [ "sh", "check_health.sh" ]
-            initialDelaySeconds: {{ .Values.wso2.deployment.gatewayRuntime.enforcer.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.wso2.deployment.gatewayRuntime.enforcer.livenessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.wso2.deployment.gatewayRuntime.enforcer.readinessProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.wso2.deployment.gatewayRuntime.enforcer.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.wso2.deployment.gatewayRuntime.enforcer.readinessProbe.periodSeconds }}
         - name: choreo-connect-router
           {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.gatewayRuntime.router) | indent 10 }}
           imagePullPolicy: {{ .Values.wso2.deployment.gatewayRuntime.router.imagePullPolicy }}
@@ -287,6 +289,7 @@ spec:
               httpHeaders:
                 - name: Host
                   value: {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.hostname }}
+            failureThreshold: {{ .Values.wso2.deployment.gatewayRuntime.router.livenessProbe.failureThreshold }}
             initialDelaySeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.livenessProbe.periodSeconds }}
           readinessProbe:
@@ -297,8 +300,9 @@ spec:
               httpHeaders:
                 - name: Host
                   value: {{ .Values.wso2.deployment.gatewayRuntime.router.ingress.hostname }}
-            initialDelaySeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.livenessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.wso2.deployment.gatewayRuntime.router.readinessProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.wso2.deployment.gatewayRuntime.router.readinessProbe.periodSeconds }}
       volumes:
         - name: enforcer-log4j2
           configMap:

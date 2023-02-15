@@ -146,11 +146,13 @@ spec:
           livenessProbe:
             exec:
               command: [ "sh", "check_health.sh" ]
+            failureThreshold: {{ .Values.wso2.deployment.adapter.livenessProbe.failureThreshold }}
             initialDelaySeconds: {{ .Values.wso2.deployment.adapter.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.wso2.deployment.adapter.livenessProbe.periodSeconds }}
           readinessProbe:
             exec:
               command: [ "sh", "check_health.sh" ]
+            failureThreshold: {{ .Values.wso2.deployment.adapter.readinessProbe.failureThreshold }}
             initialDelaySeconds: {{ .Values.wso2.deployment.adapter.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.wso2.deployment.adapter.readinessProbe.periodSeconds }}
       volumes:
