@@ -128,12 +128,16 @@ wso2:
 
       # Indicates whether the container is running
       livenessProbe:
+        # Number of time probe should be failed before mark fail
+        failureThreshold: 3
         # Number of seconds after the container has started before liveness probes are initiated
         initialDelaySeconds: 10
         # How often (in seconds) to perform the probe
         periodSeconds: 30
       # Indicates whether the container is ready to service requests
       readinessProbe:
+        # Number of time probe should be failed before mark fail
+        failureThreshold: 3
         # Number of seconds after the container has started before readiness probes are initiated
         initialDelaySeconds: 8
         # How often (in seconds) to perform the probe
@@ -313,12 +317,16 @@ wso2:
           failureThreshold: 30
         # Indicates whether the container is running
         livenessProbe:
+          # Number of time probe should be failed before mark fail
+          failureThreshold: 3
           # Number of seconds after the container has started before liveness probes are initiated
           initialDelaySeconds: 10
           # How often (in seconds) to perform the probe
           periodSeconds: 30
         # Indicates whether the container is ready to service requests
         readinessProbe:
+          # Number of time probe should be failed before mark fail
+          failureThreshold: 3
           # Number of seconds after the container has started before readiness probes are initiated
           initialDelaySeconds: 8
           # How often (in seconds) to perform the probe
@@ -431,12 +439,16 @@ wso2:
           failureThreshold: 30
         # Indicates whether the container is running
         livenessProbe:
+          # Number of time probe should be failed before mark fail
+          failureThreshold: 3
           # Number of seconds after the container has started before liveness probes are initiated
           initialDelaySeconds: 20
           # How often (in seconds) to perform the probe
           periodSeconds: 10
         # Indicates whether the container is ready to service requests
         readinessProbe:
+          # Number of time probe should be failed before mark fail
+          failureThreshold: 3
           # Number of seconds after the container has started before readiness probes are initiated
           initialDelaySeconds: 20
           # How often (in seconds) to perform the probe
