@@ -391,8 +391,10 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.adapter.automountServiceAccountToken`                      | Auto mount Service Account Token to the pod                                               | false                       |
 | `wso2.deployment.adapter.podSecurityContext`                                | Security context of the the adapter pod                                                   | runAsUser:&nbsp;10500</br>runAsGroup:&nbsp;10500 |
 | `wso2.deployment.adapter.containerSecurityContext`                          | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>|
+| `wso2.deployment.adapter.livenessProbe.failureThreshold`                    | Number of time probe should be failed before mark fail                                    | 3                           |
 | `wso2.deployment.adapter.livenessProbe.initialDelaySeconds`                 | Number of seconds after the container has started before liveness probes are initiated    | 10                          |
 | `wso2.deployment.adapter.livenessProbe.periodSeconds`                       | How often (in seconds) to perform the probe                                               | 30                          |
+| `wso2.deployment.adapter.readinessProbe.failureThreshold`                   | Number of time probe should be failed before mark fail                                    | 3                           |
 | `wso2.deployment.adapter.readinessProbe.initialDelaySeconds`                | Number of seconds after the container has started before readiness probes are initiated   | 8                           |
 | `wso2.deployment.adapter.readinessProbe.periodSeconds`                      | How often (in seconds) to perform the probe                                               | 5                           |
 | `wso2.deployment.adapter.podAnnotations`                                    | Key value pair of annotations for the pod                                                 | sidecar.istio.io/inject: "false" |
@@ -403,7 +405,7 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.adapter.security.sslHostname`                              | Hostname for SSL verification, this value should be included in SAN of keystore certs     | adapter                     |
 | `wso2.deployment.adapter.security.adapterRestService.enabled`               | Enable or disable adapter Rest service. If "default": enabled in "STANDALONE" mode and disabled in "APIM_AS_CP" mode <oneof `"default"` or `"true"` or `"false"`> | "default" |
 | `wso2.deployment.adapter.security.keystore`                                 | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates)) | Default Certs           |
-| `wso2.deployment.adapter.security.truststore`                               | Truststore certs as array of secrets {secretName, subPath} (Refer [Configure Certificates](#configure-certificates))  | Default Certs |
+| `wso2.deployment.adapter.security.truststore`                               | Truststore certs as array of secrets {secretName, subPath, mountAs} (Refer [Configure Certificates](#configure-certificates))  | Default Certs |
 | `wso2.deployment.adapter.security.consul`                                   | Certs for consul integration                                                              | -                         |
 
 ###### Choreo Connect Gateway Runtime Configurations
@@ -442,8 +444,10 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.enforcer.resources.limits.cpu`              | Resources for the adapter container - CPU limit                                           | "1000m"                     |
 | `wso2.deployment.gatewayRuntime.enforcer.startupProbe.periodSeconds`        | How often (in seconds) to perform the probe                                               | 5                           |
 | `wso2.deployment.gatewayRuntime.enforcer.startupProbe.failureThreshold`     | Number of time startup probe should be done before mark fail                              | 30                          |
+| `wso2.deployment.gatewayRuntime.enforcer.livenessProbe.failureThreshold`    | Number of time probe should be failed before mark fail                                    | 3                           |
 | `wso2.deployment.gatewayRuntime.enforcer.livenessProbe.initialDelaySeconds` | Number of seconds after the container has started before liveness probes are initiated    | 10                          |
 | `wso2.deployment.gatewayRuntime.enforcer.livenessProbe.periodSeconds`       | How often (in seconds) to perform the probe                                               | 30                          |
+| `wso2.deployment.gatewayRuntime.enforcer.readinessProbe.failureThreshold`   | Number of time probe should be failed before mark fail                                    | 3                           |
 | `wso2.deployment.gatewayRuntime.enforcer.readinessProbe.initialDelaySeconds`| Number of seconds after the container has started before readiness probes are initiated   | 8                           |
 | `wso2.deployment.gatewayRuntime.enforcer.readinessProbe.periodSeconds`      | How often (in seconds) to perform the probe                                               | 5                           |
 | `wso2.deployment.gatewayRuntime.enforcer.containerSecurityContext`          | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>|
@@ -452,7 +456,7 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.enabled`       | Passing end user attributes to the backend - enabled                                      | false                       |
 | `wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.keystore`      | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates))  | Default Certs           |
 | `wso2.deployment.gatewayRuntime.enforcer.security.testTokenIssuer.enabled`  | Test token issuer - enabled                                                               | true                        |
-| `wso2.deployment.gatewayRuntime.enforcer.security.truststore`               | Truststore certs as array of secrets {secretName, subPath} (Refer [Configure Certificates](#configure-certificates))  | Default Certs |
+| `wso2.deployment.gatewayRuntime.enforcer.security.truststore`               | Truststore certs as array of secrets {secretName, subPath, mountAs} (Refer [Configure Certificates](#configure-certificates))  | Default Certs |
 | `wso2.deployment.gatewayRuntime.enforcer.log4j2Properties`                  | Define templated log4j2.properties file, if empty using default log4j2.properties         | Default templated log4j property file |
 
 ###### Choreo Connect Gateway Runtime - Router Configurations
@@ -475,8 +479,10 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.router.resources.limits.cpu`                | Resources for the adapter container - CPU limit                                           | "1000m"                     |
 | `wso2.deployment.gatewayRuntime.router.startupProbe.periodSeconds`          | How often (in seconds) to perform the probe                                               | 5                           |
 | `wso2.deployment.gatewayRuntime.router.startupProbe.failureThreshold`       | Number of time startup probe should be done before mark fail                              | 30                          |
+| `wso2.deployment.gatewayRuntime.router.livenessProbe.failureThreshold`      | Number of time probe should be failed before mark fail                                    | 3                           |
 | `wso2.deployment.gatewayRuntime.router.livenessProbe.initialDelaySeconds`   | Number of seconds after the container has started before liveness probes are initiated    | 20                          |
 | `wso2.deployment.gatewayRuntime.router.livenessProbe.periodSeconds`         | How often (in seconds) to perform the probe                                               | 10                          |
+| `wso2.deployment.gatewayRuntime.router.readinessProbe.failureThreshold`     | Number of time probe should be failed before mark fail                                    |  3                          |
 | `wso2.deployment.gatewayRuntime.router.readinessProbe.initialDelaySeconds`  | Number of seconds after the container has started before readiness probes are initiated   | 20                          |
 | `wso2.deployment.gatewayRuntime.router.readinessProbe.periodSeconds`        | How often (in seconds) to perform the probe                                               | 5                           |
 | `wso2.deployment.gatewayRuntime.router.containerSecurityContext`            | Security context of the the adapter container                                             | allowPrivilegeEscalation:&nbsp;false</br>readOnlyRootFilesystem:&nbsp;true</br>capabilities:</br>&nbsp;&nbsp;drop:</br>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;all</br>|
@@ -507,6 +513,7 @@ You can refer a value in a secret by specifying values as follows.
 
 - secretName: Name of the secret in the same namespace that Choreo Connect is going to be installed
 - subPath: Sub path in the K8s secret (or the key of the K8s secret).
+- mountAs: (Only applicable for Trust-Store) Optional file name to mount the secret with the given name inside the container.
 
 ```yaml
 secretName: "router-keystore"
@@ -533,10 +540,9 @@ The following is a sample how to define the truststore. If you have created a se
 
 ```yaml
 truststore:
-  - secretName: "adapter-certs"
+  - secretName: "control-plane-cert"
     subPath: "tls.crt"
-  - secretName: "controlplane-cert"
-    subPath: "wso2carbon.pem"
+    mountAs: "controlplane.pem"
 ```
 
 ## Configure Passwords
