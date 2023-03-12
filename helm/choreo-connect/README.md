@@ -396,7 +396,6 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 | `wso2.deployment.adapter.podAnnotations`                                    | Key value pair of annotations for the pod                                                 | sidecar.istio.io/inject: "false" |
 | `wso2.deployment.adapter.configToml`                                        | Define templated config.toml file, if empty using default config.toml                     | Default templated config toml file |
 | `wso2.deployment.adapter.logConfigToml`                                     | Define templated log_config.toml file, if empty using default log_config.toml             | Default templated log config toml file |
-| `wso2.deployment.adapter.apiArtifactsMountEmptyDir`         | Mount an empty directory on API artifacts directory         |           true         |
 | `wso2.deployment.adapter.envOverride`                                       | Set (or override) environment variables as values or from ConfigMaps or Secrets           | Default passwords           |
 | `wso2.deployment.adapter.security.sslHostname`                              | Hostname for SSL verification, this value should be included in SAN of keystore certs     | adapter                     |
 | `wso2.deployment.adapter.security.adapterRestService.enabled`               | Enable or disable adapter Rest service. If "default": enabled in "STANDALONE" mode and disabled in "APIM_AS_CP" mode <oneof `"default"` or `"true"` or `"false"`> | "default" |
@@ -433,7 +432,6 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.enforcer.imagePullPolicy`                   | Image pull policy of the container                                                        | "IfNotPresent"              |
 | `wso2.deployment.gatewayRuntime.enforcer.envOverride`                       | Set (or override) environment variables as values or from ConfigMaps or Secrets           | Default Passwords           |
 | `wso2.deployment.gatewayRuntime.enforcer.dropins`                           | Mount enforcer lib dropins JARs to the `dropins` directory, array of ConfigMap names      | -                           |
-| `wso2.deployment.gatewayRuntime.enforcer.dropinsMountEmptyDir`          | Mount an empty directory on dropins JARs directory          |           true          |
 | `wso2.deployment.gatewayRuntime.enforcer.resources.requests.memory`         | Resources for the adapter container - Memory request                                      | "1000Mi"                    |
 | `wso2.deployment.gatewayRuntime.enforcer.resources.requests.cpu`            | Resources for the adapter container - CPU request                                         | "1000m"                     |
 | `wso2.deployment.gatewayRuntime.enforcer.resources.limits.memory`           | Resources for the adapter container - Memory limit                                        | "1000Mi"                    |
