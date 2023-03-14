@@ -49,13 +49,13 @@ You can install the relevant Helm chart either from [WSO2 Helm Chart Repository]
   Helm version 2
   
   ```
-  helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.1.0-7 --namespace <NAMESPACE>
+  helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-1 --namespace <NAMESPACE>
   ```
   
   Helm version 3
 
   ```
-  helm install <RELEASE_NAME> wso2/choreo-connect --version 1.1.0-7 --namespace <NAMESPACE> --create-namespace
+  helm install <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-1 --namespace <NAMESPACE> --create-namespace
   ```
 
 The above steps will deploy the Choreo Connect using WSO2 product Docker images available at DockerHub.
@@ -66,7 +66,7 @@ please provide your WSO2 Subscription credentials via input values (using `--set
 Please see the following example.
 
 ```
- helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.1.0-7 --namespace <NAMESPACE> \
+ helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-1 --namespace <NAMESPACE> \
   --set wso2.subscription.username=<SUBSCRIPTION_USERNAME> \
   --set wso2.subscription.password=<SUBSCRIPTION_PASSWORD>
 ```
@@ -115,7 +115,7 @@ There are two types of deployment options namely,
 - WSO2 API Manager as a Control Plane
 - Standalone Gateway
 
-For more information, please refer [Choreo Connect Deployment Options](https://apim.docs.wso2.com/en/4.1.0/deploy-and-publish/deploy-on-gateway/choreo-connect/getting-started/deploy/cc-deploy-overview/)
+For more information, please refer [Choreo Connect Deployment Options](https://apim.docs.wso2.com/en/4.2.0/deploy-and-publish/deploy-on-gateway/choreo-connect/getting-started/deploy/cc-deploy-overview/)
 
 #### 2.1. Standalone Mode (Default)
 
@@ -125,14 +125,14 @@ hence if you have not specified `wso2.deployment.mode` "Standalone" deployment m
 Helm v2
 
 ```
-helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.1.0-7 --namespace <NAMESPACE> \
+helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-1 --namespace <NAMESPACE> \
   --set wso2.deployment.mode=STANDALONE
 ```
 
 Helm v3
 
 ```
-helm install <RELEASE_NAME> wso2/choreo-connect --version 1.1.0-7 --namespace <NAMESPACE> --create-namespace
+helm install <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-1 --namespace <NAMESPACE> --create-namespace
   --set wso2.deployment.mode=STANDALONE
 ```
 
@@ -154,19 +154,19 @@ Add the WSO2 Helm chart repository.
 Helm version 2
 
 ```
-helm install --name apim-as-cp wso2/am-single-node --version 4.1.0-1 --namespace apim \
+helm install --name apim-as-cp wso2/am-single-node --version 4.2.0-1 --namespace apim \
   --set wso2.deployment.am.ingress.gateway.hostname=gw.wso2.com \
   --set wso2.deployment.am.ingress.gateway.enabled=false \
-  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/v1.1.0.7/resources/controlplane-deployment.toml
+  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/v1.2.0.1/resources/controlplane-deployment.toml
 ```
 
 Helm version 3
 
 ```
-helm install apim-as-cp wso2/am-single-node --version 4.1.0-1 --namespace apim --create-namespace \
+helm install apim-as-cp wso2/am-single-node --version 4.2.0-1 --namespace apim --create-namespace \
   --set wso2.deployment.am.ingress.gateway.hostname=gw.wso2.com \
   --set wso2.deployment.am.ingress.gateway.enabled=false \
-  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/v1.1.0.7/resources/controlplane-deployment.toml
+  --set-file wso2.deployment.am.config."deployment\.toml"=https://raw.githubusercontent.com/wso2/kubernetes-microgateway/v1.2.0.1/resources/controlplane-deployment.toml
 ```
 
 NOTE: If you do not have sufficient resources you can adjust them setting following values when installing the chart.
@@ -206,7 +206,7 @@ The following example shows how to deploy Choreo Connect with "WSO2 API Manager 
 Helm v2
 
 ```
-helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.1.0-7 --namespace <NAMESPACE> \
+helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-1 --namespace <NAMESPACE> \
   --set wso2.deployment.mode=APIM_AS_CP \
   --set wso2.apim.controlPlane.hostName=am.wso2.com \
   --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim
@@ -215,7 +215,7 @@ helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.1.0-7 --names
 Helm v3
 
 ```
-helm install <RELEASE_NAME> wso2/choreo-connect --version 1.1.0-7 --namespace <NAMESPACE> --create-namespace \
+helm install <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-1 --namespace <NAMESPACE> --create-namespace \
   --set wso2.deployment.mode=APIM_AS_CP \
   --set wso2.apim.controlPlane.hostName=am.wso2.com \
   --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim
@@ -223,14 +223,14 @@ helm install <RELEASE_NAME> wso2/choreo-connect --version 1.1.0-7 --namespace <N
 
 ### 3. Choreo Analytics
 
-If you need to enable Choreo Analytics with Choreo Connect, please follow the documentation on [API Analytics Getting Started Guide](https://apim.docs.wso2.com/en/4.1.0/api-analytics/getting-started-guide/) to obtain the on-prem key for Analytics.
+If you need to enable Choreo Analytics with Choreo Connect, please follow the documentation on [API Analytics Getting Started Guide](https://apim.docs.wso2.com/en/4.2.0/api-analytics/getting-started-guide/) to obtain the on-prem key for Analytics.
 
 The following example shows how to enable Analytics with the helm charts.
 
 Helm v2
 
 ```
-helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.1.0-7 --namespace <NAMESPACE> \
+helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-1 --namespace <NAMESPACE> \
   --set wso2.choreoAnalytics.enabled=true \
   --set wso2.choreoAnalytics.endpoint=<CHOREO_ANALYTICS_ENDPOINT> \
   --set wso2.choreoAnalytics.onpremKey=<ONPREM_KEY>
@@ -239,7 +239,7 @@ helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.1.0-7 --names
 Helm v3
 
 ```
-helm install <RELEASE_NAME> wso2/choreo-connect --version 1.1.0-7 --namespace <NAMESPACE> --create-namespace \
+helm install <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-1 --namespace <NAMESPACE> --create-namespace \
   --set wso2.choreoAnalytics.enabled=true \
   --set wso2.choreoAnalytics.endpoint=<CHOREO_ANALYTICS_ENDPOINT> \
   --set wso2.choreoAnalytics.onpremKey=<ONPREM_KEY>
@@ -318,14 +318,14 @@ hostnames and the external IP in the `/etc/hosts` file at the client-side.
 - Adapter Endpoint: `https://<wso2.deployment.adapter.ingress.hostname>` (Default to `https://adapter.wso2.com`)
 - Router Endpoint: `https://<wso2.deployment.gatewayRuntime.router.ingress.hostname>` (Default to `https://gw.wso2.com`)
 
-Follow the document [Deploying a REST API in Choreo Connect](https://apim.docs.wso2.com/en/4.1.0/deploy-and-publish/deploy-on-gateway/choreo-connect/deploy-api/deploy-rest-api-in-choreo-connect/#choreo-connect-as-a-standalone-gateway) to deploy an API.
+Follow the document [Deploying a REST API in Choreo Connect](https://apim.docs.wso2.com/en/4.2.0/deploy-and-publish/deploy-on-gateway/choreo-connect/deploy-api/deploy-rest-api-in-choreo-connect/#choreo-connect-as-a-standalone-gateway) to deploy an API.
 
 #### 2. Deployment Mode: API Manager as Control Plane
 
 - API Manager Publisher: [https://am.wso2.com/publisher/](https://am.wso2.com/publisher/)
 - API Manager DevPortal: [https://am.wso2.com/devportal/](https://am.wso2.com/devportal/)
 
-Follow the document [Deploying a REST API in Choreo Connect](https://apim.docs.wso2.com/en/4.1.0/deploy-and-publish/deploy-on-gateway/choreo-connect/deploy-api/deploy-rest-api-in-choreo-connect/#choreo-connect-with-wso2-api-manager-as-a-control-plane) to deploy an API.
+Follow the document [Deploying a REST API in Choreo Connect](https://apim.docs.wso2.com/en/4.2.0/deploy-and-publish/deploy-on-gateway/choreo-connect/deploy-api/deploy-rest-api-in-choreo-connect/#choreo-connect-with-wso2-api-manager-as-a-control-plane) to deploy an API.
 
 ## Configuration
 
