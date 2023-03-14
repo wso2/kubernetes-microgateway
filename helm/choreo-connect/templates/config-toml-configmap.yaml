@@ -53,6 +53,7 @@ data:
       listenerPort = 9090
       securedListenerPort = 9095
       systemHost = "{{ .Values.wso2.deployment.gatewayRuntime.router.ingress.hostname }}"
+      useRemoteAddress = false
 
     [router.keystore]
       certPath = "/home/wso2/security/keystore/mg.pem"
@@ -64,12 +65,12 @@ data:
       verifyHostName = true
       disableSslVerification = false
 
+    [enforcer]
     [enforcer.jwtGenerator]
     enabled = {{ .Values.wso2.deployment.gatewayRuntime.enforcer.security.backendJWT.enabled }}
     publicCertificatePath = "/home/wso2/security/keystore/backend-jwt.pem"
     privateKeyPath = "/home/wso2/security/keystore/backend-jwt.key"
 
-    [enforcer]
     [enforcer.jwtIssuer]
       enabled = {{ .Values.wso2.deployment.gatewayRuntime.enforcer.security.testTokenIssuer.enabled }}
       issuer = "https://{{ .Values.wso2.deployment.gatewayRuntime.router.ingress.hostname }}/testkey"
