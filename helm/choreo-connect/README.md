@@ -207,7 +207,8 @@ Helm v2
 helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-1 --namespace <NAMESPACE> \
   --set wso2.deployment.mode=APIM_AS_CP \
   --set wso2.apim.controlPlane.hostName=am.wso2.com \
-  --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim
+  --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim \
+  --set wso2.apim.controlPlane.skipSSLVerification=true
 ```
 
 Helm v3
@@ -216,7 +217,8 @@ Helm v3
 helm install <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-1 --namespace <NAMESPACE> --create-namespace \
   --set wso2.deployment.mode=APIM_AS_CP \
   --set wso2.apim.controlPlane.hostName=am.wso2.com \
-  --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim
+  --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim \
+  --set wso2.apim.controlPlane.skipSSLVerification=true
 ```
 
 > **Note:**
@@ -351,12 +353,13 @@ If you do not have active WSO2 subscription do not change the parameters `wso2.d
 
 ######   Externally installed WSO2 API Manager Control Plane Configurations
 
-| Parameter                                | Description                                                                               | Default Value                    |
-|------------------------------------------|-------------------------------------------------------------------------------------------|----------------------------------|
-| `wso2.apim.controlPlane.hostName`        | Hostname of the control plane                                                             | am.wso2.com                      |
-| `wso2.apim.controlPlane.serviceName`     | K8s service name (if in another namespace, `<serviceName>.<namespace>`) of the control plane   | wso2am-single-node-am-service.apim |
-| `wso2.apim.controlPlane.eventListeners`  | List of K8s service names of control plane, which Choreo Connect listen for events. If empty default to `wso2.apim.controlPlane.serviceName`  | [] |
-| `wso2.apim.trafficManagers`              | List of K8s service names of traffic managers. If empty default to `wso2.apim.controlPlane.eventListeners` | []          |
+| Parameter                                    | Description                                                                                                                                  | Default Value                      |
+|----------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------|
+| `wso2.apim.controlPlane.hostName`            | Hostname of the control plane                                                                                                                | am.wso2.com                        |
+| `wso2.apim.controlPlane.serviceName`         | K8s service name (if in another namespace, `<serviceName>.<namespace>`) of the control plane                                                 | wso2am-single-node-am-service.apim |
+| `wso2.apim.controlPlane.eventListeners`      | List of K8s service names of control plane, which Choreo Connect listen for events. If empty default to `wso2.apim.controlPlane.serviceName` | []                                 |
+| `wso2.apim.controlPlane.skipSSLVerification` | Skip SSL cert verification of control plane cert for the requests made from Adapter to the control plane                                     | false                              |
+| `wso2.apim.trafficManagers`                  | List of K8s service names of traffic managers. If empty default to `wso2.apim.controlPlane.eventListeners`                                   | []                                 |
 
 ###### Choreo Connect Configurations
 
