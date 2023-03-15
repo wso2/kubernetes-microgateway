@@ -125,7 +125,7 @@ data:
       username = "admin"
       password = "$env{cp_admin_pwd}"
       environmentLabels = [{{ .Values.wso2.deployment.labelName | quote }}]
-      skipSSLVerification = false
+      skipSSLVerification = {{ .Values.wso2.apim.controlPlane.skipSSLVerification }}
 
       [controlPlane.brokerConnectionParameters]
       {{- /* Setting control plane JMS eventListeningEndpoints */ -}}

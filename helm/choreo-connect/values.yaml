@@ -40,6 +40,8 @@ wso2:
       #   - wso2am-pattern-1-am-1-service.apim
       #   - wso2am-pattern-1-am-2-service.apim
       eventListeners: []
+      # Skip SSL verification of the Control Plane cert for the communication between Adapter and Control Plane.
+      skipSSLVerification: false
 
     # List of K8s service names of the traffic managers. If list is empty, default to controlPlane.eventListeners
     # trafficManagers:
