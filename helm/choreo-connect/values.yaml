@@ -285,8 +285,6 @@ wso2:
         envOverride:
           - name: JAVA_OPTS
             value: "-Dhttpclient.hostnameVerifier=AllowAll -Xms512m -Xmx512m"
-          - name: apim_admin_pwd
-            value: "admin"
           - name: enforcer_admin_pwd
             value: "admin"
           - name: tm_admin_pwd
