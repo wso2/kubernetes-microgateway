@@ -82,3 +82,11 @@ For detailed information on the tasks carried out during this release, please se
 - Readiness probes are read from liveness probes in gateway runtime (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/101))
 
 For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.0.0.8](https://github.com/wso2/kubernetes-microgateway/milestone/16)
+
+## [v1.0.0.9] - 2023-xx-xx
+
+### Fixed
+
+- Remove unused environment variable `apim_admin_pwd` set in Enforcer (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/108)).
+
+For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.0.0.9](https://github.com/wso2/kubernetes-microgateway/milestone/19)
