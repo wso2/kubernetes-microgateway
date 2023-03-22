@@ -40,6 +40,8 @@ wso2:
       #   - wso2am-pattern-1-am-1-service.apim
       #   - wso2am-pattern-1-am-2-service.apim
       eventListeners: []
+      # Skip SSL cert verification of control plane cert for the requests made from Adapter to the control plane
+      skipSSLVerification: false
 
     # List of K8s service names of the traffic managers. If list is empty, default to controlPlane.eventListeners
     # trafficManagers:
@@ -49,7 +51,7 @@ wso2:
 
   deployment:
     # Deployment option: one of "STANDALONE" or "APIM_AS_CP"
-    # Refer deployment options: https://apim.docs.wso2.com/en/4.1.0/deploy-and-publish/deploy-on-gateway/choreo-connect/getting-started/deploy/cc-deploy-overview/
+    # Refer deployment options: https://apim.docs.wso2.com/en/4.2.0/deploy-and-publish/deploy-on-gateway/choreo-connect/getting-started/deploy/cc-deploy-overview/
     mode: "STANDALONE"
 
     # Label (environment) name of the deployment
@@ -67,7 +69,7 @@ wso2:
       # Image name for adapter
       imageName: "choreo-connect-adapter"
       # Image tag for adapter
-      imageTag: "1.1.0"
+      imageTag: "1.2.0"
       # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
       imagePullPolicy: IfNotPresent
       # Pod count
@@ -163,9 +165,6 @@ wso2:
       # otherwise you may lose configurations set with the values.yaml file.
       logConfigToml: ""
 
-      # Mount an empty directory on API artifacts directory
-      apiArtifactsMountEmptyDir: true
-
       # envOverride:
       #   - name: cp_admin_pwd
       #     value: admin
@@ -190,7 +189,7 @@ wso2:
           enabled: "default" # an string value: "default" or "true" or "false"
           
         # Private key and cert in PEM format
-        # for more details: https://apim.docs.wso2.com/en/4.1.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
+        # for more details: https://apim.docs.wso2.com/en/4.2.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
         # override default certs from secrets
         # keystore:
         #   key:
@@ -270,7 +269,7 @@ wso2:
         # Image name for enforcer
         imageName: "choreo-connect-enforcer"
         # Image tag for enforcer
-        imageTag: "1.1.0"
+        imageTag: "1.2.0"
         # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
         imagePullPolicy: IfNotPresent
 
@@ -285,8 +284,6 @@ wso2:
         envOverride:
           - name: JAVA_OPTS
             value: "-Dhttpclient.hostnameVerifier=AllowAll -Xms512m -Xmx512m"
-          - name: apim_admin_pwd
-            value: "admin"
           - name: enforcer_admin_pwd
             value: "admin"
           - name: tm_admin_pwd
@@ -297,8 +294,6 @@ wso2:
         #   - configMapName: "dropins-cm1"
         #   - configMapName: "dropins-cm2"
         dropins: {}
-        # Mount an empty directory on dropins JARs directory
-        dropinsMountEmptyDir: true
 
         # Resources for the enforcer container
         resources:
@@ -346,7 +341,7 @@ wso2:
           sslHostname: "enforcer"
 
           # private key and cert in PEM format
-          # for more details: https://apim.docs.wso2.com/en/4.1.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
+          # for more details: https://apim.docs.wso2.com/en/4.2.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
           # override default certs from secrets
           # keystore:
           #   key:
@@ -397,7 +392,7 @@ wso2:
         # Image name for router
         imageName: "choreo-connect-router"
         # Image tag for router
-        imageTag: "1.1.0"
+        imageTag: "1.2.0"
         # Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
         imagePullPolicy: IfNotPresent
 
@@ -470,7 +465,7 @@ wso2:
           #   subPath: "ca-certs.crt"
           backendCaCerts: {}
           # private key and cert in PEM format
-          # for more details: https://apim.docs.wso2.com/en/4.1.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
+          # for more details: https://apim.docs.wso2.com/en/4.2.0/deploy-and-publish/deploy-on-gateway/choreo-connect/security/importing-certificates-to-the-choreo-connect-truststore/#changing-the-private-certificate-of-a-component
           # override default certs from secrets
           # keystore:
           #   key:
