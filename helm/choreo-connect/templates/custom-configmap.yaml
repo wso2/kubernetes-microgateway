@@ -1,0 +1,13 @@
+{{- $top := . -}}
+{{- range $index, $config := .Values.wso2.deployment.volumeConfigs}}
+{{- if eq $config.kind "ConfigMap" }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $config.resource.name | trunc 63}}
+  namespace: {{ $top.Release.Namespace }} 
+data:
+  {{- toYaml $config.resource.data | nindent 2 }}
+{{- end }}
+{{- end }}

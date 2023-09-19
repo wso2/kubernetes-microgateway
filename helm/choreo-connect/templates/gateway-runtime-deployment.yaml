@@ -113,6 +113,18 @@ spec:
             - mountPath: /home/wso2/check_health.sh
               name: grpc-probe-health-check
               subPath: "check_health.sh"
+            {{- range .Values.wso2.deployment.volumeConfigs }}
+            {{- if eq .mount.container "choreo-connect-enforcer" }}
+            - name: {{ .name }}
+              mountPath: {{ .mount.path }}
+              {{- with .mount.readOnly }}
+              readOnly: {{ . }}
+              {{- end }}
+              {{- with .mount.subPath }}
+              subPath: {{ . }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
           {{- if .Values.wso2.deployment.gatewayRuntime.enforcer.dropins }}
             - mountPath: /home/wso2/lib/dropins
               name: enforcer-dropins
@@ -219,6 +231,18 @@ spec:
               readOnly: true
               subPath: {{ if .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore -}}
                 {{- .Values.wso2.deployment.gatewayRuntime.enforcer.security.keystore.cert.subPath | quote }}{{ else }}"mg.pem"{{ end }}
+            {{- range .Values.wso2.deployment.volumeConfigs }}
+            {{- if eq .mount.container "choreo-connect-router" }}
+            - name: {{ .name }}
+              mountPath: {{ .mount.path }}
+              {{- with .mount.readOnly }}
+              readOnly: {{ . }}
+              {{- end }}
+              {{- with .mount.subPath }}
+              subPath: {{ . }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
           {{- with .Values.wso2.deployment.gatewayRuntime.router.containerSecurityContext }}
           securityContext:
             {{- toYaml . | nindent 12}}
@@ -338,6 +362,19 @@ spec:
           configMap:
             name: {{ printf "%s-grpc-probe-script" (include "choreo-connect.enforcerFullname" .) | trunc 63 }}
             defaultMode: 0777
+        {{- range .Values.wso2.deployment.volumeConfigs }}
+        {{- if or (eq .mount.container "choreo-connect-router") (eq .mount.container "choreo-connect-enforcer") }}
+        - name: {{ .name }}
+          {{- if eq .kind "Secret" }}
+          secret:
+            secretName: {{ .resource.name }}
+          {{- else if eq .kind "ConfigMap" }}
+          configMap:
+            name: {{ .resource.name }}
+          {{- end }}
+        {{- end }}
+        {{- end }}
+        
       {{- if .Values.wso2.deployment.gatewayRuntime.enforcer.dropins }}
         - name: enforcer-dropins
           projected:

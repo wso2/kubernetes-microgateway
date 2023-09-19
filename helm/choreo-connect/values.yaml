@@ -483,7 +483,34 @@ wso2:
             mountEmptyDir: false
             # Path to mount the empty dir
             mountPath: /var/log/envoy
-          
+    
+    volumeConfigs: []
+      # # Name for the volume configuration
+      # - name: ""
+      #   # The kind of resource: ConfigMap OR  Secret (CASE SENSITIVE)
+      #   kind: "" 
+      #   # Resource specific details
+      #   resource:
+      #     # Name of the ConfigMap or Secret
+      #     name: sample-config
+      #     # The data section of ConfigMap/Secret
+      #     data: 
+      #       key1: value1
+      #       key2: value2
+      #     # Secret type (if it's a Secret)
+      #     secretType: ""
+      #   # Mount relted details
+      #   mount:
+      #     # The container name that requires this volume one of 'choreo-connect-adapter'/'choreo-connect-router' or 'choreo-connect-enforcer'
+      #     container: "" 
+      #     # The mount path within the container
+      #     path: ""  
+      #     # Whether the volume should be mounted in read-only mode (if needed)
+      #     readOnly: false
+      #     # Optional subpath within the volume (if needed)
+      #     subPath: "" 
+
+
 kubernetes:
   # Service account configurations
   serviceAccount:

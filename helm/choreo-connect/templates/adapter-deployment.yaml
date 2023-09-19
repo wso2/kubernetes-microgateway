@@ -115,6 +115,18 @@ spec:
             - mountPath: /home/wso2/check_health.sh
               name: grpc-probe-health-check
               subPath: "check_health.sh"
+            {{- range .Values.wso2.deployment.volumeConfigs }}
+            {{- if eq .mount.container "choreo-connect-adapter" }}
+            - name: {{ .name }}
+              mountPath: {{ .mount.path }}
+              {{- with .mount.readOnly }}
+              readOnly: {{ . }}
+              {{- end }}
+              {{- with .mount.subPath }}
+              subPath: {{ . }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
           {{- with .Values.wso2.deployment.adapter.containerSecurityContext }}
           securityContext:
             {{- toYaml . | nindent 12}}
@@ -194,6 +206,18 @@ spec:
         - name: router-keystore-cert
           secret:
             secretName: {{ if .Values.wso2.deployment.gatewayRuntime.router.security.keystore }}{{ .Values.wso2.deployment.gatewayRuntime.router.security.keystore.cert.secretName }}{{ else }}{{ printf "%s-default-keystore" (include "choreo-connect.routerFullname" .) | trunc 63 }}{{ end }}
+        {{- range .Values.wso2.deployment.volumeConfigs }}
+        {{- if eq .mount.container "choreo-connect-adapter" }}
+        - name: {{ .name }}
+          {{- if eq .kind "Secret" }}
+          secret:
+            secretName: {{ .resource.name }}
+          {{- else if eq .kind "ConfigMap" }}
+          configMap:
+            name: {{ .resource.name }}
+          {{- end }}
+        {{- end }}
+        {{- end }}
       restartPolicy: Always
       {{- with .Values.wso2.deployment.adapter.nodeSelector }}
       nodeSelector:
