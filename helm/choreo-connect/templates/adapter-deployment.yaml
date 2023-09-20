@@ -209,10 +209,10 @@ spec:
         {{- range .Values.wso2.deployment.volumeConfigs }}
         {{- if eq .mount.container "choreo-connect-adapter" }}
         - name: {{ .name }}
-          {{- if eq .kind "Secret" }}
+          {{- if eq .resource.kind "Secret" }}
           secret:
             secretName: {{ .resource.name }}
-          {{- else if eq .kind "ConfigMap" }}
+          {{- else if eq .resource.kind "ConfigMap" }}
           configMap:
             name: {{ .resource.name }}
           {{- end }}

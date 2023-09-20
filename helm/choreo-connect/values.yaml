@@ -484,22 +484,16 @@ wso2:
             # Path to mount the empty dir
             mountPath: /var/log/envoy
     
-    volumeConfigs: []
-      # # Name for the volume configuration
+    volumeConfigs: 
+      # Name for the volume configuration
       # - name: ""
-      #   # The kind of resource: ConfigMap OR  Secret (CASE SENSITIVE)
-      #   kind: "" 
       #   # Resource specific details
       #   resource:
+      #     # The kind of resource: ConfigMap OR  Secret (CASE SENSITIVE)
+      #     kind: "" 
       #     # Name of the ConfigMap or Secret
-      #     name: sample-config
-      #     # The data section of ConfigMap/Secret
-      #     data: 
-      #       key1: value1
-      #       key2: value2
-      #     # Secret type (if it's a Secret)
-      #     secretType: ""
-      #   # Mount relted details
+      #     name: ""
+      #   # Mount related details
       #   mount:
       #     # The container name that requires this volume one of 'choreo-connect-adapter'/'choreo-connect-router' or 'choreo-connect-enforcer'
       #     container: "" 
