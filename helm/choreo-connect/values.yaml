@@ -484,7 +484,7 @@ wso2:
             # Path to mount the empty dir
             mountPath: /var/log/envoy
     
-    volumeConfigs: 
+    volumeConfigs: []
       # Name for the volume configuration
       # - name: ""
       #   # Resource specific details
