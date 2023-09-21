@@ -560,3 +560,31 @@ envOverride:
         name: my-secret
         key: tm_password
 ```
+
+## Mount Your ConfigMaps and Secrets
+
+To mount your own ConfigMaps and Secrets, use the following format under `wso2.deployment.volumeConfigs`
+
+
+```yaml
+volumeConfigs:
+  - name: "adapter-config-vol"
+    resource:
+      kind: "ConfigMap"
+      name: "sample-configmap"
+    mount:
+      container: "choreo-connect-adapter" 
+      path: "/home/wso2/conf/sample-config-map/test.yaml"
+      readOnly: false
+      subPath: "test.yaml"
+  - name: "adapter-secret-vol"
+    resource:
+      kind: "Secret"
+      name: "sample-secret"
+    mount:
+      container: "choreo-connect-enforcer" 
+      path: "/home/wso2/conf/sample-secret"
+      readOnly: true
+```
+
+NOTE: As a best practice, it is advisable to include the exact file name as part of the mount path, as in the first example above. This helps avoid issues, especially when mounting multiple files to the same location, preventing potential conflicts and overwriting of existing files.
