@@ -574,7 +574,7 @@ volumeConfigs:
       name: "sample-configmap"
     mount:
       container: "choreo-connect-adapter" 
-      path: "/home/wso2/conf/sample-config-map"
+      path: "/home/wso2/conf/sample-config-map/test.yaml"
       readOnly: false
       subPath: "test.yaml"
   - name: "adapter-secret-vol"
@@ -586,3 +586,5 @@ volumeConfigs:
       path: "/home/wso2/conf/sample-secret"
       readOnly: true
 ```
+
+NOTE: As a best practice, it is advisable to include the exact file name as part of the mount path, as in the first example above. This helps avoid issues, especially when mounting multiple files to the same location, preventing potential conflicts and overwriting of existing files.
