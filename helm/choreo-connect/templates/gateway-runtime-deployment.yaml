@@ -279,24 +279,21 @@ spec:
           {{- with .Values.wso2.deployment.gatewayRuntime.router.envOverride }}
             {{- toYaml . | nindent 12}}
           {{- end }}
+          {{- include "choreo-connect.router.validateEnvoyAdminApi" . }}
           {{- if .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.enabled }}
             - name: ROUTER_ADMIN_USERNAME
-              {{- if .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.useSecret }}
+              {{- if .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.username.valueFrom }}
               valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-router-admin-credentials" (include "choreo-connect.routerFullname" .) | trunc 63 }}
-                  key: username
+                {{- toYaml .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.username.valueFrom | nindent 16 }}
               {{- else }}
-              value: {{ .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.username | quote }}
+              value: {{ .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.username.value | quote }}
               {{- end }}
             - name: ROUTER_ADMIN_PASSWORD
-              {{- if .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.useSecret }}
+              {{- if .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.password.valueFrom }}
               valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-router-admin-credentials" (include "choreo-connect.routerFullname" .) | trunc 63 }}
-                  key: password
+                {{- toYaml .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.password.valueFrom | nindent 16 }}
               {{- else }}
-              value: {{ .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.password | quote }}
+              value: {{ .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.password.value | quote }}
               {{- end }}
           {{- end }}
           {{- with .Values.wso2.deployment.labelName }}

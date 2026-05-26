@@ -170,3 +170,27 @@ Router
 {{- define "choreo-connect.routerFullname" -}}
 {{ printf "%s-router" (include "choreo-connect.fullname" .) | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end -}}
+
+{{/*
+Validate envoy admin API credentials.
+Fails if enabled is true and either:
+  - both 'value' and 'valueFrom' are set on the same field (mutually exclusive), or
+  - neither 'value' nor 'valueFrom' is provided.
+*/}}
+{{- define "choreo-connect.router.validateEnvoyAdminApi" -}}
+{{- $adminApi := .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api -}}
+{{- if $adminApi.enabled -}}
+  {{- if and $adminApi.username.valueFrom (not (empty $adminApi.username.value)) -}}
+    {{- fail "wso2.deployment.gatewayRuntime.router.envoy_admin_api.username: 'value' and 'valueFrom' are mutually exclusive — set only one" -}}
+  {{- end -}}
+  {{- if and (not $adminApi.username.valueFrom) (empty $adminApi.username.value) -}}
+    {{- fail "wso2.deployment.gatewayRuntime.router.envoy_admin_api.username.value cannot be empty when valueFrom is not set" -}}
+  {{- end -}}
+  {{- if and $adminApi.password.valueFrom (not (empty $adminApi.password.value)) -}}
+    {{- fail "wso2.deployment.gatewayRuntime.router.envoy_admin_api.password: 'value' and 'valueFrom' are mutually exclusive — set only one" -}}
+  {{- end -}}
+  {{- if and (not $adminApi.password.valueFrom) (empty $adminApi.password.value) -}}
+    {{- fail "wso2.deployment.gatewayRuntime.router.envoy_admin_api.password.value cannot be empty when valueFrom is not set" -}}
+  {{- end -}}
+{{- end -}}
+{{- end -}}
