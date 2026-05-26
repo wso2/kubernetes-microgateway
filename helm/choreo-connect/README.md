@@ -490,6 +490,10 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.router.security.keystore`                   | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates))  | Default Certs           |
 | `wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountEmptyDir`     | Mount an K8s empty dir to write Heap/CPU profile data                                     | false                       |
 | `wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountPath`         | Path to mount the empty dir to write Heap/CPU profile data                                | "/var/log/envoy"            |
+| `wso2.deployment.gatewayRuntime.router.envoy_admin_api.enabled`             | Enable the Envoy admin API. Credentials are only injected when this is `true`             | false                       |
+| `wso2.deployment.gatewayRuntime.router.envoy_admin_api.username`            | Username for basic auth on the Envoy admin API                                            | "admin"                     |
+| `wso2.deployment.gatewayRuntime.router.envoy_admin_api.password`            | Password for basic auth on the Envoy admin API                                            | "admin"                     |
+| `wso2.deployment.gatewayRuntime.router.envoy_admin_api.useSecret`           | If `true`, credentials are stored in a Kubernetes Secret and referenced via `secretKeyRef`. If `false`, credentials are set as plain-text environment variables | true |
 
 ## Kubernetes Specific Configurations
 
