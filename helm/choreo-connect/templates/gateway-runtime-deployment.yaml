@@ -279,6 +279,26 @@ spec:
           {{- with .Values.wso2.deployment.gatewayRuntime.router.envOverride }}
             {{- toYaml . | nindent 12}}
           {{- end }}
+          {{- if .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.enabled }}
+            - name: ROUTER_ADMIN_USERNAME
+              {{- if .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.useSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-router-admin-credentials" (include "choreo-connect.routerFullname" .) | trunc 63 }}
+                  key: username
+              {{- else }}
+              value: {{ .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.username | quote }}
+              {{- end }}
+            - name: ROUTER_ADMIN_PASSWORD
+              {{- if .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.useSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-router-admin-credentials" (include "choreo-connect.routerFullname" .) | trunc 63 }}
+                  key: password
+              {{- else }}
+              value: {{ .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.password | quote }}
+              {{- end }}
+          {{- end }}
           {{- with .Values.wso2.deployment.labelName }}
             - name: ROUTER_LABEL
               value: {{ . }}

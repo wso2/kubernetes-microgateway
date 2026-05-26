@@ -483,7 +483,19 @@ wso2:
             mountEmptyDir: false
             # Path to mount the empty dir
             mountPath: /var/log/envoy
-    
+
+        # Envoy admin API configuration
+        envoy_admin_api:
+          # Enable or disable the envoy admin API. Credentials are only applied when enabled is true.
+          enabled: false
+          # Username for basic auth on the admin API
+          username: "admin"
+          # Password for basic auth on the admin API
+          password: "admin"
+          # If true, credentials are stored in a Kubernetes Secret and injected via secretKeyRef.
+          # If false, credentials are injected directly as plain-text environment variables.
+          useSecret: true
+
     volumeConfigs: []
       # Name for the volume configuration
       # - name: ""
