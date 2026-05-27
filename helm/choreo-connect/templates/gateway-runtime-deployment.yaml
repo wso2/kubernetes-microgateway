@@ -203,6 +203,10 @@ spec:
           {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.gatewayRuntime.router) | indent 10 }}
           imagePullPolicy: {{ .Values.wso2.deployment.gatewayRuntime.router.imagePullPolicy }}
           volumeMounts:
+            {{- if .Values.wso2.deployment.gatewayRuntime.router.containerSecurityContext.readOnlyRootFilesystem }}
+            - mountPath: /tmp
+              name: router-tmp
+            {{- end }}
             - mountPath:  /home/wso2/security/keystore/mg.key
               name: router-keystore-key
               readOnly: true
@@ -403,6 +407,10 @@ spec:
       {{- end }}
         {{- if .Values.wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountEmptyDir }}
         - name: router-heap-profile-data
+          emptyDir: {}
+        {{- end }}
+        {{- if .Values.wso2.deployment.gatewayRuntime.router.containerSecurityContext.readOnlyRootFilesystem }}
+        - name: router-tmp
           emptyDir: {}
         {{- end }}
         - name: router-keystore-key
