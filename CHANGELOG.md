@@ -28,3 +28,9 @@ For detailed information on the tasks carried out during this release, please se
 - Support for mounting ConfigMaps and Secrets (refer to [issue](https://github.com/wso2/kubernetes-microgateway/issues/116)).
 
 For detailed information on the tasks carried out during this release, please see the GitHub milestone [v1.2.0.2](https://github.com/wso2/kubernetes-microgateway/milestone/21?closed=1)
+
+## [v1.2.0.3] - 2026-05-27
+
+### Added
+
+- Support for configuring the Envoy admin API credentials on the router via `wso2.deployment.gatewayRuntime.router.envoy_admin_api`. Credentials can be supplied either as plain-text values or referenced from a pre-existing Kubernetes Secret using `valueFrom`. The admin API is only exposed over TCP (with basic auth) when enabled and valid credentials are provided.

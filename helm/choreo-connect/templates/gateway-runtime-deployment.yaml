@@ -203,6 +203,10 @@ spec:
           {{- include "image" (dict "Values" .Values "deployment" .Values.wso2.deployment.gatewayRuntime.router) | indent 10 }}
           imagePullPolicy: {{ .Values.wso2.deployment.gatewayRuntime.router.imagePullPolicy }}
           volumeMounts:
+            {{- if .Values.wso2.deployment.gatewayRuntime.router.containerSecurityContext.readOnlyRootFilesystem }}
+            - mountPath: /tmp
+              name: router-tmp
+            {{- end }}
             - mountPath:  /home/wso2/security/keystore/mg.key
               name: router-keystore-key
               readOnly: true
@@ -278,6 +282,23 @@ spec:
               value: "2"
           {{- with .Values.wso2.deployment.gatewayRuntime.router.envOverride }}
             {{- toYaml . | nindent 12}}
+          {{- end }}
+          {{- include "choreo-connect.router.validateEnvoyAdminApi" . }}
+          {{- if .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.enabled }}
+            - name: ROUTER_ADMIN_USERNAME
+              {{- if .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.username.valueFrom }}
+              valueFrom:
+                {{- toYaml .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.username.valueFrom | nindent 16 }}
+              {{- else }}
+              value: {{ .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.username.value | quote }}
+              {{- end }}
+            - name: ROUTER_ADMIN_PASSWORD
+              {{- if .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.password.valueFrom }}
+              valueFrom:
+                {{- toYaml .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.password.valueFrom | nindent 16 }}
+              {{- else }}
+              value: {{ .Values.wso2.deployment.gatewayRuntime.router.envoy_admin_api.password.value | quote }}
+              {{- end }}
           {{- end }}
           {{- with .Values.wso2.deployment.labelName }}
             - name: ROUTER_LABEL
@@ -386,6 +407,10 @@ spec:
       {{- end }}
         {{- if .Values.wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountEmptyDir }}
         - name: router-heap-profile-data
+          emptyDir: {}
+        {{- end }}
+        {{- if .Values.wso2.deployment.gatewayRuntime.router.containerSecurityContext.readOnlyRootFilesystem }}
+        - name: router-tmp
           emptyDir: {}
         {{- end }}
         - name: router-keystore-key

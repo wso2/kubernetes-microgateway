@@ -483,7 +483,28 @@ wso2:
             mountEmptyDir: false
             # Path to mount the empty dir
             mountPath: /var/log/envoy
-    
+
+        # Envoy admin API configuration
+        envoy_admin_api:
+          # Enable or disable the envoy admin API. Credentials are only injected when enabled is true.
+          enabled: false
+          # Username for basic auth on the admin API.
+          # Provide a plain string via 'value', or reference a pre-existing secret via 'valueFrom'.
+          username:
+            value: ""
+            # valueFrom:
+            #   secretKeyRef:
+            #     name: "router-admin-credentials"
+            #     key: "username"
+          # Password for basic auth on the admin API.
+          # Provide a plain string via 'value', or reference a pre-existing secret via 'valueFrom'.
+          password:
+            value: ""
+            # valueFrom:
+            #   secretKeyRef:
+            #     name: "router-admin-credentials"
+            #     key: "password"
+
     volumeConfigs: []
       # Name for the volume configuration
       # - name: ""

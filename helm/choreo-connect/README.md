@@ -49,13 +49,13 @@ You can install the relevant Helm chart either from [WSO2 Helm Chart Repository]
   Helm version 2
   
   ```
-  helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-2 --namespace <NAMESPACE>
+  helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-3 --namespace <NAMESPACE>
   ```
   
   Helm version 3
 
   ```
-  helm install <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-2 --namespace <NAMESPACE> --create-namespace
+  helm install <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-3 --namespace <NAMESPACE> --create-namespace
   ```
 
 The above steps will deploy the Choreo Connect using WSO2 product Docker images available at DockerHub.
@@ -66,7 +66,7 @@ please provide your WSO2 Subscription credentials via input values (using `--set
 Please see the following example.
 
 ```
- helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-2 --namespace <NAMESPACE> \
+ helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-3 --namespace <NAMESPACE> \
   --set wso2.subscription.username=<SUBSCRIPTION_USERNAME> \
   --set wso2.subscription.password=<SUBSCRIPTION_PASSWORD>
 ```
@@ -125,14 +125,14 @@ hence if you have not specified `wso2.deployment.mode` "Standalone" deployment m
 Helm v2
 
 ```
-helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-2 --namespace <NAMESPACE> \
+helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-3 --namespace <NAMESPACE> \
   --set wso2.deployment.mode=STANDALONE
 ```
 
 Helm v3
 
 ```
-helm install <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-2 --namespace <NAMESPACE> --create-namespace
+helm install <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-3 --namespace <NAMESPACE> --create-namespace
   --set wso2.deployment.mode=STANDALONE
 ```
 
@@ -204,7 +204,7 @@ The following example shows how to deploy Choreo Connect with "WSO2 API Manager 
 Helm v2
 
 ```
-helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-2 --namespace <NAMESPACE> \
+helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-3 --namespace <NAMESPACE> \
   --set wso2.deployment.mode=APIM_AS_CP \
   --set wso2.apim.controlPlane.hostName=am.wso2.com \
   --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim \
@@ -214,7 +214,7 @@ helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-2 --names
 Helm v3
 
 ```
-helm install <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-2 --namespace <NAMESPACE> --create-namespace \
+helm install <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-3 --namespace <NAMESPACE> --create-namespace \
   --set wso2.deployment.mode=APIM_AS_CP \
   --set wso2.apim.controlPlane.hostName=am.wso2.com \
   --set wso2.apim.controlPlane.serviceName=wso2am-single-node-am-service.apim \
@@ -235,7 +235,7 @@ The following example shows how to enable Analytics with the helm charts.
 Helm v2
 
 ```
-helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-2 --namespace <NAMESPACE> \
+helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-3 --namespace <NAMESPACE> \
   --set wso2.choreoAnalytics.enabled=true \
   --set wso2.choreoAnalytics.endpoint=<CHOREO_ANALYTICS_ENDPOINT> \
   --set wso2.choreoAnalytics.onpremKey=<ONPREM_KEY>
@@ -244,7 +244,7 @@ helm install --name <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-2 --names
 Helm v3
 
 ```
-helm install <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-2 --namespace <NAMESPACE> --create-namespace \
+helm install <RELEASE_NAME> wso2/choreo-connect --version 1.2.0-3 --namespace <NAMESPACE> --create-namespace \
   --set wso2.choreoAnalytics.enabled=true \
   --set wso2.choreoAnalytics.endpoint=<CHOREO_ANALYTICS_ENDPOINT> \
   --set wso2.choreoAnalytics.onpremKey=<ONPREM_KEY>
@@ -490,6 +490,11 @@ Gateway runtime (enforcer + router) deployment configurations
 | `wso2.deployment.gatewayRuntime.router.security.keystore`                   | Private key and cert in PEM format (Refer [Configure Certificates](#configure-certificates))  | Default Certs           |
 | `wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountEmptyDir`     | Mount an K8s empty dir to write Heap/CPU profile data                                     | false                       |
 | `wso2.deployment.gatewayRuntime.router.debug.heapProfile.mountPath`         | Path to mount the empty dir to write Heap/CPU profile data                                | "/var/log/envoy"            |
+| `wso2.deployment.gatewayRuntime.router.envoy_admin_api.enabled`             | Enable the Envoy admin API. Credentials are only injected when this is `true`             | false                       |
+| `wso2.deployment.gatewayRuntime.router.envoy_admin_api.username.value`      | Plain-text username for basic auth on the Envoy admin API. Used when `valueFrom` is not set. **Must be set when `enabled` is `true` and `valueFrom` is not provided** | ""  |
+| `wso2.deployment.gatewayRuntime.router.envoy_admin_api.username.valueFrom`  | Reference to a pre-existing Kubernetes Secret key for the admin API username (standard `valueFrom.secretKeyRef` object). Takes precedence over `value` when set | -  |
+| `wso2.deployment.gatewayRuntime.router.envoy_admin_api.password.value`      | Plain-text password for basic auth on the Envoy admin API. Used when `valueFrom` is not set. **Must be set when `enabled` is `true` and `valueFrom` is not provided** | ""  |
+| `wso2.deployment.gatewayRuntime.router.envoy_admin_api.password.valueFrom`  | Reference to a pre-existing Kubernetes Secret key for the admin API password (standard `valueFrom.secretKeyRef` object). Takes precedence over `value` when set | -  |
 
 ## Kubernetes Specific Configurations
 
